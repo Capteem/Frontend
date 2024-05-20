@@ -1,0 +1,22 @@
+.Nav nav {
+  display: flex;
+  align-items: center;
+  background-color: #162617;
+  padding: 20px 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 16px,
+}
+.Nav nav > div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Nav nav a {
+  text-decoration: none;
+  color: white;
+}
+
+
+ 
