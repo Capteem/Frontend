@@ -44,7 +44,6 @@ function SignIn(){
                 localStorage.setItem("accesToken", result.data.accessToken);
                 localStorage.setItem("userId", id);
                 localStorage.setItem("role", result.data.role);
-                setCookie('refreshToken', result.data.refreshToken, "/");
                 navigate('/');
             })
             .catch((error)=>{   //존재하지않는 회원 또는 오류

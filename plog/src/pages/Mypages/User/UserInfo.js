@@ -211,7 +211,7 @@ function UserInfo() {
             ) : (
               <>
                 <button style={{ marginTop: '10px' }} onClick={handleEditMode}>회원정보수정하기</button>
-                <button style={{ marginTop: '10px', marginLeft: '10px' }}>회원탈퇴하기</button>
+                <button style={{ marginTop: '10px', marginLeft: '10px' }} >회원탈퇴하기</button>
               </>
             )}
           </>

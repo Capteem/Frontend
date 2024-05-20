@@ -147,7 +147,6 @@ function removeToken(){
   localStorage.removeItem('accesToken');
   localStorage.removeItem('userId');
   localStorage.removeItem('role');
-  cookies.remove('refreshToken');
   cookies.remove('tmpBag');
 }
 
