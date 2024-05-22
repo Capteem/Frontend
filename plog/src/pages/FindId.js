@@ -29,7 +29,7 @@ function FindId() {
     }
     
     try {
-      const response = await axios.post('url/confirm/user/pwauth', {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/user/checkemail`, {
         email: email,
       });
 
@@ -46,18 +46,14 @@ function FindId() {
 
   const handleVerification = async () => {
     try {
-      const response = await axios.post('url', {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/checkAuthNumber`, {
         email: email,
-        verificationCode: verificationCode,
+        auth: verificationCode,
       });
-      
-      if (response.status === 200) {
-        console.log('인증 성공');
-        alert(`아이디 : ${response.data.UserId}`);
-        navigate('/signin');
-      } else {
-        alert('인증 실패. 다시 시도해주세요.');
-      }
+      console.log(response);
+      console.log('인증 성공');
+      alert(`${response.data.message}`);
+      navigate('/signin');
     } catch (error) {
       alert('인증 실패. 다시 시도해주세요.');
     }

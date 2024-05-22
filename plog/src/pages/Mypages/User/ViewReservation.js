@@ -5,6 +5,7 @@ import '../../../styles/Table.css';
 function ViewReservation() {
   const [reservations, setReservations] = useState([]);
   const [showCompletedReservations, setShowCompletedReservations] = useState(false);
+  const [totalCompletedAmount, setTotalCompletedAmount] = useState(0);
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
@@ -24,6 +25,12 @@ function ViewReservation() {
       if (response.status === 200) {
         setReservations(response.data); 
         console.log(response.data); 
+        if (showCompletedReservations) {
+          const totalAmount = response.data
+            .filter(reservation => reservation.status === 2)
+            .reduce((sum, reservation) => sum + reservation.amount, 0);
+          setTotalCompletedAmount(totalAmount);
+        }
       } else {
         alert("예약내역 가져오기에 실패하였습니다.");
       }
@@ -68,7 +75,7 @@ function ViewReservation() {
             <th>예약한 날짜</th>
             <th>총 가격</th>
             <th>예약 상태</th>
-            <th>작업</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -78,13 +85,11 @@ function ViewReservation() {
             <tr key={index}>
               <td>{reservation.reservationTableId}</td>
               <td>
-                {
-                  <div>
-                    {reservation.reservationCameraName && <p>사진작가 : {reservation.reservationCameraName}</p>}
-                    {reservation.reservationStudioName && <p>스튜디오 : {reservation.reservationStudioName}</p>}
-                    {reservation.reservationHairName && <p>헤어,메이크업 : {reservation.reservationHairName}</p>}
-                  </div>
-                }
+                <div>
+                  {reservation.reservationCameraName && <p>사진작가 : {reservation.reservationCameraName}</p>}
+                  {reservation.reservationStudioName && <p>스튜디오 : {reservation.reservationStudioName}</p>}
+                  {reservation.reservationHairName && <p>헤어,메이크업 : {reservation.reservationHairName}</p>}
+                </div>
               </td>
               <td>{new Date(reservation.reservationStartDate).toLocaleString()}</td>
               <td>{reservation.amount}</td>
@@ -103,6 +108,12 @@ function ViewReservation() {
               </td>
             </tr>
           ))}
+          {showCompletedReservations && (
+            <tr>
+              <td colSpan="5" style={{ textAlign: 'right', fontWeight: 'bold' }}>총 결제금액:</td>
+              <td colSpan="3" style={{ fontWeight: 'bold' }}>{totalCompletedAmount}</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
