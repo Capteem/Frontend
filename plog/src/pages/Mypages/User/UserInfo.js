@@ -17,7 +17,7 @@ function UserInfo() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('url/user/getinfo', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/user/getinfo`, {
           params: {
             userId: localStorage.getItem('userId'),
           },
@@ -35,7 +35,7 @@ function UserInfo() {
   const handleEditMode = async () => {
     if (showInput) {
       try {
-        const response = await axios.post('url/user/getconfirm', {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/user/getconfirm`, {
           id: localStorage.getItem('userId'),
           password: inputPassword,
         });
@@ -55,7 +55,8 @@ function UserInfo() {
 
   const handleSaveChanges = async () => {
     try {
-      await axios.post('url/user/changeinfo', editedUserInfo);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/user/changeinfo`, editedUserInfo);
+      console.log(response);
       setUserInfo(editedUserInfo);
       setIsEditMode(false);
       window.location.reload();
@@ -78,7 +79,7 @@ function UserInfo() {
   const handlePasswordSave = async () => {
     if (newPassword === newPasswordReEnter && newPassword.length > 3) {
       try {
-        await axios.post('url/user/changePwd', { id: localStorage.getItem('userId'), password: newPassword });
+        await axios.post(`${process.env.REACT_APP_URL}/user/changePwd`, { id: localStorage.getItem('userId'), password: newPassword });
         setIsPasswordChangeMode(false);
         setNewPassword('');
         setNewPasswordReEnter('');

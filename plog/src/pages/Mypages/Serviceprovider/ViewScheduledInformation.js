@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css'; 
+import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 import '../../../styles/Table.css';
 import '../../../styles/Calendar.css';
@@ -21,6 +21,9 @@ function ViewScheduledInformation() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [value, onChange] = useState(new Date());
   const [showCompleted, setShowCompleted] = useState(false);
+
+  // 총 촬영완료된 금액
+  const [profits, setprofits] = useState(0);
 
   useEffect(() => {
     getServiceReservationList();
@@ -53,19 +56,20 @@ function ViewScheduledInformation() {
     setSelectedDate(null);
     onChange(new Date());
     window.location.reload();
-
   };
 
   const showCompletedReservations = () => {
     setShowCompleted(true);
     setSelectedDate(null);
+    const completedReservations = reservationList.filter(reservation => reservation.reservationStatus === 2);
+    const totalProfits = completedReservations.reduce((sum, reservation) => sum + reservation.reservationPrice, 0);
+    setprofits(totalProfits);
   };
 
-
-  //예약확정
-  const confirmReservation = async(reservationId) => {
+  // 예약확정
+  const confirmReservation = async (reservationId) => {
     try {
-      const response = axios.post(`${process.env.REACT_APP_URL}/service/accept`, null ,{ params : {reservationId : reservationId, providerId : providerId} })
+      await axios.post(`${process.env.REACT_APP_URL}/service/accept`, null, { params: { reservationId: reservationId, providerId: providerId } });
       alert("예약확정에 성공하였습니다.");
       window.location.reload();
     } catch (error) {
@@ -78,11 +82,12 @@ function ViewScheduledInformation() {
         alert("예약확정 중에 문제가 발생했습니다.");
       }
     }
-  }
-  //촬영완료
-  const completeFilming = async(reservationId) => {
+  };
+
+  // 촬영완료
+  const completeFilming = async (reservationId) => {
     try {
-      const response = axios.post(`${process.env.REACT_APP_URL}/service/complete`, null ,{ params : {reservationId : reservationId, providerId : providerId} })
+      await axios.post(`${process.env.REACT_APP_URL}/service/complete`, null, { params: { reservationId: reservationId, providerId: providerId } });
       alert("촬영확정에 성공하였습니다.");
       window.location.reload();
     } catch (error) {
@@ -95,11 +100,12 @@ function ViewScheduledInformation() {
         alert("촬영확정에 중에 문제가 발생했습니다.");
       }
     }
-  }
-  //취소
-  const cancelReservation = async(reservationId) => {
+  };
+
+  // 취소
+  const cancelReservation = async (reservationId) => {
     try {
-      const response = axios.post(`${process.env.REACT_APP_URL}/service/refuse`, null ,{ params : {reservationId : reservationId, providerId : providerId} })
+      await axios.post(`${process.env.REACT_APP_URL}/service/refuse`, null, { params: { reservationId: reservationId, providerId: providerId } });
       alert("예약취소에 성공하였습니다.");
       window.location.reload();
     } catch (error) {
@@ -112,20 +118,20 @@ function ViewScheduledInformation() {
         alert("예약취소에 중에 문제가 발생했습니다.");
       }
     }
-  }   
-  
+  };
+
   const filteredReservations = showCompleted
-  ? reservationList.filter(reservation => reservation.reservationStatus === 2)
-  : selectedDate
-  ? reservationList.filter(reservation => {
-      const reservationDay = new Date(reservation.reservationStartTime);
-      return (
-        reservationDay.getFullYear() === selectedDate.getFullYear() &&
-        reservationDay.getMonth() === selectedDate.getMonth() &&
-        reservationDay.getDate() === selectedDate.getDate()
-      );
-    })
-  : reservationList;
+    ? reservationList.filter(reservation => reservation.reservationStatus === 2)
+    : selectedDate
+      ? reservationList.filter(reservation => {
+        const reservationDay = new Date(reservation.reservationStartTime);
+        return (
+          reservationDay.getFullYear() === selectedDate.getFullYear() &&
+          reservationDay.getMonth() === selectedDate.getMonth() &&
+          reservationDay.getDate() === selectedDate.getDate()
+        );
+      })
+      : reservationList;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '5px', marginTop: '40px' }}>
@@ -177,12 +183,14 @@ function ViewScheduledInformation() {
               <th>날짜</th>
               <th>시작 시간</th>
               <th>끝나는 시간</th>
+              <th>가격</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {filteredReservations.length === 0 ? (
               <tr>
+                <td colSpan="7" style={{ textAlign: 'center' }}>예약 내역이 없습니다.</td>
               </tr>
             ) : (
               filteredReservations.map((reservation, index) => (
@@ -197,6 +205,7 @@ function ViewScheduledInformation() {
                   <td>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</td>
                   <td>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</td>
                   <td>{new Date(reservation.reservationEndTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</td>
+                  <td>{reservation.reservationPrice}</td>
                   <td>
                     {reservation.reservationStatus === 0 && (
                       <>
@@ -213,6 +222,12 @@ function ViewScheduledInformation() {
                   </td>
                 </tr>
               ))
+            )}
+            {showCompleted && (
+              <tr>
+                <td colSpan="5" style={{ textAlign: 'right', fontWeight: 'bold' }}>총 촬영완료 금액:</td>
+                <td colSpan="2" style={{ fontWeight: 'bold' }}>{profits}</td>
+              </tr>
             )}
           </tbody>
         </table>

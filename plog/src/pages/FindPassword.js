@@ -38,7 +38,7 @@ function FindPassword() {
     }
 
     try {
-      const response = await axios.post('url/confirm/user/pwauth', {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/user/checkemail`, {
         email: email,
         id: id,
       });
@@ -56,17 +56,14 @@ function FindPassword() {
 
   const handleVerification = async () => {
     try {
-      const response = await axios.post('url', {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/checkAuthNumber`, {
         userId: id,
-        verificationCode: verificationCode,
+        email: email,
+        auth: verificationCode,
       });
       
-      if (response.status === 200) {
-        setIsVerified(true);
         console.log('인증 성공');
-      } else {
-        alert('인증 실패. 다시 시도해주세요.');
-      }
+        setIsVerified(true);
     } catch (error) {
       alert('인증 실패. 다시 시도해주세요.');
     }
@@ -79,9 +76,9 @@ function FindPassword() {
     }
 
     try {
-      const response = await axios.post('url', {
-        userId: id,
-        newPassword: newPassword,
+      const response = await axios.post(`${process.env.REACT_APP_URL}/user/changePwd`, {
+        id: id,
+        password: newPassword,
       });
 
       if (response.status === 200) {
