@@ -36,7 +36,7 @@ function Question(){
         };
     
         try {
-            const response = await axios.post('url/complaint/add', {
+            const response = await axios.post(`${process.env.REACT_APP_URL}/complaint/add`, {
                 userId : userId,
                 complaintTitle: state.complaintTitle,
                 complaintContent:state.complaintContent,

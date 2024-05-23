@@ -18,7 +18,7 @@ function Answer() {
   const getAnswerList = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.get('url/complaint/get', {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/complaint/get`, {
         params: {
           userId: userId,
         },

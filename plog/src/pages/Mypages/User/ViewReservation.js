@@ -63,7 +63,7 @@ function ViewReservation() {
 
   return (
     <div className='Table'>
-      <h2>예약 내역</h2>
+      <h2>{showCompletedReservations ? '촬영 완료 내역' : '전체 예약 내역'}</h2>
       <button onClick={handleShowCompletedReservations}>
         {showCompletedReservations ? '전체 내역 보기' : '촬영완료 내역 보기'}
       </button>

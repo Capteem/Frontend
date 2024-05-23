@@ -20,7 +20,7 @@ function Payment() {
     const PaymentReady = async () => {
         try {
             // 결제 준비 API 호출
-            const response = await axios.post('url/payment/ready', sendList[0]);
+            const response = await axios.post(`${process.env.REACT_APP_URL}/payment/ready`, sendList[0]);
             if (response.status === 200) {
                 console.log(response.data);
                 console.log(response.data.next_redirect_pc_url);
@@ -36,7 +36,7 @@ function Payment() {
     const handlepaymentinfo = async () => {
         try {
             // 결제 정보 API 호출
-            const response = await axios.get('url/payment/success/info',{
+            const response = await axios.get(`${process.env.REACT_APP_URL}/payment/success/info`,{
               params: {
                 userId: userId,
               },
