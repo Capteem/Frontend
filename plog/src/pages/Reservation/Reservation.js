@@ -4,7 +4,7 @@ import RegionSelect from '../../components/Reservations/RegionSelect.js';
 import React, {useEffect, useState} from 'react';
 import PortfolioEnd from '../../components/Reservations/PortfolioEnd.js';
 import { debounce } from 'lodash';
-import { useCookies, Cookies } from 'react-cookie';
+import { Cookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios'
@@ -30,7 +30,7 @@ function Reservation(){
     useEffect(()=>{
         console.log("실행");
         dispatch(reset());
-        axios.get('http://222.251.241.116:8084/service/confirmed',
+        axios.get(`${process.env.REACT_APP_URL}/service/confirmed`,
             {
                 headers:{
                     'Auth-Token' : localStorage.getItem("accesToken")

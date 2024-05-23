@@ -314,7 +314,7 @@ function PortfolioEnd(props){
     //server한테 detail 받아옴
     function getDetail(props){
         setDetailPhoto([]);
-        axios.get(`http://222.251.241.116:8084/portfolio/data/${props.providerId}`,{
+        axios.get(`${process.env.REACT_APP_URL}/portfolio/data/${props.providerId}`,{
             headers:{
                 'Auth-Token' : localStorage.getItem("accesToken")
             },
@@ -334,7 +334,7 @@ function PortfolioEnd(props){
     function detailImg(props){
         setDetailPhoto([]);
         props.map((item, index)=>{
-            axios.get(`http://222.251.241.116:8084/portfolio/image/${item.imgUrl}`,{
+            axios.get(`${process.env.REACT_APP_URL}/portfolio/image/${item.imgUrl}`,{
                 headers:{
                     'Auth-Token' : localStorage.getItem("accesToken")
                 },
@@ -362,7 +362,7 @@ function PortfolioEnd(props){
     function getRep(props){
         console.log(props);
         props.map((item, index)=>{
-            axios.get(`http://222.251.241.116:8084/portfolio/image/${item.providerRepPhotoPath}${item.providerRepPhoto}`,{
+            axios.get(`${process.env.REACT_APP_URL}/portfolio/image/${item.providerRepPhotoPath}${item.providerRepPhoto}`,{
                 headers:{
                     'Auth-Token' : localStorage.getItem("accesToken")
                 },

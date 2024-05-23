@@ -47,8 +47,8 @@ function SignIn(){
                 navigate('/');
             })
             .catch((error)=>{   //존재하지않는 회원 또는 오류
-                if(error.response.status === 401)
-                    alert("401오류")
+                if(error.response.status === 406)
+                    alert("정지된 회원입니다.")
                 else
                     alert("로그인 오류. 다시 로그인해주세요.")
                 console.log(error.response); //401
