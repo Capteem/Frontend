@@ -21,7 +21,6 @@ function ServiceDropdown(props) {
           <Link to={`/servicelist/serviceinfo?providerId=${providerId}`}>포토폴리오 관리</Link>
           <Link to={`/servicelist/viewscheduledinformation?providerId=${providerId}`}>예약된 내역 관리</Link>
           <Link to={`/servicelist/review?providerId=${providerId}`}>리뷰 관리</Link>
-          <Link to={`/servicelist/review?providerId=${providerId}`}>서비스 탈퇴하기</Link>
         </div>
       )}
     </div>
