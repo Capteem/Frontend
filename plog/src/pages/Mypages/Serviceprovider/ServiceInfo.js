@@ -147,7 +147,6 @@ function ServiceInfo(){
   }
 
   function uploadPhoto(event){
-    console.log("업로드 함수 실행중");
     event.preventDefault();
 
     let fileArr = event.target.files;
@@ -176,6 +175,7 @@ function ServiceInfo(){
       })
       .catch((error)=>{
           console.log(error);
+          alert("사진 추가 실패");
       })
 
     }

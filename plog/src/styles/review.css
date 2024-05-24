@@ -1,0 +1,16 @@
+.review-star {
+    border: none;
+    right:10px;
+    background-color: white;
+    color:rgb(141, 207, 148);
+    /* float: left; */
+    /* margin-left:10px; */
+}
+
+.review-starClick {
+    border: none;
+    right:10px;
+    background-color: white;
+    color:rgb(141, 207, 148);
+    /* margin-left:10px; */
+}

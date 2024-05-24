@@ -31,6 +31,7 @@ import UserInfo from './pages/Mypages/User/UserInfo.js';
 import ViewReservation from './pages/Mypages/User/ViewReservation.js';
 import ShoppingBag from './pages/Mypages/ShoppingBag.js';
 import WriteReview from './pages/Mypages/User/WriteReview.js'
+import ReviewList from './pages/Mypages/User/ReviewList.js';
 
 //serviceprovider
 import ServiceList from './pages/Mypages/Serviceprovider/ServiceList.js';
@@ -72,7 +73,8 @@ function App() {
       <Route path='/mypage/userinfo' element={<UserInfo/>} />
       <Route path='/mypage/viewreservation' element={<ViewReservation/>} />
       <Route path='/mypage/shoppingbag' element={<ShoppingBag/>} />
-      <Route path='/mypate/writereview' element={<WriteReview/>} />
+      <Route path='/mypage/reviewlist' element={<ReviewList/>} />
+      <Route path='/mypage/writereview' element={<WriteReview/>} />
       
       {/* ServiceProvider */}
       

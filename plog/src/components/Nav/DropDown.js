@@ -21,6 +21,7 @@ function Dropdown({ role }) {
           <Link to="/mypage/userinfo">회원 정보</Link>
           <Link to="/mypage/viewreservation">예약 내역</Link>
           <Link to="/mypage/shoppingbag">장바구니</Link>
+          <Link to="/mypage/reviewlist">리뷰 관리</Link>
           {role === "PROVIDER" && (
             <Link to="/mypage/servicelist">서비스 리스트</Link>
           )}

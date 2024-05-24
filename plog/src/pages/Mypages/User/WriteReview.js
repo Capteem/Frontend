@@ -1,16 +1,68 @@
 import React, {useEffect, useState} from 'react';
-import { TiStarOutline } from "react-icons/ti";
+import { GiRoundStar } from "react-icons/gi";
+
+import { GoStarFill } from "react-icons/go";
+import { GoStar } from "react-icons/go";
 
 import axios from 'axios'
 
+import '../../../styles/review.css'
+
 function WriteReview(props){
 
+    const [review, setReview] = useState("");
     let initialStar = [false, false, false, false, false];
+    const [reviewScore, setReviewScore] = useState(0);
     const [starClick, setStarClick] = useState([false, false, false, false, false]);
-    
-    function sendReview(){
 
-        axios.post(`${process.env.REACT_APP_URL}/review/add`,
+    useEffect(()=>{
+        setReviewScore(0);
+        setStarClick(initialStar);
+    },[])
+
+    function checkStar(props){
+        let tmp = initialStar;
+        starClick.map((item, index)=>{
+            if(index <= props){
+                tmp[index] = true;
+            }else{
+                tmp[index] = false;
+            }
+        });
+        setReviewScore(props + 1);
+        setStarClick(tmp);
+    }
+
+    function changeReview(event){
+        setReview(event.target.value);
+    }
+
+    function checkWrite(){
+        console.log(review);
+        if(review === ""){
+            alert("리뷰를 작성해주세요.")
+        }else if(reviewScore === 0){
+            alert("별점을 매겨주세요");
+        }else{
+            sendReview();
+        }
+    }
+
+    function sendReview(){
+        const date = new Date();
+        const tmp = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+        const send = {
+            "reviewContent" : review,
+            "reviewScore": reviewScore,
+            "userId": localStorage.getItem('userId'),
+            "userNickName": "string",
+            "reviewDate": tmp.toISOString(),
+            "providerId": 2
+        }
+
+        console.log(send);
+        axios.post(`${process.env.REACT_APP_URL}/review/add`, send,
             {
                 headers:{
                     'Auth-Token' : localStorage.getItem("accesToken")
@@ -18,13 +70,13 @@ function WriteReview(props){
             }
         )
         .then(function(result){
-            
+            console.log(result);
+            console.log("리뷰 작성 성공");
         })
         .catch((error)=>{
             console.log(error);
             alert('리뷰 작성 실패');
         })
-
     }
     
     return(
@@ -35,17 +87,22 @@ function WriteReview(props){
                 {
                     starClick.map((item, index)=>{
                         return(
-                            <button onClick={console.log("별 클릭")} disabled={false}>  {/*calender 보고 css 참고하기*/}
-                                <TiStarOutline />
+                            item === false ? 
+                            <button className='review-star' onClick={()=>{checkStar(index);}} disabled={false}>
+                                <GoStar />
+                            </button>
+                            :
+                            <button className='review-starClick' onClick={()=>{checkStar(index);}} disabled={false}>
+                                <GoStarFill />
                             </button>
                         )
                     })
                 }
             </div>
 
-            <textarea placeholder="리뷰를 입력하시오."/>
+            <textarea onChange={(event)=>{changeReview(event)}} placeholder="리뷰를 작성해주세요."/>
             <br/>
-            <button onClick={()=>{sendReview();}}>입력완료</button>
+            <button onClick={()=>{checkWrite();}}>입력완료</button>
 
         </div>
     );

@@ -432,6 +432,10 @@ function PortfolioEnd(props){
                             가격 : {detail.providerPrice}<br/>
                         </pre>
 
+                        <div>
+                            <button onClick={()=>{}}>Portfolio</button>
+                            <button onClick={()=>{}}>Review</button>
+                        </div>
                         <div className="gallery-container-modal">
                         {
                             detailPhoto && detailPhoto.map((item, index)=>{
