@@ -52,6 +52,13 @@
     margin-left:50px;
   }
 
+  .reservation-price{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
   .portfolio-selection{
     margin-top: 10px;
     margin-right: 3px;
@@ -89,7 +96,7 @@
   .portfolio-modalBody {
     position: absolute;
     width: 600px;
-    height: 500px;
+    height: 600px;
     padding: 40px;
     text-align: left;
     background-color: rgb(255, 255, 255);
@@ -103,6 +110,24 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
+  }
+
+  .gallery-container-review-modal {
+    height: 70%; /* 스크롤이 필요한 높이 지정 */
+    overflow: auto; /* 스크롤 가능하도록 설정 */
+    display: grid;
+  }
+  .gallery-container-review-modal::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 너비 */
+  }
+  
+  .gallery-container-review-modal::-webkit-scrollbar-thumb {
+    background-color: #aed1af; /* 스크롤바 색상 */
+    border-radius: 50px; /* 스크롤바 모서리 둥글게 */
+  }
+  
+  .gallery-container-review-modal::-webkit-scrollbar-thumb:hover {
+    background-color: #456547; /* 스크롤바 호버시 색상 변경 */
   }
 
   
@@ -259,6 +284,13 @@
   margin-left: 3px;
 }
 
+.portfolio-modal-text{
+  text-align: left;
+  font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
 /* 여기까지 Portfolio.js */
 
 /* 여기부터 selection */
@@ -366,7 +398,7 @@
   .portfolio-modalBody {
     /* position: absolute; */
     width: 90%;
-    height: 70%;
+    height: 85%;
     padding: 40px;
     text-align: left;
     background-color: rgb(255, 255, 255);

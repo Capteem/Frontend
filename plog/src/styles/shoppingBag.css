@@ -53,5 +53,9 @@
 }
 
 .shoppingBag-calculate-button{
-
+    border:solid 1px #69876b;
+    border-radius: 3px;
+    color:white;
+    background-color: #69876b;
+    margin: 1px;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import cookie from 'react-cookies';
-import { useCookies, Cookies } from 'react-cookie';
+import { Cookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
 //css
@@ -58,6 +58,7 @@ function ShoppingBag(){
     //todo:결제 완료 후 삭제
     function sendPay(props){
         console.log(props);
+        remove(props);
         const sendList = [{
             "purchaseAmount": props.price,
             "purchaseName": "Plog",
@@ -74,6 +75,7 @@ function ShoppingBag(){
             }
         }];
         navigate('/payment', { state: { sendList } });
+        remove(props);
     }
 
     return(
@@ -90,12 +92,21 @@ function ShoppingBag(){
             </div>
             {
                 dataList && dataList.map((item, index)=>{
+                    console.log(item);
+                    let [tmpStartDate, tmpStartTime] = item.startDate.split("T");
+                    let timeStart = tmpStartTime.split(":");
+
+                    let [tmpEndDate, tmpEndTime] = item.endDate.split("T");
+                    let timeEnd = tmpEndTime.split(":");
+
                     return(
                         <div key={index} className='shoppingBag-container'>
                             <div className='shoppingBag-date'>
                                 {date(item.startDate)}
                                 <br/>
-                                ({item.hours}시간)
+                                {timeStart[0]}시 - {timeEnd[0]}시
+                                {/* <br/> */}
+                                {/* ({item.hours}시간) */}
                             </div>
                             <div className='shoppingBag-select'>
                                 studio : {item.studioName === undefined ? "미선택" : item.studioName}
@@ -115,7 +126,7 @@ function ShoppingBag(){
                                     }}
                                 >결제</button>
                                 <br/>
-                                <button onClick={()=>{remove(item);}}>삭제</button>
+                                <button className='shoppingBag-calculate-button' onClick={()=>{remove(item);}}>삭제</button>
                             </div>
                         </div>
                     )
