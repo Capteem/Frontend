@@ -64,7 +64,7 @@ function ComplainManagement() {
       console.error('답글 등록, 수정에 실패하였습니다.', error);
     }
   };
-
+//
   return (
     <div className='Table'>
       <h4>Q&A관리</h4>
