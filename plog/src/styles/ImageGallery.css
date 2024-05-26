@@ -40,6 +40,7 @@
 
 .image-container img {
   position: absolute;
+  padding: 1px;
   top: 0;
   left: 0;
   width: 100%;

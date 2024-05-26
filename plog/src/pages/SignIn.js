@@ -47,15 +47,19 @@ function SignIn(){
                 navigate('/');
             })
             .catch((error)=>{   //존재하지않는 회원 또는 오류
-                if(error.response.status === 406)
-                    alert("정지된 회원입니다.")
-                else
-                    alert("로그인 오류. 다시 로그인해주세요.")
-                console.log(error.response); //401
+                console.log("로그인 오류. 다시 시도해주세요.");
+
+                if(error.response != undefined){
+                    if(error.response.status === 406)
+                        alert("정지된 회원입니다.");
+                    else if(error.response.status === 404)
+                        alert("존재하지 않는 회원입니다.")
+                    else if(error.response.status === 400)
+                        alert("패스워드가 일치하지 않습니다.")
+                }
             })
         }
     };
-
 
     const REST_API_KEY = 'f6beecf93404eca27071b9f472f53da4';
     const REDIRECT_URL = 'http://localhost:3000/auth';

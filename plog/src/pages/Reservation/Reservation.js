@@ -153,7 +153,7 @@ function Reservation(){
 
     const [selectNum, setSelectNum] = useState();
     const [modalShow, setModalShow] = useState(false);
-
+    const [modalShoppingShow, setmMdalShoppingShow] = useState(false);
 
     function sendPay(){
         const sendList = [{
@@ -247,13 +247,15 @@ function Reservation(){
                         <br/>
                         <br/>
                         <br/>
-                        {isNaN(price) ? <h5>총가격:0원</h5> :
-                            <h5>총가격:{price}원</h5>
-                        }
+                        <div className='reservation-price'>
+                            {isNaN(price) ? <>총가격:0원</> :
+                                <>총가격:{price}원</>
+                            }
+                        </div>
                         <div className='reservation-caculate-design'>
                         <button className='calculate-button' onClick={()=>{
                             if(checkSelect()){
-                                shoppingBag();
+                                setmMdalShoppingShow(true);
                             }
                         }}>장바구니</button>
                         <button className='calculate-button'
@@ -328,7 +330,7 @@ function Reservation(){
                     }
                     <button className='calculate-button' onClick={()=>{
                         if(checkSelect()){
-                            shoppingBag();
+                            setmMdalShoppingShow(true);
                         }
                     }}>장바구니</button>
 
@@ -403,6 +405,73 @@ function Reservation(){
                                 }}>결제</button>
                                 <button className='calculate-button' onClick={()=>{
                                     setModalShow(false);
+                                }}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {
+                modalShoppingShow &&
+                <div className='portfolio-modal' onClick={()=>{setmMdalShoppingShow(false)}}>
+                    <div className='portfolio-modalBody'>
+                        <div className='reservation-center-bottom'>
+                            <div className='reservation-center'>
+                                <h5>장바구니에 담으시겠습니까?</h5>
+                            </div>
+                            <br/>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th>날짜</th>
+                                        <td>
+                                            {checkFinal.finalDateShow}
+                                            {checkFinal.finalDateShow === '' ? <span className='reservation-not-selected'>미선택</span> : null}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>스튜디오</th>
+                                        <td>
+                                            {checkFinal.fianlStudio.providerName}
+                                            {checkFinal.fianlStudio.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>사진작가</th>
+                                        <td>
+                                            {checkFinal.finalPhotographer.providerName}
+                                            {checkFinal.finalPhotographer.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>헤어 메이크업</th>
+                                        <td>
+                                            {checkFinal.finalHair.providerName}
+                                            {checkFinal.finalHair.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>지역</th>
+                                        <td>
+                                        {checkFinal.finalArea} {checkFinal.finalSubarea}
+                                        {checkFinal.finalArea === "" ? <span className='reservation-not-selected'>미선택</span> : null}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>총가격</th>
+                                        <td>{price}원</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div className='reservation-calculate'>
+                                <button className='calculate-button' onClick={()=>{
+                                    shoppingBag();
+                                    setModalShow(false);
+                                }}>확인</button>
+                                <button className='calculate-button' onClick={()=>{
+                                    setmMdalShoppingShow(false);
                                 }}>취소</button>
                             </div>
                         </div>

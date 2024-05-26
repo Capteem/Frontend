@@ -8,8 +8,11 @@ import {changeStudio, changePhotographer, changeHair,
     changeArea, changeSubarea, changeCommonTimeList} from '../../assets/store.js';
 
 import { debounce } from 'lodash';
+import { GoStarFill } from "react-icons/go";
+import { GoStar } from "react-icons/go";
 
 import '../../styles/ImageGallery.css'; // CSS 파일 import
+import '../../styles/review.css'
 
 function PortfolioEnd(props){
 
@@ -20,6 +23,7 @@ function PortfolioEnd(props){
     });
 
     useEffect(()=>{
+        console.log("화면바뀜 실행");
         window.addEventListener('resize', handleResize);
         return()=>{
             window.removeEventListener('resize', handleResize);
@@ -52,9 +56,10 @@ function PortfolioEnd(props){
 
     //서버한테 제공자들 데이터 받아옴
     useEffect(()=>{
+        console.log(props.sendToPortfolio);
         initialSetting(props.sendToPortfolio);
         setProviderAll(props.sendToPortfolio);
-        getRep(props.sendToPortfolio)
+        getRep(props.sendToPortfolio);
     },[props.sendToPortfolio]);
 
     function initialSetting(props){
@@ -215,6 +220,8 @@ function PortfolioEnd(props){
         galleryClick:false,
     });
     useEffect(()=>{
+        console.log(props.selectNum);
+
         if(props.selectNum === 1){
             setShow(showPhoto);
         }else if(props.selectNum === 2){
@@ -222,7 +229,7 @@ function PortfolioEnd(props){
         }else if(props.selectNum === 3){
             setShow(showStudio); 
         }
-    }, [serverStudio, serverPhoto, serverHM, showPhoto, showHM, showStudio, click, checkSelect.finalDate])
+    }, [serverStudio, serverPhoto, serverHM, showPhoto, showHM, showStudio, checkSelect.finalDate, click])
     useEffect(()=>{
         setClick(prevClick => ({
             ...prevClick, // 이전 상태를 복사
@@ -235,6 +242,8 @@ function PortfolioEnd(props){
     }, [checkSelect.finalDate])
 
     useEffect(()=>{
+        console.log("시간 저장");
+
         saveTimeListWithSelect();
     },[checkSelect.fianlStudio, checkSelect.finalPhotographer, checkSelect.finalHair]);
     
@@ -360,7 +369,6 @@ function PortfolioEnd(props){
 
     const [repPhoto, setRepPhoto] = useState([]);
     function getRep(props){
-        console.log(props);
         props.map((item, index)=>{
             axios.get(`${process.env.REACT_APP_URL}/portfolio/image/${item.providerRepPhotoPath}${item.providerRepPhoto}`,{
                 headers:{
@@ -388,6 +396,26 @@ function PortfolioEnd(props){
         })
     }
 
+    const [detailReview, setDetailReview]= useState([]);
+    function getReview(props){
+        console.log(props);
+        setDetailPhoto([]);
+        axios.get(`${process.env.REACT_APP_URL}/review/provider/get/${props.providerId}`,{
+            headers:{
+                'Auth-Token' : localStorage.getItem("accesToken")
+            },
+        })
+        .then((result)=>{
+            console.log(result.data);  
+            setDetailReview(result.data.reviewList);      
+        })
+        .catch((error)=>{
+            console.log("review받기 실패");
+        })
+        setDetail(props);
+    }
+
+    const [imgReview, setImgReview] = useState(true)
     return(
         <>
             {windowSize.width > 768 ?
@@ -414,6 +442,7 @@ function PortfolioEnd(props){
                             <div className='image-container'>
                             <img key={index} src={url} onClick={()=>{
                                 getDetail(value);   //모달창에 보여주기 위한 세부정보
+                                getReview(value);
                                 setModalShow(true);
                             }}/>
                             </div>
@@ -424,20 +453,30 @@ function PortfolioEnd(props){
             {
                 modalShow &&
                 <div className='portfolio-modal' onClick={()=>{setModalShow(false)}}>
-                    <div className='portfolio-modalBody'>
-                        <pre>
+                    <div className='portfolio-modalBody' onClick={(event)=>{event.stopPropagation(); setModalShow(true);}}>
+                        <pre className='portfolio-modal-text'>
                             이름 : {detail.providerName}<br/>
                             문의 번호 : {detail.providerPhone}<br/>
                             위치 : {detail.providerArea} {detail.providerSubArea} {detail.providerDetailArea}<br/>
                             가격 : {detail.providerPrice}<br/>
                         </pre>
 
-                        <div>
-                            <button onClick={()=>{}}>Portfolio</button>
-                            <button onClick={()=>{}}>Review</button>
-                        </div>
-                        <div className="gallery-container-modal">
                         {
+                            imgReview === true ? 
+                            <>
+                                <button className='portfolio-button-click' onClick={()=>{setImgReview(true); setModalShow(true);}}>Portfolio</button>
+                                <button className='portfolio-button' onClick={()=>{setImgReview(false); setModalShow(true);}}>Review</button>
+                            </>
+                            :
+                            <>
+                                <button className='portfolio-button' onClick={()=>{setImgReview(true); setModalShow(true);}}>Portfolio</button>
+                                <button className='portfolio-button-click' onClick={()=>{setImgReview(false); setModalShow(true);}}>Review</button>
+                            </>
+                        }
+
+                        {imgReview && <div className="gallery-container-modal">
+                        {
+                            
                             detailPhoto && detailPhoto.map((item, index)=>{
                                 return(
                                     <div className='image-container'>
@@ -447,9 +486,50 @@ function PortfolioEnd(props){
                             })
                         }
                         </div>
+                        }
+                        {(!imgReview) && <div className="gallery-container-review-modal">
+                        {
+                            detailReview && detailReview.map((item, index)=>{
+                                let five = [1,2,3,4,5];
+                                const [date, time] = item.reviewDate.split("T");
+                                let dateComment = item.comment === null ? 0 : item.comment.commentDate.split("T");
+
+                                return(
+                                    <div className='review-box'>
+                                        <div className='review-user'>
+                                            <span className='review-name'>{item.userNickName}</span>
+                                            <span className='review-time'>{date} {time}</span>
+                                            <div style={{marginBottom:2, marginTop:-5}}>{
+                                                five.map((score, index)=>{
+                                                    return(
+                                                        <span>{
+                                                        score <= item.reviewScore ?
+                                                        <GoStarFill className='review-starClick'/>
+                                                        :
+                                                        <GoStar className='review-star'/>
+                                                        }</span>
+                                                    )
+                                                })
+                                            }</div>
+                                            <div className='review-content'>{item.reviewContent}</div>
+                                        </div>
+                                        {
+                                            item.comment && <div className='review-provider'>
+                                                <span className='review-name'>{detail.providerName}</span>
+                                                <span className='review-time'>{dateComment[0]} {dateComment[1]}</span>
+                                                <div className='review-content'>{item.comment.commentContent}</div>
+                                            </div>
+                                        }
+                                    </div>
+                                )
+                            })
+                        }
+                        </div>
+                        }
 
                         <div className='portfolio-selection'>
-                            <button className='portfolio-selection-button' onClick={()=>{
+                            <button className='portfolio-selection-button' onClick={(event)=>{
+                                event.stopPropagation();
                                 setFinal(detail, detail.providerType);
                                 setModalShow(false);
                             }}>선택</button>

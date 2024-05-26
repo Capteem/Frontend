@@ -14,3 +14,55 @@
     color:rgb(141, 207, 148);
     /* margin-left:10px; */
 }
+
+.review-content{
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; */
+    max-width: 500px;
+}
+
+.review-reviewBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
+}
+
+.review-box{
+    margin:3px;
+}
+
+.review-user{
+    text-align: left;
+    margin:1px;
+    padding: 2px;
+}
+
+.review-provider{
+    /* border-bottom: 1.5px solid #69876b; */
+    border-radius: 4px;
+    text-align: left;
+    padding: 5px;
+    background-color: #d1e4d38f;
+}
+
+.review-name{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.review-time{
+    font-size: 10px;
+    font-weight: 100;
+    color:grey;
+    margin-left:10px;
+}
+
+.review-content{
+    font-size:14px;
+    margin-bottom:10px;
+
+}

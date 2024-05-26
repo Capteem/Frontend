@@ -123,7 +123,7 @@ function Review(){
             {reviewList && reviewList.map((item, index)=>{
                 let [date, time] = item.reviewDate.split("T");
                 return(
-                    <div key={index}>
+                    <div key={index} className='review-reviewBox'>
                         <div>
                             <div>{date} {time}</div>
                             <div>{item.reviewScore}</div>

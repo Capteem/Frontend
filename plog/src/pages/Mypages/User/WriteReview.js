@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { GiRoundStar } from "react-icons/gi";
 
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
