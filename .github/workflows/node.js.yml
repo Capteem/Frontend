@@ -28,25 +28,25 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
     
-  - name: Install AWS CLI
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
+  # - name: Install AWS CLI
+  #       run: |
+  #         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  #         unzip awscliv2.zip
+  #         sudo ./aws/install
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: us-west-2
 
-      - name: Deploy to S3
-        env:
-          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        run: aws s3 sync build/ s3://$S3_BUCKET --delete
+  #     - name: Deploy to S3
+  #       env:
+  #         S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+  #       run: aws s3 sync build/ s3://$S3_BUCKET --delete
 
-      - name: Invalidate CloudFront cache
-        env:
-          DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-        run: aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+  #     - name: Invalidate CloudFront cache
+  #       env:
+  #         DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+  #       run: aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
