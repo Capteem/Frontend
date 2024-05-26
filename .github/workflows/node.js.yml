@@ -25,10 +25,13 @@ jobs:
 
       - run: npm ci
       - run: npm run build --if-present
+      
+      - name: check pwd
+        run: pwd
 
       - name: List build directory contents
-        run: pwd &&
-        ls -la build/
+        run: ls -la build/
+
       # CD steps for deploying to AWS S3 and invalidating CloudFront cache
       - name: Install AWS CLI
         run: |
