@@ -28,6 +28,9 @@ jobs:
 
       - name: Build project
         run: npm run build --if-present
+      
+      - name: check working directory
+        run: pwd
 
       - name: List build directory contents
         run: ls -al plog
