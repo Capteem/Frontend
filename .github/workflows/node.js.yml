@@ -23,16 +23,17 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - run: npm ci
-      - run: npm run build --if-present
-      
-      - name: check pwd
-        run: pwd
+      - name: Install dependencies
+        run: npm ci
+        working-directory: Frontend/plog
+
+      - name: Build project
+        run: npm run build --if-present
+        working-directory: Frontend/plog
 
       - name: List build directory contents
-        run: ls -la build/
+        run: ls -la Frontend/plog/build.zip
 
-      # CD steps for deploying to AWS S3 and invalidating CloudFront cache
       - name: Install AWS CLI
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -49,7 +50,7 @@ jobs:
       - name: Deploy to S3
         env:
           S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        run: aws s3 sync build/ s3://$S3_BUCKET --delete
+        run: aws s3 cp Frontend/plog/build.zip s3://$S3_BUCKET/build.zip
 
       - name: Invalidate CloudFront cache
         env:
