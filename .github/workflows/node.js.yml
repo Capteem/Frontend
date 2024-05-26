@@ -49,7 +49,7 @@ jobs:
           aws-region: us-west-2
 
       - name: Deploy to S3
-        run: aws s3 cp Frontend/plog/build.zip s3://${{ secrets.S3_BUCKET }}/build.zip
+        run: aws s3 cp plog/build.zip s3://${{ secrets.S3_BUCKET }}/build.zip
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
