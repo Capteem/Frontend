@@ -59,3 +59,32 @@
     background-color: #69876b;
     margin: 1px;
 }
+
+.shoppingBag-none{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top:100px;
+    margin-bottom:50px;
+}
+
+.shoppingBag-noneImg{
+    width: 200px;
+    height: 180px;
+    opacity: 50%;
+}
+.shoppingBag-noneBag{
+    width: 300px;
+    height: 280px;
+    border-radius: 100%;
+    margin-bottom: 10px;
+}
+
+.shoppingBag-noneText{
+    margin-top:10px;
+    font-size: 15px;
+    color:grey;
+    font-weight: 500;
+}
+

@@ -2,7 +2,12 @@
 import { useLocation } from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 
+import { GoStarFill } from "react-icons/go";
+import { GoStar } from "react-icons/go";
+
 import axios from 'axios'
+
+import '../../../styles/review.css'
 
 function Review(){
     const locate = useLocation();
@@ -23,11 +28,21 @@ function Review(){
         .then((result)=>{
             console.log(result.data.reviewList);            
             setReviewList(result.data.reviewList);
+            calculateScore(result.data.reviewList);
         })
         .catch((error)=>{
             console.log(error);
             console.log("리뷰 리스트 받기 실패");
         })
+    }
+    const [score, setScore] = useState(0);
+    function calculateScore(props){
+        let tmpScore = 0;
+        props && props.map((item,index)=>{
+            tmpScore = tmpScore+item.reviewScore;
+        })
+        let averageScore = tmpScore / props.length;
+        setScore(parseFloat(averageScore.toFixed(2)));
     }
     useEffect(()=>{
         initialcheckSetting();
@@ -118,42 +133,68 @@ function Review(){
     }
 
     return(
-        <div>
-            서비스에 달린 리뷰들
+        <div className='review-body'>
+        <div className='review'>
+            <div className='review-title'>
+                Review
+            </div>
+            <div className='review-score'>
+                <GoStarFill className='review-star-score'/> : {score}
+            </div>
             {reviewList && reviewList.map((item, index)=>{
                 let [date, time] = item.reviewDate.split("T");
+                let five = [1,2,3,4,5];
+
                 return(
                     <div key={index} className='review-reviewBox'>
-                        <div>
-                            <div>{date} {time}</div>
-                            <div>{item.reviewScore}</div>
-                            <div>
-                                {item.reviewContent}
-                            </div>
+                        <div className='review-user'>
+                            <span className='review-name'>{item.userNickName}</span>
+                            <span className='review-time'>{date} {time}</span>
+                            <div style={{marginBottom:2, marginTop:-5}}>{
+                                five.map((score, index)=>{
+                                    return(
+                                        <span>{
+                                            score <= item.reviewScore ?
+                                                <GoStarFill className='review-starClick'/>
+                                            :
+                                                <GoStar className='review-star'/>
+                                        }</span>
+                                    )
+                                })
+                            }</div>
+                            <div className='review-content'>{item.reviewContent}</div>
                         </div>
+
                         <div>{
                             item.comment === null ?
                             <div>
-                                <textarea disabled={checkCommentChange[index]}
+                                <textarea className='review-textarea'
+                                    disabled={checkCommentChange[index]}
                                     onChange={(event)=>{addComment(event, item)}}
                                     placeholder='답글을 달아주세요'
+                                    maxLength={500}
                                 />
-                                <button onClick={()=>{sendComment();}}>완료</button>
+                                <div className='review-button-left'>
+                                <button className='review-button' onClick={()=>{sendComment();}}>완료</button>
+                                </div>
                             </div>
                             :
                             <div>
-                                <textarea disabled={!checkCommentChange[index]}
+                                <textarea className='review-textarea'
+                                    disabled={!checkCommentChange[index]}
                                     onChange={(event)=>{addFixComment(event, item)}}
                                 >
                                     {item.comment.commentContent}
                                 </textarea>
                                 <div>{
                                     checkCommentChange[index] === false ?
-                                    <button onClick={()=>{changeComment(index);}}>수정</button>
+                                    <div className='review-button-left'>
+                                    <button className='review-button' onClick={()=>{changeComment(index);}}>수정</button>
+                                    </div>
                                     :
-                                    <div>
-                                        <button onClick={()=>{changeComplete(index); fixComment();}}>완료</button>
-                                        <button onClick={()=>{changeComplete(index);}}>취소</button>
+                                    <div className='review-button-left'>
+                                        <button className='review-button' onClick={()=>{changeComplete(index); fixComment();}}>완료</button>
+                                        <button className='review-button' onClick={()=>{changeComplete(index);}}>취소</button>
                                     </div>
                                 }</div>
                             </div>
@@ -161,6 +202,7 @@ function Review(){
                     </div>
                 )
             })}
+        </div>
         </div>
     )
 }

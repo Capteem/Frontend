@@ -2,6 +2,10 @@ import React, {useEffect, useState} from 'react';
 
 import axios from 'axios'
 
+import '../../../styles/review.css'
+import { GoStarFill } from "react-icons/go";
+import { GoStar } from "react-icons/go";
+
 function ReviewList(){
 
     useEffect(()=>{
@@ -109,15 +113,33 @@ function ReviewList(){
     }
 
     return(
-        <div>
-            <h4>리뷰리스트</h4>
-            {reviewList && reviewList.map((item, index)=>{
+            <div className='review-body'>
+                <div className='review'>
+                    <div className='review-title'>
+                        Review List
+                    </div>
+
+                    {reviewList && reviewList.map((item, index)=>{
                 let [date, time] = item.reviewDate.split("T");
+                let five = [1,2,3,4,5];
+
                 return(
                     <div key={index}>
-                        <div>{date} {time}</div>
-                        <div>{item.reviewScore}</div>
-                        <textarea disabled={checkChange[index]}
+                        <span className='review-time'>{date} {time}</span>
+                        <div style={{marginBottom:2, marginTop:-5}}>{
+                                five.map((score, index)=>{
+                                    return(
+                                        <span>{
+                                            score <= item.reviewScore ?
+                                                <GoStarFill className='review-starClick'/>
+                                            :
+                                                <GoStar className='review-star'/>
+                                        }</span>
+                                    )
+                                })
+                        }</div>
+                        <textarea className='review-textarea'
+                            disabled={checkChange[index]}
                             onChange={(event)=>{changeComment(event, item)}}
                         >
                             {item.reviewContent}
@@ -125,21 +147,22 @@ function ReviewList(){
 
                         {
                             checkChange[index] === true ? 
-                            <div>
-                                <button onClick={()=>{changeReview(index);}}>수정</button>
-                                <button onClick={()=>{deleteReview(item.reviewId);}}>삭제</button>
+                            <div className='review-button-left'>
+                                <button className='review-button' onClick={()=>{changeReview(index);}}>수정</button>
+                                <button className='review-button' onClick={()=>{deleteReview(item.reviewId);}}>삭제</button>
                             </div>
                             :
-                            <div>
-                                <button onClick={()=>{changeComplete(index); rewriteReview();}}>완료</button>
-                                <button onClick={()=>{changeComplete(index);}}>취소</button>
+                            <div className='review-button-left'>
+                                <button className='review-button' onClick={()=>{changeComplete(index); rewriteReview();}}>완료</button>
+                                <button className='review-button' onClick={()=>{changeComplete(index);}}>취소</button>
                             </div>
                         }
                     </div>
                 )
             })}
-
-        </div>
+                </div>
+                
+            </div>
     )
 }
 

@@ -1,3 +1,17 @@
+.review-body{
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+.review{
+    max-width: 400px;
+    /* display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center; */
+}
+
 .review-star {
     border: none;
     right:10px;
@@ -20,15 +34,14 @@
     justify-content: center;
     align-items: center;
     flex-direction: column; */
-    max-width: 500px;
+    max-width: 400px;
 }
 
 .review-reviewBox{
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     flex-direction: column;
-    width: 400px;
 }
 
 .review-box{
@@ -64,5 +77,40 @@
 .review-content{
     font-size:14px;
     margin-bottom:10px;
+}
 
+.review-textarea{
+    width: 400px;  /* 너비 고정 */
+    height: 200px; /* 높이 고정 */
+    resize: none;
+}
+
+.review-button{
+    border:solid 1px #69876b;
+    border-radius: 3px;
+    background-color: #69876b;
+    color: white;
+    margin-left:1px;
+}
+
+.review-button-left{
+    display: flex;
+    justify-content: right;
+    margin-bottom: 3px;
+}
+
+.review-title{
+    text-align: left;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.review-score{
+    text-align: right;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.review-star-score{
+    color:rgb(141, 207, 148);
 }
