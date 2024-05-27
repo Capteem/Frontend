@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 //css
 import '../../styles/shoppingBag.css'
+import shoppingBag from '../../assets/shoppingBag.jpg'
 
 //쿠키에서 받아와서 띄움
 function ShoppingBag(){
@@ -80,16 +81,26 @@ function ShoppingBag(){
 
     return(
         <div>
-            <div className='shoppingBag-container-title'>
-                <div className='shoppingBag-date-title'>
-                    <b>날짜</b>
+            {
+                dataList.length === 0 ? 
+                <div className='shoppingBag-none'>
+                <img className='shoppingBag-noneBag' src={shoppingBag}/>
+                <div className='shoppingBag-noneText'>장바구니가 텅 비었습니다</div>
                 </div>
-                <div className='shoppingBag-select-title'>
-                    <b>선택</b>
+                : null
+            }
+            {
+                dataList.length > 0 && <div className='shoppingBag-container-title'>
+                    <div className='shoppingBag-date-title'>
+                        <b>날짜</b>
+                    </div>
+                    <div className='shoppingBag-select-title'>
+                        <b>선택</b>
+                    </div>
+                    <div className='shoppingBag-date-title'>
+                    </div>
                 </div>
-                <div className='shoppingBag-date-title'>
-                </div>
-            </div>
+            }
             {
                 dataList && dataList.map((item, index)=>{
                     console.log(item);
@@ -131,12 +142,6 @@ function ShoppingBag(){
                         </div>
                     )
                 })
-            }
-            {
-                !listLength &&
-                <div>
-                    장바구니 텅빔
-                </div>
             }
         </div>
     );

@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useLocation } from 'react-router-dom';
 
 import selectImage from '../../../assets/select-image.png';
+import addImg from '../../../assets/addImg.png';
 
 //css
 import '../../../styles/ImageGallery.css';
@@ -43,7 +44,6 @@ function ServiceInfo(){
     .then((result)=>{
       console.log(result.data);
       setServiceName(result.data.providerName);
-
       repPhoto(result.data);
       setServicePhoneNumber(result.data.providerPhoneNum);
       setLocation(result.data.providerAddress);
@@ -355,6 +355,38 @@ function ServiceInfo(){
 
   }
 
+  const [checkChangeInfo, setCheckChangeInfo] = useState(false);
+  const [tmpserviceName, settmpServiceName] = useState(serviceName);
+  const [tmpservicePhoneNumber, settmpServicePhoneNumber] = useState(servicePhoneNumber);
+  const [tmpprice, settmpPrice] = useState(price);
+  function sendChangeInfo(){
+    if(checkChangeInfo === true){
+      let tmp = {
+        "providerId": providerId,
+        "providerName": tmpserviceName,
+        "providerPhoneNum": tmpservicePhoneNumber,
+        "providerPrice": tmpprice
+      };
+      console.log(tmp);
+      axios.post(`${process.env.REACT_APP_URL}/service/info`,tmp, {
+        headers:{
+            'Auth-Token' : localStorage.getItem("accesToken"),
+        },
+      })
+      .then((result)=>{
+        console.log(result);
+        console.log("정보 수정 완료");
+        getInfo();
+      })
+      .catch((error)=>{
+          console.log(error);
+          alert("정보 수정 실패");
+          getInfo();
+      })
+
+    }
+  }
+
   const [imgRemove, setImgRemove] = useState(true);
   return (
     <div className='information-container'>
@@ -385,19 +417,25 @@ function ServiceInfo(){
         <div className='information-information'>
           <div className='input-group'>
               <span>서비스명</span>
-              <input type="text" placeholder={serviceName} disabled={change} />
+              <input type="text" placeholder={serviceName}
+              onChange={(e)=>{settmpServiceName(e.target.value); setCheckChangeInfo(true);}} 
+              disabled={change} />
           </div>
           <div className='input-group'>
               <span>문의번호</span>
-              <input type="text" placeholder={servicePhoneNumber} disabled={change} />
+              <input type="text" placeholder={servicePhoneNumber}
+              onChange={(e)=>{settmpServicePhoneNumber(e.target.value); setCheckChangeInfo(true);}} 
+              disabled={change} />
           </div>
           <div className='input-group'>
               <span>주소</span>
-              <input type="text" placeholder={location} disabled={change} />
+              <input type="text" placeholder={location} disabled={true} />
           </div>
           <div className='input-group'>
               <span>가격</span>
-              <input type="text" placeholder={price} disabled={change} />
+              <input type="text" placeholder={price}
+              onChange={(e)=>{settmpPrice(e.target.value); setCheckChangeInfo(true);}}
+              disabled={change} />
           </div>
         </div>
       </div>
@@ -461,25 +499,26 @@ function ServiceInfo(){
       <div className='information-portfolio'>
           <b>포트폴리오</b>
       </div>
-      {url && <div className="gallery-container">
-            {url && url.map((item, index) => (
-                <div className="image-container">
-                    <img alt={item.url} src={item.url}/>
-                    {!imgRemove && <button type="button" className='information-delete-button' onClick={()=>{removeImg(index, item)}}>
-                        X
-                    </button>}
-                </div>
-            ))}
+      {
+        url.length === 0 ? 
+        <div className='shoppingBag-none'>
+          <img className='shoppingBag-noneImg' src={addImg}/>
+          <div className='shoppingBag-noneText'>사진을 추가해주세요.</div>
+        </div>
+        : null
+      }
+      {url.length > 0 && <div className="gallery-container">
+        {url && url.map((item, index) => (
+          <div className="image-container">
+            <img alt={item.url} src={item.url}/>
+            {!imgRemove && <button type="button" className='information-delete-button' onClick={()=>{removeImg(index, item)}}>
+              X
+            </button>}
+          </div>
+        ))}
       </div>
       }
-      {
-              !url &&
-              <div>
-                사진을 등록해주세요.
-              </div>
-            }
-
-        {!change && 
+      {!change && 
         <>
           <div className='information-removePhoto'>
           {imgRemove === true ?
@@ -498,9 +537,10 @@ function ServiceInfo(){
               null
           }
           </div>
-        </>}
+        </>
+      }
       
-        <div className='information-change'>
+      <div className='information-change'>
         {change === true ?
           <button className='information-daybutton-click' onClick={()=>{
             setChange(false); setTimeShow(false);
@@ -511,12 +551,13 @@ function ServiceInfo(){
             <br/>
               <button className='information-finish-button' onClick={()=>{setChange(true); setTimeShow(false);
                 createDate();
+                sendChangeInfo();
                 resetDay();
               }}>수정 완료</button>
               <button className='information-finish-button'>서비스 삭제</button>
           </div>
         }
-        </div>
+      </div>
     </div>
   );
 }

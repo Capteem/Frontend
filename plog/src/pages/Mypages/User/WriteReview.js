@@ -80,9 +80,15 @@ function WriteReview(props){
     
     return(
         <div>
-            <h4>리뷰쓰기</h4>
+            <div className='review-body'>
+                <div className='review-title'>
+                    Review
+                </div>
+            </div>
             <div>
-                <span>별점</span>
+                별점
+            </div>
+            <div>
                 {
                     starClick.map((item, index)=>{
                         return(
@@ -99,9 +105,9 @@ function WriteReview(props){
                 }
             </div>
 
-            <textarea onChange={(event)=>{changeReview(event)}} placeholder="리뷰를 작성해주세요."/>
+            <textarea className='review-textarea' onChange={(event)=>{changeReview(event)}} placeholder="리뷰를 작성해주세요."/>
             <br/>
-            <button onClick={()=>{checkWrite();}}>입력완료</button>
+            <button className='calculate-button' onClick={()=>{checkWrite();}}>입력완료</button>
 
         </div>
     );

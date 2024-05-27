@@ -397,6 +397,7 @@ function PortfolioEnd(props){
     }
 
     const [detailReview, setDetailReview]= useState([]);
+    const [score, setScore] = useState(0);
     function getReview(props){
         console.log(props);
         setDetailPhoto([]);
@@ -407,12 +408,22 @@ function PortfolioEnd(props){
         })
         .then((result)=>{
             console.log(result.data);  
-            setDetailReview(result.data.reviewList);      
+            setDetailReview(result.data.reviewList);
+            calculateScore(result.data.reviewList);      
         })
         .catch((error)=>{
             console.log("review받기 실패");
         })
         setDetail(props);
+    }
+    function calculateScore(props){
+        console.log(props);
+        let tmpScore = 0;
+        props && props.map((item,index)=>{
+            tmpScore = tmpScore+item.reviewScore;
+        })
+        let averageScore = tmpScore / props.length;
+        setScore(parseFloat(averageScore.toFixed(2)));
     }
 
     const [imgReview, setImgReview] = useState(true)
@@ -488,6 +499,9 @@ function PortfolioEnd(props){
                         </div>
                         }
                         {(!imgReview) && <div className="gallery-container-review-modal">
+                        <div className='review-score'>
+                            <GoStarFill className='review-star-score'/> : {score}
+                        </div>
                         {
                             detailReview && detailReview.map((item, index)=>{
                                 let five = [1,2,3,4,5];
