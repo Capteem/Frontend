@@ -46,12 +46,10 @@ import UserManagement from './pages/Admin/UserManagement.js';
 import ServiceManagement from './pages/Admin/ServiceManagement.js';
 
 function App() {
-
-  const userId = localStorage.getItem('userId');
+  const role = localStorage.getItem('role');
   return (
     <BrowserRouter>
-      {userId === 'admin' ?  <Admin_Nav/>: <Home_Nav/>}
-      
+      {role === 'ADMIN' ?  <Admin_Nav/>: <Home_Nav/>}
       <div className="App">
       <Routes>
       <Route path='/' element={<Home/>} />
@@ -92,7 +90,6 @@ function App() {
       </Routes>
       </div> 
     </BrowserRouter>
-
 
   );
 }

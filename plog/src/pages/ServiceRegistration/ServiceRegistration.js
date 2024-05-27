@@ -124,12 +124,13 @@ function ServiceRegistration(){
           const file = event.target.files[0];
       
           const formData = new FormData();
-          formData.append('providerPhotoName', file);
-          formData.append('providerName', provider_name);
+          formData.append('providerCheckFiles', file);
+          formData.append('userId', userId);
       
-          const response = await axios.post(`${process.env.REACT_APP_URL}/service/photo`, formData, {
+          const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/checkProvider`, formData, {
             headers: {
-              'Content-Type': 'multipart/form-data',
+                'userId' : userId,
+              'providerCheckFiles': 'multipart/form-data',
             }, 
           });
           console.log("사진" + response);

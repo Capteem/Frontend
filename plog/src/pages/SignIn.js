@@ -44,7 +44,8 @@ function SignIn(){
                 localStorage.setItem("accesToken", result.data.accessToken);
                 localStorage.setItem("userId", id);
                 localStorage.setItem("role", result.data.role);
-                navigate('/');
+                navigate('/', { replace: true });
+                window.location.reload();
             })
             .catch((error)=>{   //존재하지않는 회원 또는 오류
                 console.log("로그인 오류. 다시 시도해주세요.");
