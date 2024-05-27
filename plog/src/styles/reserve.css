@@ -77,7 +77,19 @@
     padding-top:5px;
     border-radius:5px;
     width :80px;
-    
+  }
+
+  .portfolio-chatting-button{
+    border:0;
+    border-width: 2px;
+    background-color: #9cc593;
+    color: white;
+    margin-bottom: 6px;
+    margin-right: 4px;
+    padding-bottom:5px;
+    padding-top:5px;
+    border-radius:5px;
+    width :80px;
   }
   
   .portfolio-modal {

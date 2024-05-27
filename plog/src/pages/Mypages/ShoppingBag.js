@@ -59,22 +59,22 @@ function ShoppingBag(){
     //todo:결제 완료 후 삭제
     function sendPay(props){
         console.log(props);
-        remove(props);
         const sendList = [{
             "purchaseAmount": props.price,
             "purchaseName": "Plog",
             "reservationRequestDto": {
                 "userId": localStorage.getItem('userId'),
-                "reservationCameraId": props.photo === undefined ? null : props.photoId,
-                "reservationCameraName": props.photo === undefined ? null : props.photoName,
-                "reservationStudioId": props.studio === undefined ? null : props.studioId,
-                "reservationStudioName": props.studio === undefined ? null : props.studioName,
-                "reservationHairId": props.hm === undefined ? null : props.hmId,
-                "reservationHairName": props.hm === undefined ? null : props.hmName,
+                "reservationCameraId": props.photo === "" ? null : props.photoId,
+                "reservationCameraName": props.photo === "" ? null : props.photoName,
+                "reservationStudioId": props.studio === "" ? null : props.studioId,
+                "reservationStudioName": props.studio === "" ? null : props.studioName,
+                "reservationHairId": props.hm === "" ? null : props.hmId,
+                "reservationHairName": props.hm === "" ? null : props.hmName,
                 "reservationStartDate":  props.startDate,
                 "reservationEndDate": props.endDate
             }
         }];
+        console.log(sendList);
         navigate('/payment', { state: { sendList } });
         remove(props);
     }

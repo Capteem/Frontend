@@ -463,7 +463,7 @@ function PortfolioEnd(props){
             </div>
             {
                 modalShow &&
-                <div className='portfolio-modal' onClick={()=>{setModalShow(false)}}>
+                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setScore(0);}}>
                     <div className='portfolio-modalBody' onClick={(event)=>{event.stopPropagation(); setModalShow(true);}}>
                         <pre className='portfolio-modal-text'>
                             이름 : {detail.providerName}<br/>
@@ -542,10 +542,12 @@ function PortfolioEnd(props){
                         }
 
                         <div className='portfolio-selection'>
+                            <button className='portfolio-chatting-button'>채팅</button>
                             <button className='portfolio-selection-button' onClick={(event)=>{
                                 event.stopPropagation();
                                 setFinal(detail, detail.providerType);
                                 setModalShow(false);
+                                setScore(0);
                             }}>선택</button>
                         </div>
                     </div>

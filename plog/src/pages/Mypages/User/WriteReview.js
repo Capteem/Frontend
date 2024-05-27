@@ -57,7 +57,7 @@ function WriteReview(props){
             "userId": localStorage.getItem('userId'),
             "userNickName": "string",
             "reviewDate": tmp.toISOString(),
-            "providerId": 2
+            "providerId": 4
         }
 
         console.log(send);

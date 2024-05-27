@@ -44,10 +44,13 @@ function ServiceInfo(){
     .then((result)=>{
       console.log(result.data);
       setServiceName(result.data.providerName);
+      settmpServiceName(result.data.providerName);
       repPhoto(result.data);
       setServicePhoneNumber(result.data.providerPhoneNum);
+      settmpServicePhoneNumber(result.data.providerPhoneNum);
       setLocation(result.data.providerAddress);
-      setPrice(result.data.providerPrice);      
+      setPrice(result.data.providerPrice);
+      settmpPrice(result.data.providerPrice);     
     })
     .catch((error)=>{
         console.log(error);
