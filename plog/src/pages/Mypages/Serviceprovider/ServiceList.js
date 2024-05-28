@@ -17,7 +17,7 @@ function ServiceProviderInfo() {
 
   const getServiceList = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken'); 
+      const accessToken = localStorage.getItem('accesToken'); 
       const response = await axios.get(`${process.env.REACT_APP_URL}/service/user/provider`, {
         headers:{
           'Auth-Token' : accessToken

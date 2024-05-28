@@ -18,7 +18,7 @@ function ServiceRegistrationList() {
 
   const getServiceRegistrationList = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken'); 
+      const accessToken = localStorage.getItem('accesToken'); 
 
       const response = await axios.get(`${process.env.REACT_APP_URL}/service/check`, {
         params: {

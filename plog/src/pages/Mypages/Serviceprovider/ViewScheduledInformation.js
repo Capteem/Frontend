@@ -35,6 +35,9 @@ function ViewScheduledInformation() {
         params: {
           providerId: providerId,
         },
+        headers:{
+          'Auth-Token' : localStorage.getItem('accesToken')
+        },
       });
       if (response.status === 200) {
         setreservationList(response.data);
@@ -69,7 +72,11 @@ function ViewScheduledInformation() {
   // 예약확정
   const confirmReservation = async (reservationId) => {
     try {
-      await axios.post(`${process.env.REACT_APP_URL}/service/accept`, null, { params: { reservationId: reservationId, providerId: providerId } });
+      await axios.post(`${process.env.REACT_APP_URL}/service/accept`, null, { params: { reservationId: reservationId, providerId: providerId },
+        headers:{
+          'Auth-Token' : localStorage.getItem('accesToken')
+        },
+      });
       alert("예약확정에 성공하였습니다.");
       window.location.reload();
     } catch (error) {
@@ -87,7 +94,11 @@ function ViewScheduledInformation() {
   // 촬영완료
   const completeFilming = async (reservationId) => {
     try {
-      await axios.post(`${process.env.REACT_APP_URL}/service/complete`, null, { params: { reservationId: reservationId, providerId: providerId } });
+      await axios.post(`${process.env.REACT_APP_URL}/service/complete`, null, { params: { reservationId: reservationId, providerId: providerId },
+        headers:{
+          'Auth-Token' : localStorage.getItem('accesToken')
+        },
+      });
       alert("촬영확정에 성공하였습니다.");
       window.location.reload();
     } catch (error) {
@@ -105,7 +116,11 @@ function ViewScheduledInformation() {
   // 취소
   const cancelReservation = async (reservationId) => {
     try {
-      await axios.post(`${process.env.REACT_APP_URL}/service/refuse`, null, { params: { reservationId: reservationId, providerId: providerId } });
+      await axios.post(`${process.env.REACT_APP_URL}/service/refuse`, null, { params: { reservationId: reservationId, providerId: providerId },
+        headers:{
+          'Auth-Token' : localStorage.getItem('accesToken')
+        },
+      });
       alert("예약취소에 성공하였습니다.");
       window.location.reload();
     } catch (error) {

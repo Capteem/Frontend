@@ -12,7 +12,7 @@ useEffect(() => {
 
 const getServiceList = async () => {
   try {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accesToken');
 
     const response = await axios.get(`${process.env.REACT_APP_URL}/admin/provider`, {
       params: {
@@ -47,7 +47,13 @@ const ServiceStateChange = async (userId, providerId, providerName, providerStat
       userId: userId,
       providerId: providerId,
       providerStatus: selectedStatus[providerId] || providerStatus,
-    });
+    },
+    {
+      headers: {
+        'Auth-Token': localStorage.getItem('accesToken'),
+      },
+    }
+  );
     
     if (response.status === 200) {
       //1 활성화 2 대기 3 정지 4 차단

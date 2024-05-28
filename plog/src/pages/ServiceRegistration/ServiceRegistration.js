@@ -67,7 +67,13 @@ function ServiceRegistration(){
                 providerDetail: detail,
                 //providerTypeAuth:state.provider_submission,
                 providerPhoneNum : state.provider_phonenumber,
-            });
+            },
+            {
+                headers:{
+                    'Auth-Token' : localStorage.getItem('accesToken')
+                  },
+            }
+            );
             console.log("등록" + response);
             // 상태 코드에 따른 처리
             if (response.status === 200) {
@@ -104,7 +110,10 @@ function ServiceRegistration(){
             const response = await axios.get(`${process.env.REACT_APP_URL}/confirm/check`, {
                 params: {
                     businessNumber:state.provider_submission,
-                  },
+                },
+                headers:{
+                    'Auth-Token' : localStorage.getItem('accesToken')
+                },
             });
            if (response.status === 200) {
               alert("사업자 번호가 맞습니다");
@@ -130,7 +139,8 @@ function ServiceRegistration(){
           const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/checkProvider`, formData, {
             headers: {
                 'userId' : userId,
-              'providerCheckFiles': 'multipart/form-data',
+                'providerCheckFiles': 'multipart/form-data',
+                'Auth-Token' : localStorage.getItem('accesToken')
             }, 
           });
           console.log("사진" + response);

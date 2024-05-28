@@ -42,7 +42,7 @@ function Payment() {
     const handlepaymentinfo = async () => {
         try {
             // 결제 정보 API 호출
-            const response = await axios.get(`${process.env.REACT_APP_URL}/payment/success/info/`,{
+            const response = await axios.get(`${process.env.REACT_APP_URL}/payment/success/info`,{
                 headers:{
                     'Auth-Token' : localStorage.getItem('accesToken')
                 },

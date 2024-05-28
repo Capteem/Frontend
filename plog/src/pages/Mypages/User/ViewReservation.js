@@ -14,7 +14,7 @@ function ViewReservation() {
 
   const getReservationInfoList = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken'); 
+      const accessToken = localStorage.getItem('accesToken'); 
       const response = await axios.post(`${process.env.REACT_APP_URL}/reservation/list`, {
         userId: userId
       }, {
@@ -41,7 +41,7 @@ function ViewReservation() {
 
   const handleCancel = async (tid) => {
     try {
-      const accessToken = localStorage.getItem('accessToken'); 
+      const accessToken = localStorage.getItem('accesToken'); 
       const response = await axios.post(`${process.env.REACT_APP_URL}/payment/refund`, {
         userId: userId, 
         tid: tid,

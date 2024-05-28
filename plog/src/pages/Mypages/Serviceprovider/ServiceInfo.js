@@ -225,7 +225,11 @@ function ServiceInfo(){
     tmp.splice(index, 1);
     console.log(item);
 
-    axios.delete(`${process.env.REACT_APP_URL}/portfolio/${item.id}`)
+    axios.delete(`${process.env.REACT_APP_URL}/portfolio/${item.id}`,{
+      headers:{
+        'Auth-Token' : localStorage.getItem("accesToken")
+      }
+    })
     .then((response) => {
         setImageURL(tmp);
     })
