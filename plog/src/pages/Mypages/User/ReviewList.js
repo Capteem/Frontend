@@ -16,12 +16,15 @@ function ReviewList(){
 
     //todo: 서비스 제공자도 받아오기
     function getReviewList(){
+
         axios.post(`${process.env.REACT_APP_URL}/review/user/get`,
+        {
+            "userId": localStorage.getItem("userId")
+        },
         {
             headers: {
               'Auth-Token': localStorage.getItem("accesToken"),
             },
-            "userId": localStorage.getItem("userId")
         })
         .then(function(result){
             console.log(result.data.reviewList);

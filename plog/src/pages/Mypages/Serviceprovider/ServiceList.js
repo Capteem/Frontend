@@ -19,6 +19,9 @@ function ServiceProviderInfo() {
     try {
       const accessToken = localStorage.getItem('accessToken'); 
       const response = await axios.get(`${process.env.REACT_APP_URL}/service/user/provider`, {
+        headers:{
+          'Auth-Token' : accessToken
+        },
         params: {
           userId: userId,
         },
@@ -30,6 +33,7 @@ function ServiceProviderInfo() {
         alert("서비스리스트 가져오기에 실패하였습니다.");
       }
     } catch (error) {
+      console.log(error);
       alert("서비스리스트 불러오는 중에 문제가 발생했습니다.");
     }
   }

@@ -41,6 +41,7 @@ function SignIn(){
                 password: password,
             })
             .then(function(result){
+                console.log(result);
                 localStorage.setItem("accesToken", result.data.accessToken);
                 localStorage.setItem("userId", id);
                 localStorage.setItem("role", result.data.role);
@@ -48,7 +49,7 @@ function SignIn(){
             })
             .catch((error)=>{   //존재하지않는 회원 또는 오류
                 console.log("로그인 오류. 다시 시도해주세요.");
-
+                console.log(error);
                 if(error.response != undefined){
                     if(error.response.status === 406)
                         alert("정지된 회원입니다.");

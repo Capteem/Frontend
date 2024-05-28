@@ -45,6 +45,11 @@ function ViewReservation() {
       const response = await axios.post(`${process.env.REACT_APP_URL}/payment/refund`, {
         userId: userId, 
         tid: tid,
+      },
+      {
+        headers: {
+          'Auth-Token': accessToken 
+        }
       });
       if (response.status === 200) {
         alert("예약을 취소하였습니다.");
