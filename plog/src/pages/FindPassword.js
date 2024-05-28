@@ -39,6 +39,9 @@ function FindPassword() {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/user/checkemail`, {
+        headers: {
+          'Auth-Token': localStorage.getItem("accesToken"),
+        },
         email: email,
         id: id,
       });
@@ -57,6 +60,9 @@ function FindPassword() {
   const handleVerification = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/checkAuthNumber`, {
+        headers: {
+          'Auth-Token': localStorage.getItem("accesToken"),
+        },
         userId: id,
         email: email,
         auth: verificationCode,
@@ -77,6 +83,9 @@ function FindPassword() {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/user/changePwd`, {
+        headers: {
+          'Auth-Token': localStorage.getItem("accesToken"),
+        },
         id: id,
         password: newPassword,
       });
