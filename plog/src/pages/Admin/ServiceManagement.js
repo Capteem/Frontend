@@ -102,7 +102,15 @@ return (
                   ? "스튜디오"
                   : "헤어,메이크업"}
               </td>
-              <td>제출자료api</td>
+              <td>
+              {serviceinfo.providerType !== 1 ? 
+              <button>
+                등록사진보기
+              </button>
+              :
+              ""
+              }
+              </td>
               <td>
                 <select
                   value={
