@@ -21,6 +21,11 @@ function UserInfo() {
           params: {
             userId: localStorage.getItem('userId'),
           },
+          
+          headers: {
+              'Auth-Token': localStorage.getItem('accesToken'),
+          },
+          
         });
         console.log(response.data);
         setUserInfo(response.data);
@@ -38,7 +43,13 @@ function UserInfo() {
         const response = await axios.post(`${process.env.REACT_APP_URL}/user/getconfirm`, {
           id: localStorage.getItem('userId'),
           password: inputPassword,
-        });
+        },
+        {
+          headers: {
+            'Auth-Token': localStorage.getItem('accesToken'),
+          },
+        }
+      );
         if (response.status === 200) {
           setIsEditMode(true);
           setShowInput(false);
@@ -55,7 +66,11 @@ function UserInfo() {
 
   const handleSaveChanges = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/user/changeinfo`, editedUserInfo);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/user/changeinfo`, editedUserInfo, {
+        headers: {
+          'Auth-Token': localStorage.getItem('accesToken'),
+        },
+      });
       console.log(response);
       setUserInfo(editedUserInfo);
       setIsEditMode(false);
@@ -79,7 +94,11 @@ function UserInfo() {
   const handlePasswordSave = async () => {
     if (newPassword === newPasswordReEnter && newPassword.length > 3) {
       try {
-        await axios.post(`${process.env.REACT_APP_URL}/user/changePwd`, { id: localStorage.getItem('userId'), password: newPassword });
+        await axios.post(`${process.env.REACT_APP_URL}/user/changePwd`, { id: localStorage.getItem('userId'), password: newPassword }, {
+          headers: {
+            'Auth-Token': localStorage.getItem('accesToken'),
+          },
+        });
         setIsPasswordChangeMode(false);
         setNewPassword('');
         setNewPasswordReEnter('');

@@ -42,7 +42,13 @@ function Question(){
                 complaintContent:state.complaintContent,
                 complaintDate: new Date().toISOString(),
                 complaintType: state.complaintType,
-            });
+            },
+            {
+                headers: {
+                  'Auth-Token': localStorage.getItem('accesToken'),
+                },
+            }
+        );
             
             if (response.status === 200) {
                 alert("질문 등록에 성공하였습니다.");

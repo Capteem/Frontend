@@ -34,7 +34,6 @@ function ServiceProviderInfo() {
       }
     } catch (error) {
       console.log(error);
-      alert("서비스리스트 불러오는 중에 문제가 발생했습니다.");
     }
   }
 

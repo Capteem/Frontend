@@ -85,7 +85,7 @@ function ServiceRegistrationList() {
         <td>
           {registration.providerStatus === 1 ? "승인" :
           registration.providerStatus === 2 ? "대기중" : 
-          registration.providerStatus === 4 ? "반려" : null
+          registration.providerStatus === 3 ? "정지" : "반려"
           }
       </td>
       </tr>
