@@ -11,6 +11,12 @@ import shoppingBag from '../../assets/shoppingBag.jpg'
 function ShoppingBag(){
 
     const navigate = useNavigate();
+    useEffect(()=>{
+        const token = localStorage.getItem('accesToken');
+        if(!token){
+            navigate('/');
+        }
+    },[navigate])
 
     const [dataList, setDataList] = useState([]);
     const [listLength, setListLength] =useState(false);

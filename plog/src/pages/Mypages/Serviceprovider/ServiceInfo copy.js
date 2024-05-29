@@ -11,7 +11,7 @@ import '../../../styles/ImageGallery.css';
 import '../../../styles/serviceInfo.css';
 import '../../../styles/reserve.css';
 
-//포폴 조회, 등록, 수정
+//포폴 조회, 등록, 수정(원본)
 function ServiceInfo(){
 
   const navigate = useNavigate();
@@ -61,8 +61,7 @@ function ServiceInfo(){
       setLocation(result.data.providerAddress);
       setPrice(result.data.providerPrice);
       settmpPrice(result.data.providerPrice);
-      if(result.data.dateList.length > 0){
-        console.log("일정 실행");
+      if(result.data.dateList){
         deleteSameTime(result.data.dateList);
       }
     })
@@ -134,6 +133,7 @@ function ServiceInfo(){
   //todo:대표사진 불러오기
   const [repImg, setRepImg] = useState("");
   function repPhoto(props){
+    console.log(props);
     axios.get(`${process.env.REACT_APP_URL}/portfolio/image/${props.providerRepPhotoPath}${props.providerRepPhoto}`,{
       headers:{
         'Auth-Token' : localStorage.getItem("accesToken")
@@ -255,7 +255,7 @@ function ServiceInfo(){
   const day = ["일", "월", "화", "수", "목", "금", "토",];
   const dayEnglish = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY",];
   const [checkDay, setCheckDay] = useState([false, false, false, false, false, false, false]);
-  const time = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00",
+  const time = ["9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00",
     "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00",];
   const [checkTime, setCheckTime] = useState([false, false, false, false, false, false, false, false, false, 
     false, false, false, false, false, false,]);
@@ -326,7 +326,7 @@ function ServiceInfo(){
   function createDate(){
     const today = new Date();
     const twoMonthsLater = new Date(today);
-    twoMonthsLater.setMonth(today.getMonth() + 1);
+    twoMonthsLater.setMonth(today.getMonth() + 2);
 
     day.map((item, dayIndex)=>{
       let currentDay = new Date(today);
@@ -344,7 +344,7 @@ function ServiceInfo(){
             sendDateList.push({
               date: sendDateServer,
               time : tmp,
-              day : dayEnglish[dayIndex]
+              day : day[dayIndex]
             })
           }
         })
@@ -352,9 +352,7 @@ function ServiceInfo(){
       }
     })
     console.log(sendDateList);
-    if(sendDateList.length > 0){
-      sendTime(sendDateList, providerId);
-    }
+    sendTime();
   }
 
   //서버한테 받은 시간 중복 없애기
@@ -377,6 +375,26 @@ function ServiceInfo(){
     console.log(uniqueTimeAndDay);
   }
 
+  //서버한테 시간 보내기
+  function sendTime(){
+    let tmp = {
+      'providerId' : providerId,
+      "dateList" : sendDateList
+    };
+    axios.post(`${process.env.REACT_APP_URL}/service/workdate`, tmp,
+    {
+      headers:{
+          'Auth-Token' : localStorage.getItem("accesToken")
+      }
+    })
+    .then(function(result){
+      console.log(result);
+    })
+    .catch((error)=>{
+        console.log(error);
+    })
+
+  }
 
   const [checkChangeInfo, setCheckChangeInfo] = useState(false);
   const [tmpserviceName, settmpServiceName] = useState(serviceName);
@@ -493,14 +511,13 @@ function ServiceInfo(){
             })
           }
         </div>
-
         <div>
           {
             timeShow && time.map((item, index)=>{
               return(
                 <>
                 {
-                  timeCheck[clickDay][index] === true ?
+                  checkTime[index] === true ?
                   <button className='timeSelectbutton-select' disabled={change} onClick={()=>{
                     checkTimeList(clickDay, index);
                     chagneTimeSelect(index);
@@ -516,7 +533,7 @@ function ServiceInfo(){
               )
             })
           }
-        </div>      
+        </div>
       </div>
 
 
@@ -584,28 +601,6 @@ function ServiceInfo(){
       </div>
     </div>
   );
-}
-
-//todo:서버 시간 보내진거 체크
-//서버한테 시간 보내기
-function sendTime(props, id){
-  let tmp = {
-    "providerId" : id,
-    "dateList" : props
-  };
-  console.log(tmp);
-  axios.post(`${process.env.REACT_APP_URL}/service/workdate`, tmp,
-  {
-    headers:{
-        'Auth-Token' : localStorage.getItem("accesToken")
-    }
-  })
-  .then(function(result){
-    console.log(result);
-  })
-  .catch((error)=>{
-    console.log(error);
-  })
 }
 
 export default ServiceInfo;

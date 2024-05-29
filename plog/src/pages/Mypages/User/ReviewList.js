@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios'
 
@@ -7,6 +8,15 @@ import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 
 function ReviewList(){
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        const token = localStorage.getItem('accesToken');
+        if(!token){
+            navigate('/');
+        }
+    },[navigate])
 
     useEffect(()=>{
         getReviewList();

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
@@ -8,6 +9,14 @@ import axios from 'axios'
 import '../../../styles/review.css'
 
 function WriteReview(props){
+
+    const navigate = useNavigate();
+    useEffect(()=>{
+        const token = localStorage.getItem('accesToken');
+        if(!token){
+            navigate('/');
+        }
+    },[navigate])
 
     const [review, setReview] = useState("");
     let initialStar = [false, false, false, false, false];

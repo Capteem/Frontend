@@ -1,6 +1,7 @@
 // 서비스 제공자 리뷰관리 페이지
 import { useLocation } from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
@@ -13,6 +14,15 @@ function Review(){
     const locate = useLocation();
     const queryParams = new URLSearchParams(locate.search);
     const providerId = queryParams.get('providerId');
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        const token = localStorage.getItem('accesToken');
+        if(!token){
+            navigate('/');
+        }
+    },[navigate])
 
     useEffect(()=>{
         getInfo();

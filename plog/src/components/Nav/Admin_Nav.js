@@ -6,39 +6,15 @@ import '../../styles/Nav.css';
 import Plog from './../../assets/Ploglogo.png'
 
 function Admin_Nav() {
-     const [checkLogin, setCheckLogin] = useState(false);
+  const [checkLogin, setCheckLogin] = useState(false);
   useEffect(()=>{
     const token = localStorage.getItem("accesToken");
     if(token){
       setCheckLogin(true);
     }
   })
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
+  const [modalShow, setModalShow] = useState(false);
   const navigate = useNavigate();
-  function write(){
-    return(
-      <>
-        진짜 로그아웃??
-        <button onClick={()=>{
-          removeToken();
-          closeModal();
-          navigate("/");
-          setCheckLogin(false);
-          
-        }}>확인</button>
-        <button onClick={()=>{closeModal();}}>취소</button>
-      </>
-    )
-  }
-  //여기까지 로그아웃 관련 로직
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -99,13 +75,10 @@ function Admin_Nav() {
         </div>
               <div>
                 <NavLink onClick={()=>{
-                    openModal();
-                  }}>
-                    로그아웃
+                  setModalShow(true);
+                }}>
+                  로그아웃
                 </NavLink>
-                <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
-                  {write()}
-                </Modal>
               </div>
             </>
           }
@@ -122,7 +95,21 @@ function Admin_Nav() {
           }
         </div>
       </nav>
-
+      {
+          modalShow &&
+            <div className='small-portfolio-modal' onClick={()=>{setModalShow(false)}}>
+              <div className='small-portfolio-modalBody'>
+                <div className='small-modal-big-text'>로그아웃 하시겠습니까?</div>
+                <button className='small-modal-button' onClick={()=>{
+                  removeToken();
+                  navigate("/");
+                  setCheckLogin(false);
+                  setModalShow(false);
+                }}>확인</button>
+                <button className='small-modal-button' onClick={()=>{setModalShow(false);}}>취소</button>
+              </div>
+            </div>
+        }
     </div>
   )
 }  

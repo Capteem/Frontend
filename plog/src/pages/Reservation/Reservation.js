@@ -24,6 +24,16 @@ import '../../styles/Table.css';
 // todo: 로그인 했는지 확인
 function Reservation(){
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        const token = localStorage.getItem('accesToken');
+        if(!token){
+            navigate('/');
+        }
+    },[navigate])
+
+
     //여기서부터 수정중
     const [sendToPortfolio, setSendToPortfolio] = useState([]);
     //서버한테 제공자들 데이터 받아옴
@@ -48,7 +58,6 @@ function Reservation(){
         })
     },[]);
 
-    const navigate = useNavigate();
     const checkFinal = useSelector((state)=>state.sendReservation);
 
     function resetArea(){
