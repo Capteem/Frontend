@@ -102,7 +102,7 @@ function ServiceManagement() {
     }
   };
 
-  const ShowRegisteredPhoto = async (userId) => {
+  const ShowRegisteredPhoto = async (userId, providerId) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/image/fileNames`,
         { 
@@ -195,7 +195,7 @@ function ServiceManagement() {
                 </td>
                 <td>
                   {serviceinfo.providerType !== 2 && serviceinfo.providerStatus === 2 ? (
-                    <button onClick={() => ShowRegisteredPhoto(serviceinfo.userId.id)}>등록사진보기</button>
+                    <button onClick={() => ShowRegisteredPhoto(serviceinfo.userId.id, serviceinfo.providerId)}>등록사진보기</button>
                   ) : (
                     ''
                   )}
@@ -225,7 +225,7 @@ function ServiceManagement() {
           </tbody>
         </table>
       )}
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={{ content: {height: '65%' ,width: '50%', margin: 'auto' } }}>
+      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={{ content: {height: '67%' ,width: '50%', margin: 'auto' } }}>
       <div style={{ display: 'flex', marginBottom : "10px"}}>
       <button
       onClick={closeModal}

@@ -78,6 +78,7 @@ function ServiceRegistration() {
             alert("사업자 번호를 인증해주세요");
             return;
         }
+
         if ((state.provider_service === "1" || state.provider_service === "2") && !isFileUploaded) {
             alert("사진을 업로드해주세요");
             return;
@@ -87,6 +88,7 @@ function ServiceRegistration() {
             alert("전화번호를 올바른 형식으로 입력하세요 (예: 010-1234-5678)");
             return;
         }
+        
 
         try {
             const addressParts = state.address.split(" ");
@@ -192,6 +194,12 @@ function ServiceRegistration() {
             return;
         }
 
+        if (state.provider_service === "1" && files.length !== 10) {
+            alert("사진작가는 10장의 사진을 등록해야 합니다.");
+            setIsFileUploaded(false);
+            return;
+        }
+
         setIsFileUploaded(true);
 
         // 추가 업로드 처리
@@ -285,7 +293,6 @@ function ServiceRegistration() {
              <div>
             <label
             className="input file"
-            onChange={handleFileUpload}
             >
             <h6>사진을 10장 업로드해주세요</h6>
             <input
