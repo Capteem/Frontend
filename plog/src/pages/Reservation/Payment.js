@@ -5,17 +5,23 @@ import '../../styles/Table.css';
 
 function Payment() {
     const location = useLocation();
-    
+    const navigate = useNavigate();
     const { sendList } = location.state || {};
     const userId = localStorage.getItem('userId');
+    const accessToken = localStorage.getItem('accesToken');
 
     console.log('sendList:', sendList);
 
     const [paymentInfo, setPaymentInfo] = useState(null);
     
+
     useEffect(() => {
-      PaymentReady();
-    }, []);
+        if (!accessToken) {
+          navigate("/signin");
+        } else {
+            PaymentReady();
+        }
+      }, [accessToken, navigate]);
 
     const PaymentReady = async () => {
         try {
@@ -35,7 +41,12 @@ function Payment() {
                 alert("결제 준비 중 문제가 발생했습니다. 다시 시도해주세요.");
             }
         } catch (error) {
-            console.error('결제 준비 중 오류가 발생했습니다:', error);
+            if (error.response && error.response.status === 401) {
+                alert("로그인 만료. 다시 로그인해주세요.");
+                navigate('/signin', { replace: true });
+              } else {
+                console.error('결제 준비 중 오류가 발생했습니다:', error);
+              }
             return false;
         }
     };
@@ -57,7 +68,12 @@ function Payment() {
                 alert("결제 정보를 가져오는 중 문제가 발생했습니다.");
             }
         } catch (error) {
-            console.error('결제 정보 가져오기 중 오류가 발생했습니다:', error);
+            if (error.response && error.response.status === 401) {
+                alert("로그인 만료. 다시 로그인해주세요.");
+                navigate('/signin', { replace: true });
+              } else {
+                console.error('결제 정보 가져오기 중 오류가 발생했습니다:', error);
+            }
         }
     };
 
