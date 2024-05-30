@@ -41,8 +41,13 @@ function Review(){
             calculateScore(result.data.reviewList);
         })
         .catch((error)=>{
-            console.log(error);
-            console.log("리뷰 리스트 받기 실패");
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                console.log(error);
+                console.log("리뷰 리스트 받기 실패");
+            }
         })
     }
     const [score, setScore] = useState(0);
@@ -106,8 +111,13 @@ function Review(){
             getInfo();
         })
         .catch((error)=>{
-            console.log(error);
-            alert('comment 달기 실패');
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                console.log(error);
+                alert('comment 달기 실패');
+            }
         })
     }
 
@@ -137,8 +147,13 @@ function Review(){
             getInfo();
         })
         .catch((error)=>{
-            console.log(error);
-            alert('리뷰 댓글 수정 실패');
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                console.log(error);
+                alert('리뷰 댓글 수정 실패');
+            }
         })
     }
 

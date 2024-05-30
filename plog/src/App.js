@@ -13,6 +13,7 @@ import SingUp from './pages/SignUp';
 import FindId from './pages/FindId.js'
 import FindPassword from './pages/FindPassword.js'
 import KaKaoAuthHandler from './pages/KaKaoAuthHandler.js'
+import Gallery from './pages/Gallery.js';
 
 // Home_Nav
 // 예약
@@ -65,6 +66,7 @@ function App() {
       <Route path='/serviceregistrationlist' element={<ServiceRegistrationList/>} />ß
       <Route path='/answer/' element={<Answer/>} />
       <Route path='/question/' element={<Question/>} />
+      <Route path='/gallery' element={<Gallery/>} />
       
       {/* Mypage_Nav */}
       {/* User */}

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import '../../App.css'
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux"
@@ -15,6 +16,8 @@ import '../../styles/ImageGallery.css'; // CSS 파일 import
 import '../../styles/review.css'
 
 function PortfolioEnd(props){
+
+    const navigate = useNavigate();
 
     //화면 크기 담는 state
     const [windowSize, setWindowSize] = useState({
@@ -67,21 +70,31 @@ function PortfolioEnd(props){
         const photoTmp = [];
         const hmTmp = [];
     
-        props.forEach((provider) => {
-            switch (provider.providerType) {
-                case 1:
-                    photoTmp.push(provider);
-                    break;
-                case 2:
-                    hmTmp.push(provider);
-                    break;
-                case 3:
-                    studioTmp.push(provider);
-                    break;
-                default:
-                    break;
+        props.map((item)=>{
+            if(item.providerType === 1){
+                photoTmp.push(item);
+            }else if(item.providerType === 2){
+                hmTmp.push(item);
+            }else if(item.providerType === 3){
+                studioTmp.push(item);
             }
-        });
+        })
+
+        // props.forEach((provider) => {
+        //     switch (provider.providerType) {
+        //         case 1:
+        //             photoTmp.push(provider);
+        //             break;
+        //         case 2:
+        //             hmTmp.push(provider);
+        //             break;
+        //         case 3:
+        //             studioTmp.push(provider);
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // });
     
         setServerStudio(studioTmp);
         setServerPhoto(photoTmp);
@@ -317,7 +330,7 @@ function PortfolioEnd(props){
             }));
         }
     }
-
+    
     const [modalShow, setModalShow] = useState(false);
     const [detail, setDetail] = useState([]);
     //server한테 detail 받아옴
@@ -334,6 +347,12 @@ function PortfolioEnd(props){
         .catch((error)=>{
             if(error.response.status === 404){
                 console.log("포트폴리오 존재 안함");
+            }
+            else if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                console.log(error);
             }
         })
         setDetail(props);
@@ -361,8 +380,13 @@ function PortfolioEnd(props){
                 reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
             })
             .catch((error)=>{
-                console.log("포폴 detail사진 재요청 에러");
-                console.log(error);
+                if(error.response.status === 401){
+                    alert("로그인 만료. 다시 로그인해주세요.")
+                    navigate('/signin', { replace: true });
+                }else{
+                    console.log("포폴 detail사진 재요청 에러");
+                    console.log(error);
+                }
             })
         })
     }
@@ -389,8 +413,13 @@ function PortfolioEnd(props){
                 reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
             })
             .catch((error)=>{
-                console.log("대표사진 요청 에러");
-                console.log(error);
+                if(error.response.status === 401){
+                    alert("로그인 만료. 다시 로그인해주세요.")
+                    navigate('/signin', { replace: true });
+                }else{
+                    console.log("대표사진 요청 에러");
+                    console.log(error);
+                }
             })
 
         })
@@ -412,7 +441,13 @@ function PortfolioEnd(props){
             calculateScore(result.data.reviewList);      
         })
         .catch((error)=>{
-            console.log("review받기 실패");
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                console.log("review받기 실패");
+                console.log(error);
+            }
         })
         setDetail(props);
     }

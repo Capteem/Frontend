@@ -150,3 +150,19 @@
   .input-delete {
     display: none;
 }
+
+.timeSelectbutton-select:disabled{
+  border: none;
+  font-size: 17px; /* 버튼 내부 텍스트 크기 */
+  border: none;
+  /* border-radius: 5px; */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
+  background-color: #69876b; /* 배경색 (선택적) */
+  color: white; /* 텍스트 색상 (선택적) */
+  margin: 2px;
+  width: 55px; /* 버튼의 너비 */
+  height: 25px; /* 버튼의 높이 */
+  text-align: center; /* 텍스트를 가운데 정렬 */
+  align-items: left;
+  line-height: 7px;
+}

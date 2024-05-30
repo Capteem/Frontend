@@ -67,8 +67,13 @@ function ServiceInfo(){
       }
     })
     .catch((error)=>{
+      if(error.response.status === 401){
+        alert("로그인 만료. 다시 로그인해주세요.")
+        navigate('/signin', { replace: true });
+      }else{
         console.log(error);
         console.log("정보 받기 실패");
+      }
     })
   }
   function getInfoForRep(){
@@ -82,8 +87,13 @@ function ServiceInfo(){
       repPhoto(result.data);      
     })
     .catch((error)=>{
+      if(error.response.status === 401){
+        alert("로그인 만료. 다시 로그인해주세요.")
+        navigate('/signin', { replace: true });
+      }else{
         console.log(error);
         console.log("정보 받기 실패");
+      }
     })
   }
 
@@ -97,9 +107,14 @@ function ServiceInfo(){
       detailPhoto(result.data.portfolioList);          
     })
     .catch((error)=>{
-        console.log(error);
         if(error.response.status === 404){
             console.log("포트폴리오 존재 안함");
+        } else if(error.response.status === 401){
+          alert("로그인 만료. 다시 로그인해주세요.")
+          navigate('/signin', { replace: true });
+        }else{
+          console.log(error);
+          console.log("정보 받기 실패");
         }
     })
   }
@@ -125,8 +140,13 @@ function ServiceInfo(){
             reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
         })
         .catch((error)=>{
+          if(error.response.status === 401){
+            alert("로그인 만료. 다시 로그인해주세요.")
+            navigate('/signin', { replace: true });
+          }else{
             console.log("포폴 detail사진 재요청 에러");
             console.log(error);
+          }
         })
     })
   }
@@ -151,8 +171,13 @@ function ServiceInfo(){
       reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
     })
     .catch((error)=>{
-      console.log("포폴 detail사진 재요청 에러");
-      console.log(error);
+      if(error.response.status === 401){
+        alert("로그인 만료. 다시 로그인해주세요.")
+        navigate('/signin', { replace: true });
+      }else{
+        console.log("포폴 detail사진 재요청 에러");
+        console.log(error);
+      }
     })
   }
 
@@ -189,8 +214,13 @@ function ServiceInfo(){
           }
       })
       .catch((error)=>{
+        if(error.response.status === 401){
+          alert("로그인 만료. 다시 로그인해주세요.")
+          navigate('/signin', { replace: true });
+        }else{
           console.log(error);
           alert("사진 추가 실패");
+        }
       })
 
     }
@@ -226,7 +256,12 @@ function ServiceInfo(){
           }
       })
       .catch((error)=>{
-          console.log(error);
+        if(error.response.status === 401){
+          alert("로그인 만료. 다시 로그인해주세요.")
+          navigate('/signin', { replace: true });
+        }else{
+            console.log(error);
+        }
       })
     }
   }
@@ -246,7 +281,12 @@ function ServiceInfo(){
         setImageURL(tmp);
     })
     .catch((error) => {
-        console.log(error);
+      if(error.response.status === 401){
+        alert("로그인 만료. 다시 로그인해주세요.")
+        navigate('/signin', { replace: true });
+      }else{
+          console.log(error);
+      }
     })
   }
   //여기까지 이미지
@@ -278,6 +318,11 @@ function ServiceInfo(){
     [false, false, false, false, false, false, false, false,
       false, false, false, false, false, false, false,],
   ]);
+
+  const [originDate, setOriginDate] = useState([]); //날짜,시간,요일
+  const [originWorkdate, setOriginWorkdate] = useState([]); //시간, 요일
+  const [deleteDate, setDeleteDate] = useState([]); //지우는 날짜
+  const [addDate, setAddDate] = useState([]);
 
   function setChangeDay(dayIndex){
     let tmp = [false, false, false, false, false, false, false,];
@@ -323,7 +368,82 @@ function ServiceInfo(){
   }
 
   const sendDateList = [];
-  function createDate(){
+  function checkOrigin(){
+    console.log(originDate);
+    if(originDate.length === 0){
+      createDate();
+    }else{  //추가 또는 삭제
+      let tmpCheckDay = [];
+      timeCheck.map((dayItem, dayIndex)=>{
+        dayItem.map((timeItem, timeIndex)=>{
+          if(timeItem === true){
+            tmpCheckDay.push({
+              day: dayEnglish[dayIndex],
+              time: time[timeIndex]+':00', 
+            })
+          }
+        })
+      })
+      console.log(tmpCheckDay);
+
+      let tmpAdd = tmpCheckDay.filter(tmpItem => 
+        !originWorkdate.some(oItem => oItem.day === tmpItem.day && oItem.time === tmpItem.time));
+      setAddDate(tmpAdd);
+      let tmpDelete = originWorkdate.filter(oItem => 
+        !tmpCheckDay.some(tmpItem => tmpItem.day === oItem.day && tmpItem.time === oItem.time));
+      setDeleteDate(tmpDelete);
+
+      if(tmpAdd.length > 0){
+        addday(tmpAdd);
+      }
+      if(tmpDelete.length > 0){
+        console.log(tmpDelete);
+        deleteday(tmpDelete);
+      }
+    }
+  }
+  function deleteday(props){
+    let tmpDelete = originDate.filter(origin => 
+      props.some(oItem => oItem.day === origin.day && oItem.time === origin.time));
+
+    sendDeleteTime(tmpDelete, providerId);
+  }
+
+  function addday(props){
+    console.log(props);
+
+    let tmpSend = [];
+
+    const today = new Date();
+    const twoMonthsLater = new Date(today);
+    twoMonthsLater.setMonth(today.getMonth() + 1);
+
+    props.map((item, dayIndex)=>{
+      let currentDay = new Date(today);
+      let dayindex = dayEnglish.indexOf(item.day);
+      if (currentDay.getDay() !== dayindex) {
+        currentDay.setDate(today.getDate() + ((dayindex + 7 - today.getDay()) % 7));
+      }
+      while(currentDay <= twoMonthsLater){
+        let tmpdate = new Date(currentDay);
+        const sendDateServer = tmpdate.getFullYear() + '-' + (tmpdate.getMonth()+1).toString().padStart(2,'0') 
+            + '-' + tmpdate.getDate().toString().padStart(2, '0');
+        
+        tmpSend.push({
+          date: sendDateServer,
+          time : item.time,
+          day : item.day
+        })
+
+        currentDay.setDate(currentDay.getDate() + 7);
+      }
+    })
+    console.log(tmpSend);
+    // sendAddTime(tmpSend, providerId);
+    sendTime(tmpSend, providerId);
+  }
+
+  function createDate(){  //날짜 최초등록
     const today = new Date();
     const twoMonthsLater = new Date(today);
     twoMonthsLater.setMonth(today.getMonth() + 1);
@@ -353,13 +473,15 @@ function ServiceInfo(){
     })
     console.log(sendDateList);
     if(sendDateList.length > 0){
-      sendTime(sendDateList, providerId);
+      if(originWorkdate.length == 0){
+        sendTime(sendDateList, providerId);
+      }
     }
   }
 
   //서버한테 받은 시간 중복 없애기
   function deleteSameTime(props){
-    
+    setOriginDate(props);
     // 중복을 확인하기 위한 Set 생성
     const uniqueSet = new Set();
     
@@ -375,6 +497,22 @@ function ServiceInfo(){
     });
     
     console.log(uniqueTimeAndDay);
+    setOriginWorkdate(uniqueTimeAndDay);
+    settingWithOriginDate(uniqueTimeAndDay);
+  }
+
+  function settingWithOriginDate(props){
+    console.log(props);
+
+    props.map((item, props)=>{
+      let dayIndex = dayEnglish.indexOf(item.day);
+      let tmpTime = item.time.slice(0,-3);
+      let timeIndex = time.indexOf(tmpTime);
+
+      let tmpTimecheck = [... timeCheck];
+      tmpTimecheck[dayIndex][timeIndex] = true;
+      setTimeCheck(tmpTimecheck);
+    })
   }
 
 
@@ -402,9 +540,14 @@ function ServiceInfo(){
         getInfo();
       })
       .catch((error)=>{
+        if(error.response.status === 401){
+          alert("로그인 만료. 다시 로그인해주세요.")
+          navigate('/signin', { replace: true });
+        }else{
           console.log(error);
           alert("정보 수정 실패");
           getInfo();
+        }
       })
 
     }
@@ -494,11 +637,10 @@ function ServiceInfo(){
           }
         </div>
 
-        <div>
-          {
-            timeShow && time.map((item, index)=>{
-              return(
-                <>
+        <div>{
+          timeShow && time.map((item, index)=>{
+            return(
+              <>
                 {
                   timeCheck[clickDay][index] === true ?
                   <button className='timeSelectbutton-select' disabled={change} onClick={()=>{
@@ -511,12 +653,10 @@ function ServiceInfo(){
                     chagneTimeSelect(index);
                   }}>{item}</button>
                 }
-                  {index != 0 && index % 7 === 0 ? <br/> : null}
-                </>
-              )
-            })
-          }
-        </div>      
+                {index != 0 && index % 7 === 0 ? <br/> : null}
+              </>
+          )})
+        }</div>      
       </div>
 
 
@@ -574,9 +714,9 @@ function ServiceInfo(){
           <div>
             <br/>
               <button className='information-finish-button' onClick={()=>{setChange(true); setTimeShow(false);
-                createDate();
                 sendChangeInfo();
                 resetDay();
+                checkOrigin();
               }}>수정 완료</button>
               <button className='information-finish-button'>서비스 삭제</button>
           </div>
@@ -593,7 +733,6 @@ function sendTime(props, id){
     "providerId" : id,
     "dateList" : props
   };
-  console.log(tmp);
   axios.post(`${process.env.REACT_APP_URL}/service/workdate`, tmp,
   {
     headers:{
@@ -607,5 +746,26 @@ function sendTime(props, id){
     console.log(error);
   })
 }
+
+function sendDeleteTime(props, id){
+  let tmp = {
+    "providerId" : id,
+    "dateList" : props
+  };
+  console.log(tmp);
+  axios.post(`${process.env.REACT_APP_URL}/service/delete/workdate`, tmp,
+  {
+    headers:{
+        'Auth-Token' : localStorage.getItem("accesToken")
+    }
+  })
+  .then(function(result){
+    console.log(result);
+  })
+  .catch((error)=>{
+    console.log(error);
+  })
+}
+
 
 export default ServiceInfo;

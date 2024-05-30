@@ -53,8 +53,13 @@ function Reservation(){
             setSendToPortfolio(tmp);
         })
         .catch((error)=>{
-            console.log(error);
-            alert('서버로부터 data 받아오는 것 실패');
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                alert('서버로부터 data 받아오는 것 실패');
+                console.log(error);
+            }
         })
     },[]);
 

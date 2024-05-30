@@ -12,7 +12,7 @@ function UserManagement() {
 
   const getUserList = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken');
+      const accessToken = localStorage.getItem('accesToken');
 
       const response = await axios.get(`${process.env.REACT_APP_URL}/admin/user`, {
         params: {
@@ -46,7 +46,13 @@ function UserManagement() {
       const response = await axios.post(`${process.env.REACT_APP_URL}/admin/user/change`, {
         userId: userId,
         status: selectedStatus[userId] || status,
-      });
+      },
+      {
+        headers:{
+          'Auth-Token' : localStorage.getItem("accesToken"),
+        },
+      }
+    );
       console.log(userId);
       console.log(selectedStatus[userId] || status);
       if (response.status === 200) {

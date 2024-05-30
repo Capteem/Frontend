@@ -7,10 +7,13 @@ import { GoStar } from "react-icons/go";
 import axios from 'axios'
 
 import '../../../styles/review.css'
+import '../../../styles/smallModal.css';
 
 function WriteReview(props){
 
     const navigate = useNavigate();
+    const [modalShow, setModalShow] = useState(false);
+
     useEffect(()=>{
         const token = localStorage.getItem('accesToken');
         if(!token){
@@ -52,7 +55,7 @@ function WriteReview(props){
         }else if(reviewScore === 0){
             alert("별점을 매겨주세요");
         }else{
-            sendReview();
+            setModalShow(true);
         }
     }
 
@@ -82,8 +85,13 @@ function WriteReview(props){
             console.log("리뷰 작성 성공");
         })
         .catch((error)=>{
-            console.log(error);
-            alert('리뷰 작성 실패');
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                alert('리뷰 작성 실패');
+                console.log(error);
+            }
         })
     }
     
@@ -117,6 +125,20 @@ function WriteReview(props){
             <textarea className='review-textarea' onChange={(event)=>{changeReview(event)}} placeholder="리뷰를 작성해주세요."/>
             <br/>
             <button className='calculate-button' onClick={()=>{checkWrite();}}>입력완료</button>
+
+            {
+                modalShow &&
+                <div className='small-portfolio-modal' onClick={()=>{setModalShow(false)}}>
+                    <div className='small-portfolio-modalBody'>
+                        <div className='small-modal-big-text'>리뷰를 등록하시겠습니까?</div>
+                        <button className='small-modal-button' onClick={()=>{
+                            setModalShow(false);
+                            sendReview();
+                        }}>확인</button>
+                        <button className='small-modal-button' onClick={()=>{setModalShow(false);}}>취소</button>
+                    </div>
+                </div>
+            }
 
         </div>
     );

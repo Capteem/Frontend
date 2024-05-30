@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import Modal from 'react-modal';
 import {Cookies} from 'react-cookie';
 import { useEffect, useState } from 'react';
+import { debounce } from 'lodash';
 import '../../styles/Nav.css';
 import '../../styles/smallModal.css';
 import Dropdown from './DropDown'; 
@@ -22,6 +22,25 @@ function Nav(){
   const [modalShow, setModalShow] = useState(false);
   const navigate = useNavigate();
   //여기까지 로그아웃 관련 로직
+
+  //화면 크기 담는 state
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+  useEffect(()=>{
+    window.addEventListener('resize', handleResize);
+    return()=>{
+        window.removeEventListener('resize', handleResize);
+    };
+  },[]);
+
+  const handleResize = debounce(()=>{
+    setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+  }, 1000);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -77,7 +96,7 @@ function Nav(){
                   </NavLink>
                 </div>
                 <div>
-                  <NavLink>
+                  <NavLink to="/gallery">
                       갤러리
                   </NavLink>
                 </div>

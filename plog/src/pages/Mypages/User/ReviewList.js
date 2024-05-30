@@ -41,8 +41,13 @@ function ReviewList(){
             setReviewList(result.data.reviewList);
         })
         .catch((error)=>{
-            console.log(error);
-            alert('리뷰 받아오기 실패');
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                console.log(error);
+                alert('리뷰 받아오기 실패');
+            }
         })
     }
 
@@ -84,8 +89,13 @@ function ReviewList(){
             getReviewList();
         })
         .catch((error)=>{
-            console.log(error);
-            alert('리뷰 삭제 실패');
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                alert('리뷰 삭제 실패');
+                console.log(error);
+            }
         })
     }
 
@@ -120,8 +130,13 @@ function ReviewList(){
             getReviewList();
         })
         .catch((error)=>{
-            console.log(error);
-            alert('리뷰 수정 실패');
+            if(error.response.status === 401){
+                alert("로그인 만료. 다시 로그인해주세요.")
+                navigate('/signin', { replace: true });
+            }else{
+                alert('리뷰 수정 실패');
+                console.log(error);
+            }
         })
     }
 

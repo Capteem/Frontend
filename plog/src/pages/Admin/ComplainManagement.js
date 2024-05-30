@@ -51,7 +51,13 @@ function ComplainManagement() {
         complaintId: complainlist[index].complaintId,
         complaintReplyContent: newReplyContent,
         complaintReplyDate: new Date().toISOString(),
-      });
+      },
+      {
+        headers:{
+          'Auth-Token' : localStorage.getItem("accesToken"),
+        },
+      }
+    );
       if (response.status === 200) {
         alert(`답글 등록, 수정에 성공하였습니다.`);
         getComplainList(); // 리스트 다시 가져오기
