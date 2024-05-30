@@ -1,0 +1,510 @@
+  .reservation-start-container{
+    max-width: 1300px; /* 최대 폭 설정 */
+    margin: 0 auto; /* 상하 여백 0, 좌우 자동 조절로 중앙 정렬 */
+    padding: 20px; /* 내부 여백 추가 (선택적) */
+  }
+
+  .reservation-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .calendar {
+    flex: 1;
+    margin-right: 10px; /* 원하는 간격 설정 */
+    margin-left: 10px;
+  }
+  
+  .portfolio {
+    flex: 2.5;
+    margin: 0 10px; /* 원하는 간격 설정 */
+    width: 80%;
+  }
+  
+  .selection {
+    flex: 1;
+    margin-right: 15px; /* 원하는 간격 설정 */
+    padding:15px;
+    padding-top:15px;
+    padding-right:20px;
+    text-align: left;
+    border: solid 1.5px #69876b;
+    border-radius: 20px;
+  }
+
+  .reservation-calculate{
+    display: flex;
+    justify-content: center;
+  }
+
+  .reservation-center{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .reservation-center-bottom{
+    margin-top: 10px;
+  }
+
+  .reservation-center-bottom pre{
+    margin-left:50px;
+  }
+
+  .reservation-price{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .portfolio-selection{
+    margin-top: 10px;
+    margin-right: 3px;
+    display: flex;
+    justify-content: right;
+  }
+
+  .portfolio-selection-button{
+    border:0;
+    border-width: 2px;
+    background-color: #69876b;
+    color: white;
+    margin-bottom: 6px;
+    margin-right: 4px;
+    padding-bottom:5px;
+    padding-top:5px;
+    border-radius:5px;
+    width :80px;
+  }
+
+  .portfolio-chatting-button{
+    border:0;
+    border-width: 2px;
+    background-color: #9cc593;
+    color: white;
+    margin-bottom: 6px;
+    margin-right: 4px;
+    padding-bottom:5px;
+    padding-top:5px;
+    border-radius:5px;
+    width :80px;
+  }
+  
+  .portfolio-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .portfolio-modalBody {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    padding: 40px;
+    text-align: left;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+  }
+
+  .gallery-container-modal {
+    height: 70%; /* 스크롤이 필요한 높이 지정 */
+    overflow: auto; /* 스크롤 가능하도록 설정 */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+
+  .gallery-container-review-modal {
+    height: 70%; /* 스크롤이 필요한 높이 지정 */
+    overflow: auto; /* 스크롤 가능하도록 설정 */
+    display: grid;
+  }
+  .gallery-container-review-modal::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 너비 */
+  }
+  
+  .gallery-container-review-modal::-webkit-scrollbar-thumb {
+    background-color: #aed1af; /* 스크롤바 색상 */
+    border-radius: 50px; /* 스크롤바 모서리 둥글게 */
+  }
+  
+  .gallery-container-review-modal::-webkit-scrollbar-thumb:hover {
+    background-color: #456547; /* 스크롤바 호버시 색상 변경 */
+  }
+
+  
+
+  /* 여기서부터 calendar.js */
+
+  .customHeaderContainer{
+    background-color: white;
+    border:none;
+    margin-bottom:5px;
+  }
+
+  .monthButton{
+    border: none;
+    right:10px;
+    background-color: white;
+    float: left;
+    margin-left:10px;
+  }
+
+  .monthButton-two{
+    border: none;
+    right:10px;
+    background-color: white;
+    float: right;
+    margin-right:10px;
+  }
+
+  .react-datepicker{
+    border:none;
+  }
+
+  .react-datepicker__header {
+    background-color: white !important;
+    border:none;
+    margin-bottom:-15px;
+  }
+
+  .react-datepicker__day--outside-month {
+    color:#BFBFBF; /* 회색으로 변경 */
+}
+
+.timeSelectbutton-select{
+  border: none;
+  font-size: 17px; /* 버튼 내부 텍스트 크기 */
+  border: none;
+  /* border-radius: 5px; */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
+  background-color: #69876b; /* 배경색 (선택적) */
+  color: white; /* 텍스트 색상 (선택적) */
+  margin: 2px;
+  width: 55px; /* 버튼의 너비 */
+  height: 25px; /* 버튼의 높이 */
+  text-align: center; /* 텍스트를 가운데 정렬 */
+  align-items: left;
+  line-height: 7px;
+}
+
+.timeSelectbutton-notSelect{
+  border: none;
+  font-size: 17px; /* 버튼 내부 텍스트 크기 */
+  border: none;
+  /* border-radius: 5px; */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
+  background-color: #96be99; /* 배경색 (선택적) */
+  color: white; /* 텍스트 색상 (선택적) */
+  margin: 2px;
+  width: 55px; /* 버튼의 너비 */
+  height: 25px; /* 버튼의 높이 */
+  text-align: center; /* 텍스트를 가운데 정렬 */
+  align-items: left;
+  line-height: 7px;
+  
+}
+
+.timeSelectbutton-notSelect:disabled{
+  border: none;
+  font-size: 17px; /* 버튼 내부 텍스트 크기 */
+  border: none;
+  /* border-radius: 5px; */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
+  background-color: #d6d8d6; /* 배경색 (선택적) */
+  color: white; /* 텍스트 색상 (선택적) */
+  margin: 2px;
+  width: 55px; /* 버튼의 너비 */
+  height: 25px; /* 버튼의 높이 */
+  text-align: center; /* 텍스트를 가운데 정렬 */
+  align-items: left;
+  line-height: 7px;
+  opacity: 50%;
+  
+}
+
+/* 여기까지 calendar.js */
+
+/* 여기부터 RegionSelect.js */
+
+.region-select-box{
+  --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3e%3cpath fill=%27none%27 stroke=%27%23343a40%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 d=%27m2 5 6 6 6-6%27/%3e%3c/svg%3e);
+  justify-content: center;
+  width:95%;
+  padding: .375rem 2.25rem .375rem .75rem;
+  margin-bottom: 2px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  /* color: var(--bs-body-color); */
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
+  background-repeat: no-repeat;
+  background-position: right .75rem center;
+  background-size: 16px 12px;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.region-text-color{
+  color: #BFBFBF;
+}
+
+/* 여기까지 RegionSelect.js */
+
+
+/* 여기부터 Portfolio.js */
+.portfolio-button {
+  border:solid;
+  border-color:#69876b;
+  border-width: 2px;
+  /* border-bottom-width: 1px; */
+  background-color: white;
+  color: #69876b;
+  border-radius:5px;
+  width: 100px;
+  height: 30px;
+  font-size: 13px;
+  margin-bottom: 5px;
+  margin-left: 3px;
+}
+
+.portfolio-button-click {
+  border:solid;
+  border-color:#69876b;
+  border-width: 2px;
+  /* border-bottom-width: 1px; */
+  background-color: #69876b;
+  color: white;
+  border-radius:5px;
+  width: 100px;
+  height: 30px;
+  font-size: 13px;
+  margin-bottom: 5px;
+  margin-left: 3px;
+}
+
+.portfolio-modal-text{
+  text-align: left;
+  font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+/* 여기까지 Portfolio.js */
+
+/* 여기부터 selection */
+.reservation-h6 {
+  margin-bottom: 2px;
+  margin-top:5px;
+}
+
+.reservation-not-selected {
+  color:#9b9999;
+}
+
+.calculate-button{
+  border:0;
+  border-width: 2px;
+  background-color: #69876b;
+  color: white;
+  /* border-radius:5px 5px 0px 0px; */
+  /* margin-top:10px; */
+  margin-bottom: 6px;
+  margin-right: 4px;
+  padding-bottom:5px;
+  padding-top:5px;
+  padding-left:10px;
+  padding-right:10px;
+  border-radius:5px 5px 5px 5px;
+  width :100px;
+}
+
+.reservation-x-button{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  line-height:12px;
+  width: 20px; /* 버튼의 너비 */
+  height: 20px; /* 버튼의 높이 */
+  padding-bottom: 6px;
+  padding-left:6.5px;
+  font-size: 17px; /* 버튼 내부 텍스트 크기 */
+  border: none; /* 버튼 테두리 제거 (선택적) */
+  border-radius: 5px; /* 버튼 모서리 둥글게 (선택적) */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
+  background-color: #69876b; /* 배경색 (선택적) */
+  color: white; /* 텍스트 색상 (선택적) */
+  opacity: 0.7;
+}
+
+.reservation-align{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reservation-caculate-design{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 여기까지 selection */
+
+@media (max-width: 990px){
+  .reservation-caculate-design{
+    flex-direction: column;
+  }
+
+  .calculate-button{
+    border:0;
+    border-width: 2px;
+    background-color: #69876b;
+    color: white;
+    margin-bottom: 6px;
+    padding-bottom:5px;
+    padding-top:5px;
+    padding-left:10px;
+    padding-right:10px;
+    border-radius:5px 5px 5px 5px;
+    width :150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reservation-container {
+    flex-direction: column; /* 화면이 작아지면 세로로 쌓입니다. */
+  }
+
+  /* .calendar, .photos, .selected { */
+  /* 기본 flex 설정을 제거하고 너비를 100%로 설정합니다. */
+    /* flex: none;
+    width: 100%;
+  } */
+
+  .portfolio-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .portfolio-modalBody {
+    /* position: absolute; */
+    width: 90%;
+    height: 85%;
+    padding: 40px;
+    text-align: left;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+  }
+
+  .gallery-container-modal {
+    height: 70%; /* 스크롤이 필요한 높이 지정 */
+    overflow: auto; /* 스크롤 가능하도록 설정 */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+  
+  .image-container-modal {
+    /* display: 80%;
+    width: 50%;
+    height: 50%;
+    flex-wrap: wrap;
+    padding: 10px;
+    justify-content: flex-start;
+    object-fit: cover; */
+
+    width: 100%;
+    height: 100%;
+    flex-wrap: wrap;
+    padding: 0px;
+    object-fit: contain;
+    
+  }
+  
+  .image-container-modal::-webkit-scrollbar {
+    width: 12px; /* 스크롤바 너비 */
+  }
+  
+  .image-container-modal::-webkit-scrollbar-thumb {
+    background-color: #888; /* 스크롤바 색상 */
+    border-radius: 50px; /* 스크롤바 모서리 둥글게 */
+  }
+  
+  .image-container-modal::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* 스크롤바 호버시 색상 변경 */
+  }
+
+  .region-select {
+    flex: 1;
+    margin-left: 10px; /* 원하는 간격 설정 */
+    text-align: left;
+    margin-left: 30px;
+    margin-top: 10px;
+  }
+
+  .reservation-x-button{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    line-height:12px;
+    width: 17px; /* 버튼의 너비 */
+    height: 17px; /* 버튼의 높이 */
+    padding-bottom: 5px;
+    padding-left:6px;
+    margin-left:4px;
+    font-size: 15px; /* 버튼 내부 텍스트 크기 */
+    border: none; /* 버튼 테두리 제거 (선택적) */
+    border-radius: 5px; /* 버튼 모서리 둥글게 (선택적) */
+    cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
+    background-color: #69876b; /* 배경색 (선택적) */
+    color: white; /* 텍스트 색상 (선택적) */
+    opacity: 0.7;
+  }
+}
+
+.reservation-center-bottom table{
+  margin-bottom:30px;
+  margin-left:30px;
+  width: 450px;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.reservation-center-bottom th{
+  width: 120px;
+  padding: 12px 15px;
+  text-align: right;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.reservation-center-bottom td {
+  flex-grow:0.9;
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}

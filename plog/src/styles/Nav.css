@@ -1,0 +1,50 @@
+.Nav nav {
+  display: flex;
+  align-items: center;
+  background-color: #162617;
+  padding: 20px 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 16px,
+}
+.Nav nav > div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Nav nav a {
+  text-decoration: none;
+  color: white;
+}
+
+.Nav_small nav {
+  display:flex;
+  width:100%;
+  align-items: center;
+  justify-content:space-between;
+  background-color: #162617;
+  padding: 20px 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 16px,
+}
+
+.nav-small-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.nav-small-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.Nav_small nav a {
+  text-decoration: none;
+  color: white;
+}
+
+ 
