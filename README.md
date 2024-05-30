@@ -1,7 +1,11 @@
 # Plog - 나만의 사진촬영 패키지를 만들어 보자
 <img width="771" alt="SW캡스톤디자인_Capteem" src="https://github.com/Capteem/Frontend/assets/80399640/08f4c090-0b5c-472f-b4e4-52ce54e6b589">
 
-## 핵심기능
+## Plog 핵심기능
+
+1. 예약 기능
+
+2. 서비스 등록
 
 ## 역할 분담
 |이나경|박서현|
