@@ -4,6 +4,7 @@
 ## Plog 핵심기능
 
 1. 예약 기능
+<img width="1052" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/95f085cf-7682-4fbb-88f2-2c40da562264">
 
 2. 서비스 등록
 
