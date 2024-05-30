@@ -10,7 +10,6 @@ function ViewReservation() {
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accesToken');
-  
   useEffect(() => {
     if (!accessToken){
       navigate("/signin");

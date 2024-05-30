@@ -50,7 +50,7 @@ function ComplainManagement() {
         alert("로그인 만료. 다시 로그인해주세요.");
         navigate('/signin', { replace: true });
       } else {
-        console.error('서비스리스트 가져오기에 실패하였습니다.', error);
+        console.error('Q&A리스트 가져오기에 실패하였습니다.', error);
       }
     }
   };
@@ -78,19 +78,19 @@ function ComplainManagement() {
       }
     );
       if (response.status === 200) {
-        alert(`답글 등록, 수정에 성공하였습니다.`);
+        alert(`답글 등록에 성공하였습니다.`);
         getComplainList(); // 리스트 다시 가져오기
         setEditingComplaintIndex(-1);
         setNewReplyContent('');
       } else if (response.status === 400) {
-        alert('답글 등록, 수정에 실패하였습니다.');
+        alert('답글 등록에 실패하였습니다.');
       } 
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
         navigate('/signin', { replace: true });
       } else {
-        console.error('서비스리스트 가져오기에 실패하였습니다.', error);
+        console.error('답글 등록에 실패하였습니다.', error);
       }
     }
   };
