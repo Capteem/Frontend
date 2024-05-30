@@ -1,7 +1,16 @@
 # Plog - 나만의 사진촬영 패키지를 만들어 보자
 <img width="771" alt="SW캡스톤디자인_Capteem" src="https://github.com/Capteem/Frontend/assets/80399640/08f4c090-0b5c-472f-b4e4-52ce54e6b589">
 
-## Plog 핵심기능
+## 0. 목차
+1. [Plog 서비스 소개](#1-Plog-서비스-소개)
+2. [Plog 핵심기능](#2-Plog-핵심기능)
+3. [역할 분담](#3-역할-분담)
+4. [기술 스택](#4-기술-스택)
+5. [라이브러리](#5-라이브러리)
+6. [프로젝트 폴더 구조](#6-프로젝트-폴더-구조)
+
+
+## 2. Plog 핵심기능
 
 1. 예약 기능
 <img width="1052" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/95f085cf-7682-4fbb-88f2-2c40da562264">
@@ -20,14 +29,14 @@
 - 사진작가는 본인이 찍은 사진 10장, 헤어,메이크업은 자격증 사진을 등록하면된다.<br/>
 - 관리자가 승인하면 서비스 제공자로 활동을 할 수 있다.<br/>
 
-## 역할 분담
+## 3. 역할 분담
 |이나경|박서현|
 |:---:|:---:|
 |DB설계|DB설계|
 |API 명세서 작성 및 구현|API 명세서 작성 및 구현|
 |리드미 작성|인프라 구축|
 
-## 기술 스택
+## 4. 기술 스택
 <div>
   <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
   <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
@@ -39,7 +48,7 @@
   <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
 </div>
 
-## 라이브러리
+## 5. 라이브러리
 
 - Redux
 - react-daum-postcode
@@ -51,7 +60,7 @@
 - react-router-dom
 - react-icos
 
-## 프로젝트 폴더 구조
+## 6. 프로젝트 폴더 구조
 ```
 📦src
  ┣ 📂assets
