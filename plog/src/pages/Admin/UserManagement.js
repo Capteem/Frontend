@@ -66,17 +66,10 @@ function UserManagement() {
         status: selectedStatus[userId] || status,
       },
       {
-<<<<<<< HEAD
-        headers:{
-          'Auth-Token' : localStorage.getItem("accesToken"),
-        },
-      }
-=======
       headers: {
         'Auth-Token': localStorage.getItem('accesToken'),
       },
     }
->>>>>>> fccd1baea3fa6c3a25bc3d8f31c101b35a914eb0
     );
       console.log(userId);
       console.log(selectedStatus[userId] || status);
