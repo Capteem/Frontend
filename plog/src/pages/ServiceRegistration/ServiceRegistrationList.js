@@ -7,10 +7,15 @@ function ServiceRegistrationList() {
   const navigate = useNavigate();
   const [registrations, setRegistrations] = useState([]);
   const userId = localStorage.getItem('userId');
+  const accessToken = localStorage.getItem('accesToken');
 
   useEffect(() => {
-    getServiceRegistrationList(userId);
-  }, [userId]);
+    if (!accessToken) {
+        navigate("/signin");
+    }
+    else{
+    getServiceRegistrationList(userId);}
+  }, [accessToken, userId, navigate]);
 
   const handleServiceRegistrationClick = () => {
     navigate('/serviceregisteration');
@@ -32,15 +37,17 @@ function ServiceRegistrationList() {
       if (response.status === 200) {
         setRegistrations(response.data);
         console.log(response.data);
-      } else {
-        console.error('서비스등록내역 가져오기에 실패하였습니다.', response.data);
-        alert('서비스등록내역 가져오기에 실패하였습니다.');
-      }
-    } catch (error) {
+    }
+  } catch (error) {
       console.error('서비스등록내역을 불러오는 중에 문제가 발생했습니다.', error);
       if (error.response && error.response.status === 400) {
         alert('잘못된 요청 형식입니다. 다시 시도해 주세요.');
-      } else {
+      } 
+      else if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } 
+      else {
         alert('서비스등록내역을 불러오는 중에 문제가 발생했습니다.');
       }
     }

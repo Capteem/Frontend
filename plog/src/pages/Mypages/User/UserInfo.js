@@ -92,7 +92,7 @@ function UserInfo() {
     }
     if (!phoneRegex.test(editedUserInfo.phoneNum)) {
       phoneNumRef.current.focus();
-      alert("전화번호를 000-0000-0000 또는 00-0000-0000 형식에 맞게 입력하세요");
+      alert("전화번호를 올바른 형식으로 입력하세요 (예: 010-1234-5678)");
       return;
     }
     if (!emailRegex.test(editedUserInfo.email)) {

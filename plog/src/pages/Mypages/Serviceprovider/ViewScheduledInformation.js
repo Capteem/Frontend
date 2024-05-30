@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
@@ -8,6 +9,10 @@ import '../../../styles/Calendar.css';
 import moment from "moment";
 
 function ViewScheduledInformation() {
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accesToken');
+  const role = localStorage.getItem('role');
+
   // providerid 받기
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -26,8 +31,16 @@ function ViewScheduledInformation() {
   const [profits, setprofits] = useState(0);
 
   useEffect(() => {
-    getServiceReservationList();
-  }, []);
+    if (!accessToken){
+      navigate("/signin");
+    }
+    else if(role !== 'PROVIDER'){
+      navigate("/");
+    }
+    else{
+      getServiceReservationList();
+    }
+  }, [accessToken, navigate]);
 
   const getServiceReservationList = async () => {
     try {
@@ -46,7 +59,12 @@ function ViewScheduledInformation() {
         alert("서비스예약리스트 가져오기에 실패하였습니다.");
       }
     } catch (error) {
-      alert("서비스예약리스트 불러오는 중에 문제가 발생했습니다.");
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        alert("서비스예약리스트 불러오는 중에 문제가 발생했습니다.");
+      }
     }
   };
 
@@ -85,8 +103,12 @@ function ViewScheduledInformation() {
         console.log(error.response.data);
         alert("예약확정에 실패하였습니다.");
       } else {
-        console.error(error);
-        alert("예약확정 중에 문제가 발생했습니다.");
+        if (error.response && error.response.status === 401) {
+          alert("로그인 만료. 다시 로그인해주세요.");
+          navigate('/signin', { replace: true });
+        } else {
+          console.error('예약확정에 실패하였습니다.', error);
+        }
       }
     }
   };
@@ -107,8 +129,12 @@ function ViewScheduledInformation() {
         console.log(error.response.data);
         alert("촬영확정에 실패하였습니다.");
       } else {
-        console.error(error);
-        alert("촬영확정에 중에 문제가 발생했습니다.");
+        if (error.response && error.response.status === 401) {
+          alert("로그인 만료. 다시 로그인해주세요.");
+          navigate('/signin', { replace: true });
+        } else {
+          console.error('촬영확정에 실패하였습니다.', error);
+        }
       }
     }
   };
@@ -129,8 +155,12 @@ function ViewScheduledInformation() {
         console.log(error.response.data);
         alert("예약취소에 실패하였습니다.");
       } else {
-        console.error(error);
-        alert("예약취소에 중에 문제가 발생했습니다.");
+        if (error.response && error.response.status === 401) {
+          alert("로그인 만료. 다시 로그인해주세요.");
+          navigate('/signin', { replace: true });
+        } else {
+          console.error('예약취소에 실패하였습니다.', error);
+        }
       }
     }
   };

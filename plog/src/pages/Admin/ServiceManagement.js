@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Modal from 'react-modal'; // Add this if using react-modal
+import Modal from 'react-modal'; 
+
+Modal.setAppElement('#root');
 
 function ServiceManagement() {
   const [servicelist, setServicelist] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalImages, setModalImages] = useState([]); // Change to an array to store multiple images
+  const [modalImages, setModalImages] = useState([]); 
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accesToken');
@@ -74,6 +76,7 @@ function ServiceManagement() {
 
       if (response.status === 200) {
         alert(`${providerName}의 상태를 ${getStatusText(selectedStatus[providerId] || providerStatus)}로 변경하였습니다.`);
+        window.location.reload();
       } else if (response.status === 400) {
         alert('서비스 상태 변경을 실패하였습니다.');
       } else if (response.status === 401) {
@@ -102,7 +105,10 @@ function ServiceManagement() {
   const ShowRegisteredPhoto = async (userId) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/image/fileNames`,
-        { userId },
+        { 
+          userId : userId,
+
+        },
         {
           headers: {
             'Auth-Token': accessToken,
@@ -112,6 +118,7 @@ function ServiceManagement() {
 
       if (response.status === 200) {
         const filenames = response.data.fileNameList;
+        console.log(filenames);
         const imagePromises = filenames.map(filename => 
           axios.get(`${process.env.REACT_APP_URL}/confirm/image/${filename}`, {
             headers: {
@@ -218,13 +225,32 @@ function ServiceManagement() {
           </tbody>
         </table>
       )}
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
-        <h2>등록된 사진</h2>
-        {modalImages.map((image, index) => (
-          <img key={index} src={image} alt={`등록된 사진 ${index + 1}`} />
-        ))}
-        <button onClick={closeModal}>Close</button>
-      </Modal>
+      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={{ content: {height: '65%' ,width: '50%', margin: 'auto' } }}>
+      <div style={{ display: 'flex', marginBottom : "10px"}}>
+      <button
+      onClick={closeModal}
+      style={{
+        width: '15%',
+        padding: '5px',
+        marginBottom: '10px',
+        boxSizing: 'border-box',
+        borderRadius: '15px',
+        backgroundColor: '#162617',
+        color: '#E8EEE8',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        alignSelf: 'center'  
+      }}
+      >
+      Close
+      </button>
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {modalImages.map((image, index) => (
+        <img key={index} src={image} alt={`등록된 사진 ${index + 1}`} style={{ width: '200px', height: '200px', marginRight: '2px', marginBottom: '5px' }} />
+      ))}
+      </div>
+    </Modal>
     </div>
   );
 }
