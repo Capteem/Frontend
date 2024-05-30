@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../../styles/Table.css';
 import ServiceDropdown from './ServiceDropdown'; 
+import { useNavigate } from 'react-router-dom';
 
 function ServiceList() {
   const [serviceList, setserviceList] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  
   const userId = localStorage.getItem('userId');
   useEffect(() => {
     getServiceList();
@@ -33,7 +36,12 @@ function ServiceList() {
         alert("서비스리스트 가져오기에 실패하였습니다.");
       }
     } catch (error) {
-      console.log(error);
+      if(error.response.status === 401){
+        alert("로그인 만료. 다시 로그인해주세요.")
+        navigate('/signin', { replace: true });
+      }else{
+        console.log(error);
+      }
     }
   }
 

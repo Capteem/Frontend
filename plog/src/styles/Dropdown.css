@@ -5,6 +5,14 @@
     border: none;
     cursor: pointer;
   }
+
+  .dropbtn-icon {
+    background-color: #162617;
+    color: white;
+    font-size: 35px;
+    border: none;
+    cursor: pointer;
+  }
   
   .dropdown-content {
     display: none;
@@ -47,4 +55,37 @@
     position: relative;
     display: inline-block;
   }
+
+  .dropdown-content-small {
+    display: none;
+    position: absolute;
+    background-color: #162617;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 15px; 
+    left: 0;  /* 왼쪽 정렬 */
+    top: 100%;  /* 버튼 바로 아래에 위치 */
+  }
+
+    /* Style the links inside the dropdown */
+  .dropdown-content-small a {
+    color: #162617;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+    
+    /* Change color of dropdown links on hover */
+    .dropdown-content-small a:hover {
+      background-color: white;
+      color:  #162617;
+    }
+    
+    /* Position the dropdown content */
+    .dropdown-content-small {
+      position: absolute;
+      right: 0;
+    }
+
   

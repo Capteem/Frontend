@@ -131,7 +131,9 @@ function ViewReservation() {
                   </button>
                 )}
                 {(reservation.status === 2) &&(
-                  <button style={{background : "#efbb54", borderColor : "#efbb54"}}>
+                  <button style={{background : "#efbb54", borderColor : "#efbb54"}}
+                    onClick={()=>{navigate('/mypage/writereview', {state: reservation}); console.log(reservation);}}
+                  >
                     리뷰쓰기
                   </button>
                 )}

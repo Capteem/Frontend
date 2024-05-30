@@ -23,25 +23,6 @@ function Nav(){
   const navigate = useNavigate();
   //여기까지 로그아웃 관련 로직
 
-  //화면 크기 담는 state
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-  useEffect(()=>{
-    window.addEventListener('resize', handleResize);
-    return()=>{
-        window.removeEventListener('resize', handleResize);
-    };
-  },[]);
-
-  const handleResize = debounce(()=>{
-    setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-    });
-  }, 1000);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -50,7 +31,6 @@ function Nav(){
 
     return (
       <div className="Nav">
-
       <nav>
             {
               checkLogin === false ?

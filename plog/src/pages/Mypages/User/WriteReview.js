@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from "react-router";
 
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
@@ -13,6 +14,9 @@ function WriteReview(props){
 
     const navigate = useNavigate();
     const [modalShow, setModalShow] = useState(false);
+
+    const { state } = useLocation();
+    console.log(state);
 
     useEffect(()=>{
         const token = localStorage.getItem('accesToken');
