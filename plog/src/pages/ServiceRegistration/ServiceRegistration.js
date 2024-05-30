@@ -4,6 +4,7 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/multi.css';
+import { v4 as uuidv4 } from 'uuid';
 
 function ServiceRegistration() {
     const provider_name = useRef();
@@ -19,7 +20,7 @@ function ServiceRegistration() {
     const [isBusinessNumberValid, setIsBusinessNumberValid] = useState(false);
     const [isFileUploaded, setIsFileUploaded] = useState(false);
     const accessToken = localStorage.getItem('accesToken');
-
+    const uuid = 0;
     const [state, setState] = useState({
         provider_name: "",
         address: "",
@@ -33,6 +34,11 @@ function ServiceRegistration() {
         if (!accessToken) {
             navigate("/signin");
         }
+        else{
+            uuid = uuidv4();
+            console.log(uuid);
+        }
+        
     }, [accessToken,navigate]);
 
     const handleChangeState = (e) => {
@@ -89,7 +95,6 @@ function ServiceRegistration() {
             return;
         }
         
-
         try {
             const addressParts = state.address.split(" ");
             const area = addressParts[0];
@@ -103,6 +108,7 @@ function ServiceRegistration() {
                 providerSubArea: subarea,
                 providerDetail: detail,
                 providerPhoneNum: state.provider_phonenumber,
+                uuid : uuid,
             }, {
                 headers: {
                     'Auth-Token': localStorage.getItem('accesToken')
@@ -208,9 +214,11 @@ function ServiceRegistration() {
             formData.append('providerCheckFiles', file);
         }
         formData.append('userId', userId);
+        formData.append('uuid', uuid);
 
         axios.post(`${process.env.REACT_APP_URL}/confirm/checkProvider`, formData, {
             headers: {
+                'uuid' : uuid,
                 'userId': userId,
                 'providerCheckFiles': 'multipart/form-data',
                 'Auth-Token': localStorage.getItem('accesToken')

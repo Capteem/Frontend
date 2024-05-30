@@ -72,6 +72,9 @@ function FindId() {
       console.log('인증 성공');
       alert(`${response.data.message}`);
       navigate('/signin');
+      if(response.status === 400) {
+        alert('이메일 인증 문제가 발생했습니다. 다시 시도해주세요.');
+      }
     } catch (error) {
         console.error('이메일 인증에 실패하였습니다..', error);
     }

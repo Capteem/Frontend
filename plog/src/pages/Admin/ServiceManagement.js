@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal'; 
+import { MdInsertPhoto } from "react-icons/md";
 
 Modal.setAppElement('#root');
 
@@ -79,11 +80,19 @@ function ServiceManagement() {
         window.location.reload();
       } else if (response.status === 400) {
         alert('서비스 상태 변경을 실패하였습니다.');
-      } else if (response.status === 401) {
-        navigate('/signin');
       }
     } catch (error) {
-      console.error('서비스 상태 변경을 실패하였습니다.', error);
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } 
+      else if (error.response && error.response.status === 400) {
+        alert('서비스 상태 변경을 실패하였습니다.');
+        window.location.reload();
+      } 
+      else {
+        console.error('서비스 상태 변경을 실패하였습니다.', error);
+      }
     }
   };
 
@@ -195,7 +204,7 @@ function ServiceManagement() {
                 </td>
                 <td>
                   {serviceinfo.providerType !== 2 && serviceinfo.providerStatus === 2 ? (
-                    <button onClick={() => ShowRegisteredPhoto(serviceinfo.userId.id, serviceinfo.providerId)}>등록사진보기</button>
+                    <button onClick={() => ShowRegisteredPhoto(serviceinfo.userId.id, serviceinfo.providerId)}><MdInsertPhoto /></button>
                   ) : (
                     ''
                   )}
