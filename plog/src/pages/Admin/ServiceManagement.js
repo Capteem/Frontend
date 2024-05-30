@@ -246,10 +246,20 @@ function ServiceManagement() {
       </button>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {modalImages.map((image, index) => (
-        <img key={index} src={image} alt={`등록된 사진 ${index + 1}`} style={{ width: '200px', height: '200px', marginRight: '2px', marginBottom: '5px' }} />
-      ))}
-      </div>
+     {modalImages.map((image, index) => (
+      <img
+      key={index}
+      src={image}
+      alt={`등록된 사진 ${index + 1}`}
+      style={{ 
+        width: modalImages.length === 1 ? '450px' : '200px', 
+        height: modalImages.length === 1 ? '400px' : '200px', 
+        marginRight: '2px', 
+        marginBottom: '5px' 
+      }} 
+    />
+  ))}
+</div>
     </Modal>
     </div>
   );
