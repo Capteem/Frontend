@@ -101,11 +101,6 @@ function Nav(){
                   </NavLink>
                 </div>
                 <div>
-                  <NavLink>
-                      커뮤니티
-                  </NavLink>
-                </div>
-                <div>
                   <NavLink to="/answer">
                       Q&A
                   </NavLink>
