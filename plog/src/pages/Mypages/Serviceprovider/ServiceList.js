@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../../../styles/Table.css';
-import ServiceDropdown from './ServiceDropdown'; 
-import { useNavigate } from 'react-router-dom';
+import ServiceDropdown from './ServiceDropdown';
 
 function ServiceList() {
   const [serviceList, setserviceList] = useState([]);
@@ -10,9 +10,20 @@ function ServiceList() {
   const navigate = useNavigate();
   
   const userId = localStorage.getItem('userId');
+  const accessToken = localStorage.getItem('accesToken');
+  const role = localStorage.getItem('role');
+
   useEffect(() => {
-    getServiceList();
-  }, []);
+    if (!accessToken){
+      navigate("/signin");
+    }
+    else if(role !== 'PROVIDER'){
+      navigate("/");
+    }
+    else{
+      getServiceList();
+    }
+  }, [accessToken, navigate]);
 
   const toggleDropdown = () => {
   setIsDropdownOpen(!isDropdownOpen);
@@ -36,11 +47,11 @@ function ServiceList() {
         alert("서비스리스트 가져오기에 실패하였습니다.");
       }
     } catch (error) {
-      if(error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
         navigate('/signin', { replace: true });
-      }else{
-        console.log(error);
+      } else {
+        console.error('서비스리스트 가져오기에 실패하였습니다.', error);
       }
     }
   }

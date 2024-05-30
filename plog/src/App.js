@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 
 import Home from './pages/Home.js'
 //
@@ -91,6 +91,8 @@ function App() {
       <Route path='/complainmanagement' element={<ComplainManagement/>} />
       <Route path='/servicemanagement' element={<ServiceManagement/>} />
       
+      {/* Handle 404 - Not Found */}
+      <Route path='*' element={<Navigate to="/" replace />} />
       </Routes>
       </div> 
     </BrowserRouter>

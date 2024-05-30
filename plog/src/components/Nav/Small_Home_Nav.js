@@ -8,6 +8,12 @@ import '../../styles/smallModal.css';
 import Plog from './../../assets/Ploglogo.png'
 
 import { RiMenu3Line } from "react-icons/ri";
+import { FaFrog } from "react-icons/fa";
+import { FaList } from "react-icons/fa6";
+import { FaShoppingBag } from "react-icons/fa";
+import { MdOutlineRateReview } from "react-icons/md";
+import { MdMiscellaneousServices } from "react-icons/md";
+import { IoChatboxEllipses } from "react-icons/io5"
 
 function SmallNav() {
 
@@ -70,13 +76,15 @@ function SmallNav() {
                       <Link onClick={()=>{ setMyPage(!myPage);}}>마이페이지</Link>
                       {
                         myPage &&
-                        <div style={{backgroundColor:'#315233'}}>
-                          <Link to="/mypage/userinfo" onClick={()=>{ setMyPage(false);}}>회원 정보</Link>
-                          <Link to="/mypage/viewreservation" onClick={()=>{ setMyPage(false);}}>예약 내역</Link>
-                          <Link to="/mypage/shoppingbag" onClick={()=>{ setMyPage(false);}}>장바구니</Link>
-                          <Link to="/mypage/reviewlist" onClick={()=>{ setMyPage(false);}}>리뷰 관리</Link>
+                        <div>
+                          <Link to="/mypage/userinfo" onClick={()=>{ setMyPage(false);}}><FaFrog/> 회원 정보</Link>
+                          <Link to="/mypage/viewreservation" onClick={()=>{ setMyPage(false);}}><FaList/> 예약 내역</Link>
+                          <Link to="/mypage/shoppingbag" onClick={()=>{ setMyPage(false);}}><FaShoppingBag/> 장바구니</Link>
+                          <Link to="/mypage/reviewlist" onClick={()=>{ setMyPage(false);}}><MdOutlineRateReview/> 리뷰 관리</Link>
+                          <Link><IoChatboxEllipses/> 1:1 채팅</Link>
                             {role === "PROVIDER" && (
-                              <Link to="/mypage/servicelist" onClick={()=>{ setMyPage(false);}}>서비스 리스트</Link>
+                              <Link to="/mypage/servicelist" style={{ backgroundColor : "#efbb54", borderRadius : "0px 0px 15px 15px"}}
+                              onClick={()=>{ setMyPage(false);}}>서비스 리스트</Link>
                             )}
                         </div>
                       }
