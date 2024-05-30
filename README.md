@@ -20,7 +20,7 @@
 </div>
 
 ## 라이브러리
-```
+
 - Redux
 - react-daum-postcode
 - react-modal
@@ -30,7 +30,7 @@
 - react-datepicker
 - react-router-dom
 - react-icos
-```
+
 
 ## 아키텍처
 
