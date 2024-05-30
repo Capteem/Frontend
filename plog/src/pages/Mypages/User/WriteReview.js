@@ -10,30 +10,34 @@ import axios from 'axios'
 import '../../../styles/review.css'
 import '../../../styles/smallModal.css';
 
-function WriteReview(props){
+function WriteReview(){
 
     const navigate = useNavigate();
     const [modalShow, setModalShow] = useState(false);
-
-    const { state } = useLocation();
-    console.log(state);
 
     useEffect(()=>{
         const token = localStorage.getItem('accesToken');
         if(!token){
             navigate('/');
         }
-    },[navigate])
+    },[navigate]);
 
     const [review, setReview] = useState("");
     let initialStar = [false, false, false, false, false];
     const [reviewScore, setReviewScore] = useState(0);
     const [starClick, setStarClick] = useState([false, false, false, false, false]);
 
+    const { state } = useLocation();
+    console.log(state);
+
     useEffect(()=>{
         setReviewScore(0);
         setStarClick(initialStar);
     },[])
+
+    function getIdName(){
+        
+    }
 
     function checkStar(props){
         let tmp = initialStar;

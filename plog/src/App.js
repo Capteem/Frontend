@@ -7,6 +7,7 @@ import Home from './pages/Home.js'
 import Home_Nav from './components/Nav/Home_Nav.js';
 import Admin_Nav from './components/Nav/Admin_Nav.js';
 import User_Nav from './components/Nav/User_Nav.js'
+import All_Admin_Nav from './components/Nav/All_Admin_Nav.js';
 
 // pages
 import SignIn from './pages/SignIn';
@@ -52,7 +53,9 @@ function App() {
   return (
     <BrowserRouter>
       {/* {role === 'ADMIN' ?  <Admin_Nav/>: <Home_Nav/>} */}
-      {role === 'ADMIN' ?  <Admin_Nav/>: <User_Nav/>}
+      {/* {role === 'ADMIN' ?  <Admin_Nav/>: <User_Nav/>} */}
+      {role === 'ADMIN' ?  <All_Admin_Nav/>: <User_Nav/>}
+      
       <div className="App">
       <Routes>
       <Route path='/' element={<Home/>} />

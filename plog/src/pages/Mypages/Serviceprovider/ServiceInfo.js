@@ -369,6 +369,7 @@ function ServiceInfo(){
 
   const sendDateList = [];
   function checkOrigin(){
+    console.log("checkOrigin함수 안");
     console.log(originDate);
     if(originDate.length === 0){
       createDate();
@@ -403,13 +404,37 @@ function ServiceInfo(){
     }
   }
   function deleteday(props){
+    console.log("deleteday 함수 안");
     let tmpDelete = originDate.filter(origin => 
       props.some(oItem => oItem.day === origin.day && oItem.time === origin.time));
 
+    console.log("deleteTime함수 실행 전");
     sendDeleteTime(tmpDelete, providerId);
   }
 
+  function sendDeleteTime(props, id){
+    console.log("deleteTime 함수 안");
+    let tmp = {
+      "providerId" : id,
+      "dateList" : props
+    };
+    console.log(tmp);
+    axios.post(`${process.env.REACT_APP_URL}/service/delete/workdate`, tmp,
+    {
+      headers:{
+          'Auth-Token' : localStorage.getItem("accesToken")
+      }
+    })
+    .then(function(result){
+      console.log(result);
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+  }
+
   function addday(props){
+    console.log("addday 함수 안")
     console.log(props);
 
     let tmpSend = [];
@@ -440,7 +465,27 @@ function ServiceInfo(){
     })
     console.log(tmpSend);
     // sendAddTime(tmpSend, providerId);
+    console.log("sendTime함수 전");
     sendTime(tmpSend, providerId);
+  }
+  function sendTime(props, id){
+    console.log("sendTime 함수 안");
+    let tmp = {
+      "providerId" : id,
+      "dateList" : props
+    };
+    axios.post(`${process.env.REACT_APP_URL}/service/workdate`, tmp,
+    {
+      headers:{
+          'Auth-Token' : localStorage.getItem("accesToken")
+      }
+    })
+    .then(function(result){
+      console.log(result);
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
   }
 
   function createDate(){  //날짜 최초등록
@@ -474,6 +519,7 @@ function ServiceInfo(){
     console.log(sendDateList);
     if(sendDateList.length > 0){
       if(originWorkdate.length == 0){
+        console.log("sendTime함수 전");
         sendTime(sendDateList, providerId);
       }
     }
@@ -714,6 +760,7 @@ function ServiceInfo(){
           <div>
             <br/>
               <button className='information-finish-button' onClick={()=>{setChange(true); setTimeShow(false);
+                console.log("수정완료 버튼 클릭");
                 sendChangeInfo();
                 resetDay();
                 checkOrigin();
@@ -728,44 +775,6 @@ function ServiceInfo(){
 
 //todo:서버 시간 보내진거 체크
 //서버한테 시간 보내기
-function sendTime(props, id){
-  let tmp = {
-    "providerId" : id,
-    "dateList" : props
-  };
-  axios.post(`${process.env.REACT_APP_URL}/service/workdate`, tmp,
-  {
-    headers:{
-        'Auth-Token' : localStorage.getItem("accesToken")
-    }
-  })
-  .then(function(result){
-    console.log(result);
-  })
-  .catch((error)=>{
-    console.log(error);
-  })
-}
-
-function sendDeleteTime(props, id){
-  let tmp = {
-    "providerId" : id,
-    "dateList" : props
-  };
-  console.log(tmp);
-  axios.post(`${process.env.REACT_APP_URL}/service/delete/workdate`, tmp,
-  {
-    headers:{
-        'Auth-Token' : localStorage.getItem("accesToken")
-    }
-  })
-  .then(function(result){
-    console.log(result);
-  })
-  .catch((error)=>{
-    console.log(error);
-  })
-}
 
 
 export default ServiceInfo;
