@@ -6,22 +6,22 @@ import { useNavigate } from "react-router-dom";
 function UserManagement() {
   const [userlist, setuserlist] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState({});
-  const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
+  const accessToken = localStorage.getItem('accesToken');
+  const role = localStorage.getItem('role');
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accesToken');
-    const role = localStorage.getItem('role');
     if (!accessToken){
       navigate("/signin");
     }
     else if(role !== 'ADMIN'){
-      navigate(-1);
+      navigate("/");
     }
     else{
       getUserList();
     }
-  }, []);
+  }, [accessToken, navigate]);
   
   const getUserList = async () => {
     try {
@@ -39,15 +39,15 @@ function UserManagement() {
         console.log(response.data);
       } 
       else if (response.status === 400) {
-        alert('유저리스트 가져오기에 실패하였습니다.');
+        alert('사용자리스트 가져오기에 실패하였습니다.');
       }
       
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
-        navigator('/signin', { replace: true });
+        navigate('/signin', { replace: true });
       } else {
-        console.error('서비스리스트 가져오기에 실패하였습니다.', error);
+        console.error('사용자리스트 가져오기에 실패하였습니다.', error);
       }
     }
   };
@@ -76,14 +76,14 @@ function UserManagement() {
       if (response.status === 200) {
         alert(`${userId}의 상태를 ${(selectedStatus[userId] || status) === '1' ? '활성화' : (selectedStatus[userId] || status) === '2' ? '정지' : '차단'}로 변경하였습니다.`);
       } else if (response.status === 400) {
-        alert('유저 상태변화에 실패하였습니다.');
+        alert('사용자 상태변화에 실패하였습니다.');
       } 
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
-        navigator('/signin', { replace: true });
+        navigate('/signin', { replace: true });
       } else {
-        console.error('서비스리스트 가져오기에 실패하였습니다.', error);
+        console.error('사용자 상태변화에 실패하였습니다.', error);
       }
     }
   };
@@ -103,8 +103,8 @@ function UserManagement() {
             <th>닉네임</th>
             <th>유형</th>
             <th>전화번호</th>
+            <th>이메일</th>
             <th>상태</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -116,17 +116,17 @@ function UserManagement() {
               <td>{userinfo.nickname}</td>
               <td>{userinfo.role}</td>
               <td>{userinfo.phonenum}</td>
+              <td>{userinfo.email}</td>
               <td>
-                <select
+                <select 
                   value={selectedStatus[userinfo.id] || userinfo.status}
                   onChange={(e) => handleStatusChange(userinfo.id, e.target.value)}
+                  style={{marginRight : "5px"}}
                 >
                   <option value="1">활성화</option>
                   <option value="2">정지</option>
                   <option value="3">차단</option>
                 </select>
-              </td>
-              <td>
                 <button onClick={() => UserStateChange(userinfo.id, userinfo.status)}>
                 상태변경
                 </button>

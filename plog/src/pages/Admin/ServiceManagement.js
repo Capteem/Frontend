@@ -9,19 +9,18 @@ function ServiceManagement() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalImages, setModalImages] = useState([]); // Change to an array to store multiple images
   const userId = localStorage.getItem('userId');
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const accessToken = localStorage.getItem('accesToken');
-
+  const role = localStorage.getItem('role');
   useEffect(() => {
-    const role = localStorage.getItem('role');
     if (!accessToken) {
-      navigator('/signin');
+      navigate('/signin');
     } else if (role !== 'ADMIN') {
-      navigator(-1);
+      navigate("/");
     } else {
       getServiceList();
     }
-  }, [accessToken, navigator]);
+  }, [accessToken, navigate]);
 
   const getServiceList = async () => {
     try {
@@ -43,7 +42,7 @@ function ServiceManagement() {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
-        navigator('/signin', { replace: true });
+        navigate('/signin', { replace: true });
       } else {
         console.error('서비스리스트 가져오기에 실패하였습니다.', error);
       }
@@ -78,7 +77,7 @@ function ServiceManagement() {
       } else if (response.status === 400) {
         alert('서비스 상태 변경을 실패하였습니다.');
       } else if (response.status === 401) {
-        navigator('/signin');
+        navigate('/signin');
       }
     } catch (error) {
       console.error('서비스 상태 변경을 실패하였습니다.', error);
@@ -142,7 +141,7 @@ function ServiceManagement() {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
-        navigator('/signin', { replace: true });
+        navigate('/signin', { replace: true });
       } else {
         console.error('이미지정보 가져오기에 실패하였습니다.', error);
       }

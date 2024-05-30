@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../../../styles/Table.css';
 import ServiceDropdown from './ServiceDropdown'; 
 
-function ServiceProviderInfo() {
+function ServiceList() {
   const [serviceList, setserviceList] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const userId = localStorage.getItem('userId');
@@ -83,4 +83,4 @@ function ServiceProviderInfo() {
 );
 }
 
-export default ServiceProviderInfo;
+export default ServiceList;

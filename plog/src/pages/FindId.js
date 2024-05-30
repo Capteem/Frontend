@@ -58,12 +58,7 @@ function FindId() {
         alert('이메일 전송 중 문제가 발생했습니다. 다시 시도해주세요.');
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
-        navigator('/signin', { replace: true });
-      } else {
-        console.error('서비스리스트 가져오기에 실패하였습니다.', error);
-      }
+        console.error('이메일 전송에 실패하였습니다.', error);
     }
   };
 
@@ -78,7 +73,7 @@ function FindId() {
       alert(`${response.data.message}`);
       navigate('/signin');
     } catch (error) {
-      alert('인증 실패. 다시 시도해주세요.');
+        console.error('이메일 인증에 실패하였습니다..', error);
     }
   };
 

@@ -42,10 +42,10 @@ function Home() {
       <div 
         style={{ 
           position: 'absolute', 
-          top: '57%', 
-          left: textAlignment === 'center' ? '50%' : '23%', 
+          top:  window.innerWidth >= 768 ? '57%' : '59%', 
+          left: window.innerWidth >= 768 ? '22.5%' : '20.5%', 
           transform: 'translate(-50%, -50%)', 
-          textAlign: textAlignment 
+          textAlign: "left" 
         }}
       >
         <h1 

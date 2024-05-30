@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/multi.css';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,13 @@ function FindPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [newPassword_re_entering, setNewPassword_re_entering] = useState('');
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accesToken');
+    if (accessToken) {
+      navigate('/');
+    }
+  }, [navigate]);
+
   const handleChangeState = (e) => {
     if (e.target.name === 'email') {
       setEmail(e.target.value);
@@ -25,27 +32,44 @@ function FindPassword() {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSunmit();
+      handleSubmit();
     }
   };
 
-  const handleSunmit = async () => {
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const validateId = (id) => {
+    return id.length >= 5;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateId(id)) {
+      idRef.current.focus();
+      alert('아이디는 5글자 이상이어야 합니다.');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      emailRef.current.focus();
+      alert('올바른 이메일 형식이 아닙니다.');
+      return;
+    }
+
     if (email === '' || id === '') {
       emailRef.current.focus();
       idRef.current.focus();
-      alert('아이디와 이메일을 입력하세요');
+      alert('아이디와 이메일을 입력하세요.');
       return;
     }
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/user/checkemail`, {
-        headers: {
-          'Auth-Token': localStorage.getItem("accesToken"),
-        },
         email: email,
         id: id,
       });
-
       if (response.status === 200) {
         setIsEmailSent(true);
         console.log('인증번호 전송 성공');
@@ -60,16 +84,17 @@ function FindPassword() {
   const handleVerification = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/checkAuthNumber`, {
-        headers: {
-          'Auth-Token': localStorage.getItem("accesToken"),
-        },
         userId: id,
         email: email,
         auth: verificationCode,
       });
       
+      if (response.status === 200) {
         console.log('인증 성공');
         setIsVerified(true);
+      } else {
+        alert('인증 실패. 다시 시도해주세요.');
+      }
     } catch (error) {
       alert('인증 실패. 다시 시도해주세요.');
     }
@@ -83,13 +108,9 @@ function FindPassword() {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/user/changePwd`, {
-        headers: {
-          'Auth-Token': localStorage.getItem("accesToken"),
-        },
         id: id,
         password: newPassword,
       });
-
       if (response.status === 200) {
         alert('비밀번호 재설정 완료');
         navigate('/signin');
@@ -120,7 +141,7 @@ function FindPassword() {
         onKeyDown={handleKeyDown}
         placeholder="이메일"
       />
-      <button onClick={handleSunmit}>인증번호 전송</button>
+      <button onClick={handleSubmit}>인증번호 전송</button>
       {isEmailSent && (
         <div>
           <input
@@ -143,7 +164,7 @@ function FindPassword() {
             type="password"
             value={newPassword_re_entering}
             onChange={(e) => setNewPassword_re_entering(e.target.value)}
-            placeholder="새비밀번호 재입력"
+            placeholder="새 비밀번호 재입력"
           />
           <button onClick={handleResetPassword}>비밀번호 재설정</button>
         </div>

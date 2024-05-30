@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../../../styles/Table.css';
 
@@ -7,10 +8,17 @@ function ViewReservation() {
   const [showCompletedReservations, setShowCompletedReservations] = useState(false);
   const [totalCompletedAmount, setTotalCompletedAmount] = useState(0);
   const userId = localStorage.getItem('userId');
-
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accesToken');
+  
   useEffect(() => {
-    getReservationInfoList(userId);
-  }, [userId, showCompletedReservations]);
+    if (!accessToken){
+      navigate("/signin");
+    }
+    else{
+      getReservationInfoList(userId);
+    }
+  }, [userId, showCompletedReservations, accessToken, navigate]);
 
   const getReservationInfoList = async () => {
     try {
@@ -35,7 +43,12 @@ function ViewReservation() {
         alert("예약내역 가져오기에 실패하였습니다.");
       }
     } catch (error) {
-      alert("예약 정보를 불러오는 중에 문제가 발생했습니다.");
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        alert("예약 정보를 불러오는 중에 문제가 발생했습니다.");
+      }
     }
   }
 
@@ -58,7 +71,12 @@ function ViewReservation() {
         alert("예약 취소에 실패하였습니다.");
       }
     } catch (error) {
-      alert("예약 취소 중에 문제가 발생했습니다.");
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        alert("예약 취소 중에 문제가 발생했습니다.");
+      }
     }
   }
 
@@ -72,6 +90,9 @@ function ViewReservation() {
       <button onClick={handleShowCompletedReservations}>
         {showCompletedReservations ? '전체 내역 보기' : '촬영완료 내역 보기'}
       </button>
+      {reservations.length === 0 ? (
+      <p style={{marginTop : "10px"}}>예약내역이 없습니다.</p>
+      ) : (
       <table>
         <thead>
           <tr>
@@ -110,6 +131,11 @@ function ViewReservation() {
                     예약취소
                   </button>
                 )}
+                {(reservation.status === 2) &&(
+                  <button style={{background : "#efbb54", borderColor : "#efbb54"}}>
+                    리뷰쓰기
+                  </button>
+                )}
               </td>
             </tr>
           ))}
@@ -120,7 +146,7 @@ function ViewReservation() {
             </tr>
           )}
         </tbody>
-      </table>
+      </table>)}
     </div>
   )
 }

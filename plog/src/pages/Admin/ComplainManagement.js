@@ -9,21 +9,21 @@ function ComplainManagement() {
   const [editingComplaintIndex, setEditingComplaintIndex] = useState(-1);
   const [newReplyContent, setNewReplyContent] = useState('');
   const userId = localStorage.getItem('userId');
-  const navigator = useNavigate();
-
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accesToken');
+  const role = localStorage.getItem('role');
   useEffect(() => {
-    const accessToken = localStorage.getItem('accesToken');
-    const role = localStorage.getItem('role');
     if (!accessToken){
-      navigator("/signin");
+      navigate("/signin");
     }
     else if(role !== 'ADMIN'){
-      navigator(-1);
+      navigate("/");
     }
     else{
       getComplainList();
     }
-  }, []);
+  }, [accessToken, navigate]);
+  
 
   const getComplainList = async () => {
     try {
@@ -48,7 +48,7 @@ function ComplainManagement() {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
-        navigator('/signin', { replace: true });
+        navigate('/signin', { replace: true });
       } else {
         console.error('서비스리스트 가져오기에 실패하였습니다.', error);
       }
@@ -88,7 +88,7 @@ function ComplainManagement() {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
-        navigator('/signin', { replace: true });
+        navigate('/signin', { replace: true });
       } else {
         console.error('서비스리스트 가져오기에 실패하였습니다.', error);
       }

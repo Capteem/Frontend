@@ -83,7 +83,7 @@ function SignUp() {
     }
     if (!emailRegex.test(state.email)) {
       email.current.focus();
-      alert("유효한 이메일을 입력하세요");
+      alert('올바른 이메일 형식이 아닙니다.');
       return;
     }
 
@@ -111,9 +111,9 @@ function SignUp() {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
-        navigator('/signin', { replace: true });
+        navigate('/signin', { replace: true });
       } else {
-        console.error('서비스리스트 가져오기에 실패하였습니다.', error);
+        console.error('회원가입에 실패하였습니다.', error);
       }
     }
   };
