@@ -5,8 +5,18 @@
 
 1. 예약 기능
 <img width="1052" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/95f085cf-7682-4fbb-88f2-2c40da562264">
+- 날짜를 우선적으로 선택하면 그 날짜에 예약할 수 있는 서비스들이 뜬다.
+- 지역을 먼저 선택하면 그 지역에서 이용할 수 있는 서비스들만 화면에 뜬다.
+- 서비스를 먼저 선택하면 선택한 서비스를 이용할 수 있는 날짜만 선택할 수 있게 활성화가 되고 다른 서비스들도 선택한 것에 기반해 선별해서 화면에 뜬다.
 
 2. 서비스 등록
+<img width="230" height="400" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/4fade5db-aa02-4622-a07d-dd33b8ced2ce">
+<img width="230" height="400" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/a4d402be-22a2-4d1a-b0b4-66396212d311">
+<img width="230" height="400" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/94c26700-bbbc-44b2-b7c8-97f517524563">
+- 서비스 제공자로 활동하고 싶은 경우 서비스 등록을 할 수 있다.
+- 스튜디오는 사업자 번호를 등록하면된다.
+- 사진작가는 본인이 찍은 사진 10장, 헤어,메이크업은 자격증 사진을 등록하면된다.
+- 관리자가 승인하면 서비스 제공자로 활동을 할 수 있다.
 
 ## 역할 분담
 |이나경|박서현|
@@ -40,11 +50,6 @@
 - react-icos
 
 ## 프로젝트 폴더 구조
-```
-
-```
-
-## 폴더 구조
 ```
 📦src
  ┣ 📂assets
