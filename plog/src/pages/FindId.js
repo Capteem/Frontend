@@ -1,15 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/multi.css';
-import {useNavigate } from 'react-router-dom';
-// 완료되면 로그인 페이지로 넘어가기
+import { useNavigate } from 'react-router-dom';
+
 function FindId() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const emailRef = useRef(null);
   const [email, setEmail] = useState('');
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const [userId, setUserId] = useState('');
 
   const handleChangeState = (e) => {
     setEmail(e.target.value);
@@ -21,13 +20,32 @@ function FindId() {
     }
   };
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accesToken');
+    if (accessToken) {
+      navigate('/');
+    }
+  }, [navigate]);
+
+  const isValidEmail = (email) => {
+    // 이메일 형식의 정규 표현식
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSunmit = async () => {
     if (email === '') {
       emailRef.current.focus();
       alert('이메일을 입력하세요');
       return;
     }
-    
+
+    if (!isValidEmail(email)) {
+      emailRef.current.focus();
+      alert('올바른 이메일 형식이 아닙니다.');
+      return;
+    }
+
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/user/checkemail`, {
         email: email,
@@ -40,7 +58,7 @@ function FindId() {
         alert('이메일 전송 중 문제가 발생했습니다. 다시 시도해주세요.');
       }
     } catch (error) {
-      alert('이메일 전송 중 문제가 발생했습니다. 다시 시도해주세요.');
+        console.error('이메일 전송에 실패하였습니다.', error);
     }
   };
 
@@ -55,7 +73,7 @@ function FindId() {
       alert(`${response.data.message}`);
       navigate('/signin');
     } catch (error) {
-      alert('인증 실패. 다시 시도해주세요.');
+        console.error('이메일 인증에 실패하였습니다..', error);
     }
   };
 

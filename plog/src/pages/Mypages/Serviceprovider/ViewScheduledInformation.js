@@ -212,10 +212,10 @@ function ViewScheduledInformation() {
                 <tr key={index}>
                   <td>{reservation.reservationId}</td>
                   <td>
-                    {reservation.reservationStatus === 0 ? "예약 대기" :
-                      reservation.reservationStatus === 1 ? "예약 확정" :
-                        reservation.reservationStatus === 2 ? "촬영 완료" :
-                          "예약 취소"}
+                    {reservation.reservationStatus === 0 ? "예약대기" :
+                      reservation.reservationStatus === 1 ? "예약확정" :
+                        reservation.reservationStatus === 2 ? "촬영완료" :
+                          "예약취소"}
                   </td>
                   <td>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</td>
                   <td>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</td>

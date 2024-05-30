@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Table.css';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 function ComplainManagement() {
   const [complainlist, setComplainlist] = useState([]);
   const [editingComplaintIndex, setEditingComplaintIndex] = useState(-1);
   const [newReplyContent, setNewReplyContent] = useState('');
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accesToken');
+  const role = localStorage.getItem('role');
   useEffect(() => {
-    getComplainList();
-  }, []);
+    if (!accessToken){
+      navigate("/signin");
+    }
+    else if(role !== 'ADMIN'){
+      navigate("/");
+    }
+    else{
+      getComplainList();
+    }
+  }, [accessToken, navigate]);
+  
 
   const getComplainList = async () => {
     try {
@@ -32,7 +46,12 @@ function ComplainManagement() {
         alert('Q&A리스트 가져오기에 실패하였습니다.');
       }
     } catch (error) {
-      console.error('Q&A리스트 가져오기에 실패하였습니다', error);
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        console.error('Q&A리스트 가져오기에 실패하였습니다.', error);
+      }
     }
   };
 
@@ -51,29 +70,37 @@ function ComplainManagement() {
         complaintId: complainlist[index].complaintId,
         complaintReplyContent: newReplyContent,
         complaintReplyDate: new Date().toISOString(),
-      },
+      }, 
       {
-        headers:{
-          'Auth-Token' : localStorage.getItem("accesToken"),
+        headers: {
+          'Auth-Token': localStorage.getItem('accesToken'),
         },
       }
     );
       if (response.status === 200) {
-        alert(`답글 등록, 수정에 성공하였습니다.`);
+        alert(`답글 등록에 성공하였습니다.`);
         getComplainList(); // 리스트 다시 가져오기
         setEditingComplaintIndex(-1);
         setNewReplyContent('');
       } else if (response.status === 400) {
-        alert('답글 등록, 수정에 실패하였습니다.');
-      }
+        alert('답글 등록에 실패하였습니다.');
+      } 
     } catch (error) {
-      console.error('답글 등록, 수정에 실패하였습니다.', error);
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        console.error('답글 등록에 실패하였습니다.', error);
+      }
     }
   };
 //
   return (
     <div className='Table'>
       <h4>Q&A관리</h4>
+      {complainlist.length === 0 ? (
+      <p>Q&A가 없습니다.</p>
+    ) : (
         <table>
           <thead>
             <tr>
@@ -128,6 +155,7 @@ function ComplainManagement() {
             ))}
           </tbody>
         </table>
+      )}
     </div>
   );
 }

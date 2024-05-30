@@ -1,36 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/Table.css';
+import { useNavigate } from "react-router-dom";
 
 function UserManagement() {
   const [userlist, setuserlist] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState({});
+  const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
-  useEffect(() => {
-    getUserList();
-  }, []);
+  const accessToken = localStorage.getItem('accesToken');
+  const role = localStorage.getItem('role');
 
+  useEffect(() => {
+    if (!accessToken){
+      navigate("/signin");
+    }
+    else if(role !== 'ADMIN'){
+      navigate("/");
+    }
+    else{
+      getUserList();
+    }
+  }, [accessToken, navigate]);
+  
   const getUserList = async () => {
     try {
-      const accessToken = localStorage.getItem('accesToken');
-
       const response = await axios.get(`${process.env.REACT_APP_URL}/admin/user`, {
         params: {
           adminId: userId,
         },
         headers: {
-          'Auth-Token': accessToken,
-        },
+            'Auth-Token': localStorage.getItem('accesToken'),
+        },     
       });
 
       if (response.status === 200) {
         setuserlist(response.data);
         console.log(response.data);
-      } else if (response.status === 400) {
-        alert('유저리스트 가져오기에 실패하였습니다.');
+      } 
+      else if (response.status === 400) {
+        alert('사용자리스트 가져오기에 실패하였습니다.');
       }
+      
     } catch (error) {
-      console.error('유저리스트 가져오기에 실패하였습니다.', error);
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        console.error('사용자리스트 가져오기에 실패하였습니다.', error);
+      }
     }
   };
 
@@ -48,20 +66,32 @@ function UserManagement() {
         status: selectedStatus[userId] || status,
       },
       {
+<<<<<<< HEAD
         headers:{
           'Auth-Token' : localStorage.getItem("accesToken"),
         },
       }
+=======
+      headers: {
+        'Auth-Token': localStorage.getItem('accesToken'),
+      },
+    }
+>>>>>>> fccd1baea3fa6c3a25bc3d8f31c101b35a914eb0
     );
       console.log(userId);
       console.log(selectedStatus[userId] || status);
       if (response.status === 200) {
         alert(`${userId}의 상태를 ${(selectedStatus[userId] || status) === '1' ? '활성화' : (selectedStatus[userId] || status) === '2' ? '정지' : '차단'}로 변경하였습니다.`);
       } else if (response.status === 400) {
-        alert('유저 상태변화에 실패하였습니다.');
-      }
+        alert('사용자 상태변화에 실패하였습니다.');
+      } 
     } catch (error) {
-      console.error('유저 상태변화에 실패하였습니다.', error);
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        console.error('사용자 상태변화에 실패하였습니다.', error);
+      }
     }
   };
 
@@ -80,8 +110,8 @@ function UserManagement() {
             <th>닉네임</th>
             <th>유형</th>
             <th>전화번호</th>
+            <th>이메일</th>
             <th>상태</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -93,17 +123,17 @@ function UserManagement() {
               <td>{userinfo.nickname}</td>
               <td>{userinfo.role}</td>
               <td>{userinfo.phonenum}</td>
+              <td>{userinfo.email}</td>
               <td>
-                <select
+                <select 
                   value={selectedStatus[userinfo.id] || userinfo.status}
                   onChange={(e) => handleStatusChange(userinfo.id, e.target.value)}
+                  style={{marginRight : "5px"}}
                 >
                   <option value="1">활성화</option>
                   <option value="2">정지</option>
                   <option value="3">차단</option>
                 </select>
-              </td>
-              <td>
                 <button onClick={() => UserStateChange(userinfo.id, userinfo.status)}>
                 상태변경
                 </button>

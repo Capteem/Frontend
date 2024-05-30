@@ -1,8 +1,8 @@
-import { IoPersonSharp } from "react-icons/io5";
 import { FaFrog } from "react-icons/fa";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import '../../../styles/Table.css';
+import { useNavigate } from "react-router-dom";
 
 function UserInfo() {
   const [userInfo, setUserInfo] = useState({});
@@ -13,24 +13,42 @@ function UserInfo() {
   const [newPasswordReEnter, setNewPasswordReEnter] = useState('');
   const [inputPassword, setInputPassword] = useState('');
   const [showInput, setShowInput] = useState(false);
+  const accessToken = localStorage.getItem('accesToken');
+  const navigate = useNavigate();
+  const nicknameRef = useRef(null);
+  const phoneNumRef = useRef(null);
+  const emailRef = useRef(null);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/user/getinfo`, {
-          params: {
-            userId: localStorage.getItem('userId'),
-          },
-        });
-        console.log(response.data);
-        setUserInfo(response.data);
-        setEditedUserInfo({ ...response.data });
-      } catch (error) {
-        console.error('회원정보 불러오기에 실패하였습니다. 다시 시도해주세요');
+    if (!accessToken) {
+      navigate("/signin");
+    } else {
+      fetchUserInfo();
+    }
+  }, [accessToken, navigate]);
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/user/getinfo`, {
+        params: {
+          userId: localStorage.getItem('userId'),
+        },
+        headers: {
+          'Auth-Token': localStorage.getItem('accesToken'),
+        },
+      });
+      console.log(response.data);
+      setUserInfo(response.data);
+      setEditedUserInfo({ ...response.data });
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        console.error('회원정보 가져오기에 실패하였습니다.', error);
       }
-    };
-    fetchUserInfo();
-  }, []);
+    }
+  };
 
   const handleEditMode = async () => {
     if (showInput) {
@@ -38,6 +56,10 @@ function UserInfo() {
         const response = await axios.post(`${process.env.REACT_APP_URL}/user/getconfirm`, {
           id: localStorage.getItem('userId'),
           password: inputPassword,
+        }, {
+          headers: {
+            'Auth-Token': localStorage.getItem('accesToken'),
+          },
         });
         if (response.status === 200) {
           setIsEditMode(true);
@@ -46,7 +68,12 @@ function UserInfo() {
           alert('비밀번호가 일치하지 않습니다.');
         }
       } catch (error) {
-        console.error('비밀번호 확인 중 오류가 발생했습니다.');
+        if (error.response && error.response.status === 401) {
+          alert("로그인 만료. 다시 로그인해주세요.");
+          navigate('/signin', { replace: true });
+        } else {
+          console.error('비밀번호 확인에 실패하였습니다.', error);
+        }
       }
     } else {
       setShowInput(true);
@@ -54,14 +81,43 @@ function UserInfo() {
   };
 
   const handleSaveChanges = async () => {
+    const phoneRegex = /^\d{2,3}-\d{3,4}-\d{4}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // 유효성 검사
+    if (editedUserInfo.nickname.length < 3) {
+      nicknameRef.current.focus();
+      alert("닉네임을 3글자 이상 입력하세요");
+      return;
+    }
+    if (!phoneRegex.test(editedUserInfo.phoneNum)) {
+      phoneNumRef.current.focus();
+      alert("전화번호를 000-0000-0000 또는 00-0000-0000 형식에 맞게 입력하세요");
+      return;
+    }
+    if (!emailRegex.test(editedUserInfo.email)) {
+      emailRef.current.focus();
+      alert('올바른 이메일 형식이 아닙니다.');
+      return;
+    }
+
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/user/changeinfo`, editedUserInfo);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/user/changeinfo`, editedUserInfo, {
+        headers: {
+          'Auth-Token': localStorage.getItem('accesToken'),
+        },
+      });
       console.log(response);
       setUserInfo(editedUserInfo);
       setIsEditMode(false);
       window.location.reload();
     } catch (error) {
-      console.error('회원정보 수정시 오류가 발생했습니다.');
+      if (error.response && error.response.status === 401) {
+        alert("로그인 만료. 다시 로그인해주세요.");
+        navigate('/signin', { replace: true });
+      } else {
+        console.error('회원정보 수정에 실패하였습니다.', error);
+      }
     }
   };
 
@@ -79,12 +135,21 @@ function UserInfo() {
   const handlePasswordSave = async () => {
     if (newPassword === newPasswordReEnter && newPassword.length > 3) {
       try {
-        await axios.post(`${process.env.REACT_APP_URL}/user/changePwd`, { id: localStorage.getItem('userId'), password: newPassword });
+        await axios.post(`${process.env.REACT_APP_URL}/user/changePwd`, { id: localStorage.getItem('userId'), password: newPassword }, {
+          headers: {
+            'Auth-Token': localStorage.getItem('accesToken'),
+          },
+        });
         setIsPasswordChangeMode(false);
         setNewPassword('');
         setNewPasswordReEnter('');
       } catch (error) {
-        console.error('비밀번호 변경 중 오류가 발생했습니다.');
+        if (error.response && error.response.status === 401) {
+          alert("로그인 만료. 다시 로그인해주세요.");
+          navigate('/signin', { replace: true });
+        } else {
+          console.error('비밀번호 변경 중 오류가 발생했습니다.');
+        }
       }
     } else {
       alert('비밀번호를 다시 입력해주세요');
@@ -156,6 +221,7 @@ function UserInfo() {
                 {isEditMode ? (
                   <input
                     type="text"
+                    ref={nicknameRef}
                     value={editedUserInfo.nickname}
                     onChange={(e) => handleInputChange('nickname', e.target.value)}
                   />
@@ -170,6 +236,7 @@ function UserInfo() {
                 {isEditMode ? (
                   <input
                     type="text"
+                    ref={phoneNumRef}
                     value={editedUserInfo.phoneNum}
                     onChange={(e) => handleInputChange('phoneNum', e.target.value)}
                   />
@@ -184,6 +251,7 @@ function UserInfo() {
                 {isEditMode ? (
                   <input
                     type="email"
+                    ref={emailRef}
                     value={editedUserInfo.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                   />
@@ -207,12 +275,11 @@ function UserInfo() {
                   value={inputPassword}
                   onChange={handleInputPasswordChange}
                 />
-                <button style={{ marginTop: '10px' }} onClick={handleEditMode}>비밀번호 확인</button>
+                <button style={{marginTop: '10px' }} onClick={handleEditMode}>비밀번호 확인</button>
               </>
             ) : (
               <>
                 <button style={{ marginTop: '10px' }} onClick={handleEditMode}>회원정보수정하기</button>
-                <button style={{ marginTop: '10px', marginLeft: '10px' }} >회원탈퇴하기</button>
               </>
             )}
           </>

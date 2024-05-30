@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../../../styles/Table.css';
 import ServiceDropdown from './ServiceDropdown'; 
 
-function ServiceProviderInfo() {
+function ServiceList() {
   const [serviceList, setserviceList] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const userId = localStorage.getItem('userId');
@@ -34,7 +34,6 @@ function ServiceProviderInfo() {
       }
     } catch (error) {
       console.log(error);
-      alert("서비스리스트 불러오는 중에 문제가 발생했습니다.");
     }
   }
 
@@ -84,4 +83,4 @@ function ServiceProviderInfo() {
 );
 }
 
-export default ServiceProviderInfo;
+export default ServiceList;
