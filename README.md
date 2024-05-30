@@ -13,6 +13,7 @@
 <img width="230" height="400" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/4fade5db-aa02-4622-a07d-dd33b8ced2ce">
 <img width="230" height="400" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/a4d402be-22a2-4d1a-b0b4-66396212d311">
 <img width="230" height="400" alt="image" src="https://github.com/Capteem/Frontend/assets/114418850/94c26700-bbbc-44b2-b7c8-97f517524563">
+<br/>
 - 서비스 제공자로 활동하고 싶은 경우 서비스 등록을 할 수 있다.
 - 스튜디오는 사업자 번호를 등록하면된다.
 - 사진작가는 본인이 찍은 사진 10장, 헤어,메이크업은 자격증 사진을 등록하면된다.
