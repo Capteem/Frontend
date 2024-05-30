@@ -773,8 +773,5 @@ function ServiceInfo(){
   );
 }
 
-//todo:서버 시간 보내진거 체크
-//서버한테 시간 보내기
-
 
 export default ServiceInfo;
