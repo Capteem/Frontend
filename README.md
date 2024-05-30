@@ -21,7 +21,15 @@
 
 ## 라이브러리
 ```
-
+- Redux
+- react-daum-postcode
+- react-modal
+- react-bootstrap
+- react-cookie
+- date-fns
+- react-datepicker
+- react-router-dom
+- react-icos
 ```
 
 ## 아키텍처
