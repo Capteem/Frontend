@@ -38,3 +38,84 @@
 ```
 
 ```
+
+## 폴더 구조
+```
+📦src
+ ┣ 📂assets
+ ┃ ┣ 📜Ploglogo.png
+ ┃ ┣ 📜RegionList.js
+ ┃ ┣ 📜addImg.png
+ ┃ ┣ 📜home.jpg
+ ┃ ┣ 📜kakao_login_large_narrow.png
+ ┃ ┣ 📜kakao_login_large_wide.png
+ ┃ ┣ 📜kakao_login_medium_narrow.png
+ ┃ ┣ 📜kakaologo.png
+ ┃ ┣ 📜select-image.png
+ ┃ ┣ 📜shoppingBag.jpg
+ ┃ ┗ 📜store.js
+ ┣ 📂components
+ ┃ ┣ 📂Nav
+ ┃ ┃ ┣ 📜Admin_Nav.js
+ ┃ ┃ ┣ 📜DropDown.js
+ ┃ ┃ ┣ 📜Home_Nav.js
+ ┃ ┃ ┣ 📜Small_Home_Nav.js
+ ┃ ┃ ┗ 📜User_Nav.js
+ ┃ ┗ 📂Reservations
+ ┃ ┃ ┣ 📜Calendar.js
+ ┃ ┃ ┣ 📜PortfolioEnd.js
+ ┃ ┃ ┗ 📜RegionSelect.js
+ ┣ 📂error
+ ┃ ┗ 📜test.js
+ ┣ 📂pages
+ ┃ ┣ 📂Admin
+ ┃ ┃ ┣ 📜ComplainManagement.js
+ ┃ ┃ ┣ 📜ServiceManagement.js
+ ┃ ┃ ┗ 📜UserManagement.js
+ ┃ ┣ 📂Mypages
+ ┃ ┃ ┣ 📂Serviceprovider
+ ┃ ┃ ┃ ┣ 📜Review.js
+ ┃ ┃ ┃ ┣ 📜ServiceDropdown.js
+ ┃ ┃ ┃ ┣ 📜ServiceInfo copy.js
+ ┃ ┃ ┃ ┣ 📜ServiceInfo.js
+ ┃ ┃ ┃ ┣ 📜ServiceList.js
+ ┃ ┃ ┃ ┗ 📜ViewScheduledInformation.js
+ ┃ ┃ ┣ 📂User
+ ┃ ┃ ┃ ┣ 📜ReviewList.js
+ ┃ ┃ ┃ ┣ 📜UserInfo.js
+ ┃ ┃ ┃ ┣ 📜ViewReservation.js
+ ┃ ┃ ┃ ┗ 📜WriteReview.js
+ ┃ ┃ ┗ 📜ShoppingBag.js
+ ┃ ┣ 📂Q&A
+ ┃ ┃ ┣ 📜Answer.js
+ ┃ ┃ ┗ 📜Question.js
+ ┃ ┣ 📂Reservation
+ ┃ ┃ ┣ 📜Payment.js
+ ┃ ┃ ┗ 📜Reservation.js
+ ┃ ┣ 📂ServiceRegistration
+ ┃ ┃ ┣ 📜ServiceRegistration.js
+ ┃ ┃ ┗ 📜ServiceRegistrationList.js
+ ┃ ┣ 📜FindId.js
+ ┃ ┣ 📜FindPassword.js
+ ┃ ┣ 📜Gallery.js
+ ┃ ┣ 📜Home.js
+ ┃ ┣ 📜KaKaoAuthHandler.js
+ ┃ ┣ 📜SignIn.js
+ ┃ ┗ 📜SignUp.js
+ ┣ 📂styles
+ ┃ ┣ 📜Calendar.css
+ ┃ ┣ 📜Dropdown.css
+ ┃ ┣ 📜ImageGallery.css
+ ┃ ┣ 📜Nav.css
+ ┃ ┣ 📜Table.css
+ ┃ ┣ 📜multi.css
+ ┃ ┣ 📜reserve.css
+ ┃ ┣ 📜review.css
+ ┃ ┣ 📜serviceInfo.css
+ ┃ ┣ 📜shoppingBag.css
+ ┃ ┗ 📜smallModal.css
+ ┣ 📜App.css
+ ┣ 📜App.js
+ ┣ 📜index.css
+ ┗ 📜index.js
+```
