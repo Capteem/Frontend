@@ -16,11 +16,11 @@ function ReviewList(){
         if(!token){
             navigate('/');
         }
-    },[navigate])
+    },[navigate]);
 
     useEffect(()=>{
         getReviewList();
-    },[])
+    },[]);
 
     const [reviewList, setReviewList] = useState([]);
 
@@ -153,6 +153,8 @@ function ReviewList(){
 
                 return(
                     <div key={index}>
+                        <div className='review-user'>
+                        <span className='review-name'>서비스제공자이름</span>
                         <span className='review-time'>{date} {time}</span>
                         <div style={{marginBottom:2, marginTop:-5}}>{
                                 five.map((score, index)=>{
@@ -166,6 +168,7 @@ function ReviewList(){
                                     )
                                 })
                         }</div>
+                        </div>
                         <textarea className='review-textarea'
                             disabled={checkChange[index]}
                             onChange={(event)=>{changeComment(event, item)}}

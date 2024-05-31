@@ -67,6 +67,7 @@ function WriteReview(){
         }
     }
 
+    //todo: providerId 바꿔야함
     function sendReview(){
         const date = new Date();
         const tmp = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
@@ -75,7 +76,7 @@ function WriteReview(){
             "reviewContent" : review,
             "reviewScore": reviewScore,
             "userId": localStorage.getItem('userId'),
-            "userNickName": "string",
+            "userNickName": localStorage.getItem('userNickname'),
             "reviewDate": tmp.toISOString(),
             "providerId": 4
         }

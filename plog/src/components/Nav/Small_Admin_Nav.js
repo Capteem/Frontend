@@ -61,36 +61,36 @@ function Admin_Nav() {
                       <Link onClick={()=>{ setModalShow(true);}}>로그아웃</Link>
                     </div>
                 )}
-              </div>
-            </>
-          }
+            </div>
+          </>
+        }
       </div>
       <>
-          {
-            checkLogin === false ?
-              <NavLink to="/signup">
-                회원가입
-              </NavLink>
+        {
+          checkLogin === false ?
+            <NavLink to="/signup">
+              회원가입
+            </NavLink>
             :
-              null
-          }
+            null
+        }
       </>
       </nav>
       {
-          modalShow &&
-            <div className='small-portfolio-modal' onClick={()=>{setModalShow(false)}}>
-              <div className='small-portfolio-modalBody'>
-                <div className='small-modal-big-text'>로그아웃 하시겠습니까?</div>
-                <button className='small-modal-button' onClick={()=>{
-                  removeToken();
-                  navigate("/");
-                  setCheckLogin(false);
-                  setModalShow(false);
-                }}>확인</button>
-                <button className='small-modal-button' onClick={()=>{setModalShow(false);}}>취소</button>
-              </div>
-            </div>
-        }
+        modalShow &&
+        <div className='small-portfolio-modal' onClick={()=>{setModalShow(false)}}>
+          <div className='small-portfolio-modalBody'>
+            <div className='small-modal-big-text'>로그아웃 하시겠습니까?</div>
+            <button className='small-modal-button' onClick={()=>{
+              removeToken();
+              navigate("/");
+              setCheckLogin(false);
+              setModalShow(false);
+            }}>확인</button>
+            <button className='small-modal-button' onClick={()=>{setModalShow(false);}}>취소</button>
+          </div>
+        </div>
+      }
     </div>
   )
 }  
@@ -100,8 +100,9 @@ function removeToken(){
   localStorage.removeItem('accesToken');
   localStorage.removeItem('userId');
   localStorage.removeItem('role');
+  localStorage.removeItem('userNickname');
   cookies.remove('refreshToken');
   cookies.remove('tmpBag');
 }
   
-  export default Admin_Nav;
+export default Admin_Nav;

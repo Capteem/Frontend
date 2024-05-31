@@ -27,7 +27,7 @@ function User_Nav(){
 
     return(
         <>
-        {console.log(windowSize)}
+        {/* {console.log(windowSize)} */}
         {
             windowSize.width > 900 ? <Home_Nav/> : <Small_Home_Nav/>
         }

@@ -36,7 +36,6 @@ function ServiceInfo(){
 
   //서버에서 받아와 화면에 띄울 사진 url들
   const [url, setImageURL] = useState([]);
-  const [rendering, setRendering] = useState(false);
 
   //포폴 사진들 조회
   useEffect(()=>{
@@ -367,6 +366,26 @@ function ServiceInfo(){
     }
   }
 
+  function checkBeforeSend(){
+
+    const checkPhNum = /^\d{3}-\d{4}-\d{4}$/;
+
+    if(!(tmpserviceName.trim().length > 0)){
+      alert("서비스 이름을 입력해주세요.");
+    }else if(!checkPhNum.test(tmpservicePhoneNumber)){
+      alert("서비스 번호를 입력해주세요.\n(ex.000-0000-0000)");
+    }else if(tmpprice <= 0){
+      alert("가격을 입력해주세요.");
+    }else{
+      sendChangeInfo();
+      resetDay();
+      checkOrigin();
+      setChange(true);
+    }
+
+  }
+
+  //일정 체크 로직
   const sendDateList = [];
   function checkOrigin(){
     console.log("checkOrigin함수 안");
@@ -464,7 +483,6 @@ function ServiceInfo(){
       }
     })
     console.log(tmpSend);
-    // sendAddTime(tmpSend, providerId);
     console.log("sendTime함수 전");
     sendTime(tmpSend, providerId);
   }
@@ -542,7 +560,6 @@ function ServiceInfo(){
       }
     });
     
-    console.log(uniqueTimeAndDay);
     setOriginWorkdate(uniqueTimeAndDay);
     settingWithOriginDate(uniqueTimeAndDay);
   }
@@ -550,7 +567,7 @@ function ServiceInfo(){
   function settingWithOriginDate(props){
     console.log(props);
 
-    props.map((item, props)=>{
+    props.map((item)=>{
       let dayIndex = dayEnglish.indexOf(item.day);
       let tmpTime = item.time.slice(0,-3);
       let timeIndex = time.indexOf(tmpTime);
@@ -563,9 +580,9 @@ function ServiceInfo(){
 
 
   const [checkChangeInfo, setCheckChangeInfo] = useState(false);
-  const [tmpserviceName, settmpServiceName] = useState(serviceName);
-  const [tmpservicePhoneNumber, settmpServicePhoneNumber] = useState(servicePhoneNumber);
-  const [tmpprice, settmpPrice] = useState(price);
+  const [tmpserviceName, settmpServiceName] = useState("");
+  const [tmpservicePhoneNumber, settmpServicePhoneNumber] = useState("");
+  const [tmpprice, settmpPrice] = useState(0);
   function sendChangeInfo(){
     if(checkChangeInfo === true){
       let tmp = {
@@ -759,11 +776,9 @@ function ServiceInfo(){
             :
           <div>
             <br/>
-              <button className='information-finish-button' onClick={()=>{setChange(true); setTimeShow(false);
+              <button className='information-finish-button' onClick={()=>{setTimeShow(false);
                 console.log("수정완료 버튼 클릭");
-                sendChangeInfo();
-                resetDay();
-                checkOrigin();
+                checkBeforeSend();
               }}>수정 완료</button>
               <button className='information-finish-button'>서비스 삭제</button>
           </div>
