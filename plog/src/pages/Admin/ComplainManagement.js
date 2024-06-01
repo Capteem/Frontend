@@ -3,7 +3,7 @@ import '../../styles/Table.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
-
+//
 function ComplainManagement() {
   const [complainlist, setComplainlist] = useState([]);
   const [editingComplaintIndex, setEditingComplaintIndex] = useState(-1);
