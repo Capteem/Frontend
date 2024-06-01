@@ -19,31 +19,48 @@ function Gallery(){
     const [portfolio, setPortfolio] = useState([]);
     useEffect(()=>{
         console.log("실행");
-        axios.get(`${process.env.REACT_APP_URL}/service/confirmed`,
-            {
-                headers:{
-                    'Auth-Token' : localStorage.getItem("accesToken")
-                }
-            }
-        )
-        .then(function(result){
-            console.log(result.data);
-            setPortfolio(result.data);
-        })
-        .catch((error)=>{
-            if(error.response.status === 401){
-                alert("로그인 만료. 다시 로그인해주세요.")
-                navigate('/signin', { replace: true });
-            }else{
-                alert('서버로부터 data 받아오는 것 실패');
-                console.log(error);
-            }
-        })
+        // axios.get(`${process.env.REACT_APP_URL}/service/confirmed`,
+        //     {
+        //         headers:{
+        //             'Auth-Token' : localStorage.getItem("accesToken")
+        //         }
+        //     }
+        // )
+        // .then(function(result){
+        //     console.log(result.data);
+        //     setPortfolio(result.data);
+        // })
+        // .catch((error)=>{
+        //     if(error.response.status === 401){
+        //         alert("로그인 만료. 다시 로그인해주세요.")
+        //         navigate('/signin', { replace: true });
+        //     }else{
+        //         alert('서버로부터 data 받아오는 것 실패');
+        //         console.log(error);
+        //     }
+        // })
     },[]);
 
     return(
         <div>
             갤러리
+            <div className="gallery-container">
+                {
+                    // show.map((value, index)=>{
+                    //     let item = repPhoto.find(photo => photo.id === value.providerId);
+                    //     let url = item ? item.url : null;
+                    //     return(
+                    //         <div className='image-container'>
+                    //         <img key={index} src={url} onClick={()=>{
+                    //             getDetail(value);   //모달창에 보여주기 위한 세부정보
+                    //             getReview(value);
+                    //             setModalShow(true);
+                    //         }}/>
+                    //         </div>
+                    //     )
+                    // })
+                }
+            </div>
         </div>
     )
 

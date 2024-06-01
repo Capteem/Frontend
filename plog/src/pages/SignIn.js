@@ -41,10 +41,11 @@ function SignIn(){
                 password: password,
             })
             .then(function(result){
-                console.log(result);
+                console.log(result.data);
                 localStorage.setItem("accesToken", result.data.accessToken);
                 localStorage.setItem("userId", id);
                 localStorage.setItem("role", result.data.role);
+                localStorage.setItem("userNickname", result.data.userNickname);
                 navigate('/', { replace: true });
                 window.location.reload();
             })
