@@ -18,6 +18,7 @@ function UserInfo() {
   const nicknameRef = useRef(null);
   const phoneNumRef = useRef(null);
   const emailRef = useRef(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     if (!accessToken) {
@@ -25,7 +26,16 @@ function UserInfo() {
     } else {
       fetchUserInfo();
     }
-  }, [accessToken, navigate]);
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+  };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+        window.removeEventListener('resize', handleResize);
+    };
+}, [accessToken, navigate]);
 
   const fetchUserInfo = async () => {
     try {
@@ -173,7 +183,8 @@ function UserInfo() {
         }}>
           <FaFrog size="100" color="#162617" />
         </div>
-        <table style={{ width: '100%', marginTop: '10px' }}>
+        <table style={{ width: window.innerWidth <= 700 ? '100%' : '70%', marginTop: '10px' }}>
+        
           <tbody>
             <tr>
               <th scope="row">아이디</th>
