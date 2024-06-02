@@ -109,7 +109,7 @@ function UserManagement() {
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const filteredUsers = userlist.filter((user) => {
@@ -163,6 +163,9 @@ function UserManagement() {
         <p>검색 결과가 없습니다.</p>
       ) : (
         <>
+        {userlist.length === 0 ? (
+          <p>사용자가 없습니다.</p>
+        ) : (
           <Table>
             <Thead>
               <Tr>
@@ -205,7 +208,7 @@ function UserManagement() {
                 </Tr>
               ))}
             </Tbody>
-          </Table>
+          </Table>)}
           <Pagination
             activePage={currentPage}
             itemsCountPerPage={itemsPerPage}
