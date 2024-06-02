@@ -149,6 +149,7 @@ function UserManagement() {
             paddingLeft: "25px", 
             textAlign: "center",
             border: "1px solid #162617",
+            marginRight : "10px"
         }}
       />
     </div>
@@ -159,13 +160,12 @@ function UserManagement() {
         <button className="sort" onClick={() => handleSort('role')}>유형순</button>
       </div>
       </div>
-      {filteredUsers.length === 0 ? (
+      {userlist.length === 0 ? (
+        <p>사용자가 없습니다.</p>
+      ) : filteredUsers.length === 0 ? (
         <p>검색 결과가 없습니다.</p>
       ) : (
         <>
-        {userlist.length === 0 ? (
-          <p>사용자가 없습니다.</p>
-        ) : (
           <Table>
             <Thead>
               <Tr>
@@ -208,7 +208,7 @@ function UserManagement() {
                 </Tr>
               ))}
             </Tbody>
-          </Table>)}
+          </Table>
           <Pagination
             activePage={currentPage}
             itemsCountPerPage={itemsPerPage}
