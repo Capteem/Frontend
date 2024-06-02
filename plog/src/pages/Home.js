@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import HomeImage from '../assets/home.jpg'
+import HomeImage from '../assets/home.jpg';
 
 function Home() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [textAlignment, setTextAlignment] = useState('center');
 
   useEffect(() => {
-    // 초기 화면 크기 감지
     const updateTextAlignment = () => {
       if (window.innerWidth >= 768) {
         setTextAlignment('left');
@@ -15,25 +15,24 @@ function Home() {
       }
     };
 
-    updateTextAlignment();
-
     const handleResize = () => {
-      // 화면 크기 변경 감지
       setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
       updateTextAlignment();
     };
 
+    updateTextAlignment();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
       <img 
         src={HomeImage} 
         style={{
           width: '100%',
-          height: `${window.innerHeight * 0.9}px`,
+          height: `${windowHeight * 0.9}px`,
           objectFit: 'cover',
           margin: '-20px'
         }}
@@ -42,10 +41,10 @@ function Home() {
       <div 
         style={{ 
           position: 'absolute', 
-          top:  window.innerWidth >= 768 ? '57%' : '59%', 
-          left: window.innerWidth >= 768 ? '22.5%' : '20.5%', 
+          top: windowWidth >= 768 ? '57%' : '59%', 
+          left: windowWidth >= 768 ? '22.5%' : '20.5%', 
           transform: 'translate(-50%, -50%)', 
-          textAlign: "left" 
+          textAlign: textAlignment 
         }}
       >
         <h1 
