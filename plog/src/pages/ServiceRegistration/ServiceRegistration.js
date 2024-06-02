@@ -20,7 +20,8 @@ function ServiceRegistration() {
     const [isBusinessNumberValid, setIsBusinessNumberValid] = useState(false);
     const [isFileUploaded, setIsFileUploaded] = useState(false);
     const accessToken = localStorage.getItem('accesToken');
-    const uuid = 0;
+    const [uuid, setUuid] = useState(uuidv4());
+    console.log(uuid);
     const [state, setState] = useState({
         provider_name: "",
         address: "",
@@ -33,13 +34,10 @@ function ServiceRegistration() {
     useEffect(() => {
         if (!accessToken) {
             navigate("/signin");
-        }
-        else{
-            uuid = uuidv4();
+        } else {
             console.log(uuid);
         }
-        
-    }, [accessToken,navigate]);
+    }, [accessToken, navigate, uuid]);
 
     const handleChangeState = (e) => {
         setState({
@@ -94,6 +92,7 @@ function ServiceRegistration() {
             alert("전화번호를 올바른 형식으로 입력하세요 (예: 010-1234-5678)");
             return;
         }
+        console.log(uuid);
         
         try {
             const addressParts = state.address.split(" ");
@@ -108,7 +107,7 @@ function ServiceRegistration() {
                 providerSubArea: subarea,
                 providerDetail: detail,
                 providerPhoneNum: state.provider_phonenumber,
-                uuid : uuid,
+                uuid: uuid,
             }, {
                 headers: {
                     'Auth-Token': localStorage.getItem('accesToken')
@@ -127,14 +126,14 @@ function ServiceRegistration() {
             if (error.response && error.response.status === 401) {
                 alert("로그인 만료. 다시 로그인해주세요.");
                 navigate('/signin', { replace: true });
-              } else {
+            } else {
                 alert("서비스 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
-              }
+            }
         }
     }
 
     // 지역선택 완료 처리하기
-    const handlecomplete = (data) => {
+    const handleComplete = (data) => {
         setState({
             ...state,
             address: data.address,
@@ -175,10 +174,10 @@ function ServiceRegistration() {
             if (error.response && error.response.status === 401) {
                 alert("로그인 만료. 다시 로그인해주세요.");
                 navigate('/signin', { replace: true });
-              } else {
+            } else {
                 alert("사업자 번호 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
                 setIsBusinessNumberValid(false);
-              }
+            }
         }
     };
 
@@ -215,16 +214,16 @@ function ServiceRegistration() {
         }
         formData.append('userId', userId);
         formData.append('uuid', uuid);
-
+        console.log(uuid);
         axios.post(`${process.env.REACT_APP_URL}/confirm/checkProvider`, formData, {
             headers: {
-                'uuid' : uuid,
+                'uuid': uuid,
                 'userId': userId,
                 'providerCheckFiles': 'multipart/form-data',
                 'Auth-Token': localStorage.getItem('accesToken')
             },
         })
-        .then(response => {
+            .then(response => {
                 console.log("사진" + response);
                 if (response.status === 200) {
                     alert("사진 등록에 성공하였습니다.");
@@ -236,11 +235,12 @@ function ServiceRegistration() {
                 if (error.response && error.response.status === 401) {
                     alert("로그인 만료. 다시 로그인해주세요.");
                     navigate('/signin', { replace: true });
-                  } else {
+                } else {
                     alert("사진 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
-                  }
+                }
             });
     };
+
 
     
     return (
@@ -268,7 +268,7 @@ function ServiceRegistration() {
             <button onClick={openModal}>주소찾기</button>
             <Modal isOpen={isOpen} onRequestClose={closeModal}>
                 <DaumPostcode
-                    onComplete={handlecomplete}
+                    onComplete={handleComplete}
                 />
             </Modal>
             </div>
