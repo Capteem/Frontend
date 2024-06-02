@@ -3,12 +3,18 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../../../styles/Table.css';
 import ServiceDropdown from './ServiceDropdown';
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import Pagination from 'react-js-pagination';
 
 function ServiceList() {
-  const [serviceList, setserviceList] = useState([]);
+  const [serviceList, setServiceList] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1000 ? 1 : 5);
+  const [sortKey, setSortKey] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
   const navigate = useNavigate();
-  
+
   const userId = localStorage.getItem('userId');
   const accessToken = localStorage.getItem('accesToken');
   const role = localStorage.getItem('role');
@@ -23,11 +29,18 @@ function ServiceList() {
     else{
       getServiceList();
     }
-  }, [accessToken, navigate]);
+
+    const handleResize = () => {
+      setItemsPerPage(window.innerWidth < 1000 ? 1 : 5);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [accessToken, navigate, role]);
 
   const toggleDropdown = () => {
-  setIsDropdownOpen(!isDropdownOpen);
-};
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const getServiceList = async () => {
     try {
@@ -41,7 +54,7 @@ function ServiceList() {
         },
       });
       if (response.status === 200) {
-        setserviceList(response.data); 
+        setServiceList(response.data); 
         console.log(response.data); 
       } else {
         alert("서비스리스트 가져오기에 실패하였습니다.");
@@ -56,50 +69,101 @@ function ServiceList() {
     }
   }
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleSort = (key) => {
+    let order = 'asc';
+    if (sortKey === key && sortOrder === 'asc') {
+      order = 'desc';
+    }
+    setSortKey(key);
+    setSortOrder(order);
+    sortServiceList(key, order);
+  };
+
+  const sortServiceList = (key, order) => {
+    setServiceList((prevList) => {
+      const sortedList = [...prevList].sort((a, b) => {
+        if (a[key] < b[key]) {
+          return order === 'asc' ? -1 : 1;
+        }
+        if (a[key] > b[key]) {
+          return order === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+      return sortedList;
+    });
+  };
+
+  const indexOfLastService = currentPage * itemsPerPage;
+  const indexOfFirstService = indexOfLastService - itemsPerPage;
+  const currentServices = serviceList.slice(indexOfFirstService, indexOfLastService);
+
   return (
     <div className='Table'>
-    <h4>서비스리스트</h4>
-    {serviceList.length === 0 ? (
-      <p>서비스가 없습니다.</p>
-    ) : (
-    <table>
-<thead>
-  <tr>
-    <th>번호</th>
-    <th>서비스 이름</th>
-    <th>서비스 종류</th>
-    <th>서비스 주소</th>
-    <th>서비스 전화번호</th>
-    <th></th>
-  </tr>
-</thead>
-<tbody>
-  {serviceList.map((service, index) => (
-    <tr key={index}>
-      <td>{index+1}</td>
-      <td>{service.providerName}</td>
-      <td>
-        {service.providerType === 1 ? "사진작가" : 
-         service.providerType === 2 ? "스튜디오" : 
-         "헤어,메이크업"}
-      </td>
-      <td>{service.providerAddress}</td>
-      <td>{service.providerPhoneNum}</td>
-      <td>
-      <div className="dropdown">
-                  <ServiceDropdown 
-                    isOpen={isDropdownOpen}
-                    toggleDropdown={toggleDropdown}
-                    providerId = {service.providerId}
-                  />
-                </div>
-      </td>
-    </tr>
-  ))}
-</tbody>
-</table>)}
-</div>
-);
+      <h4>서비스리스트</h4>
+      <div className="sort-buttons">
+        <button className="sort" onClick={() => handleSort('providerName')}>이름순</button>
+        <button className="sort" onClick={() => handleSort('providerType')}>종류순</button>
+      </div>
+      {serviceList.length === 0 ? (
+        <p>서비스가 없습니다.</p>
+      ) : (
+        <>
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>번호</Th>
+                <Th>서비스 이름</Th>
+                <Th>서비스 종류</Th>
+                <Th>서비스 주소</Th>
+                <Th>서비스 전화번호</Th>
+                <Th>서비스 관리</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {currentServices.map((service, index) => (
+                <Tr key={index}>
+                  <Td><div className='text'>{index + 1 + (currentPage - 1) * itemsPerPage}</div></Td>
+                  <Td><div className='text'>{service.providerName}</div></Td>
+                  <Td>
+                    <div className='text'>
+                      {service.providerType === 1 ? "사진작가" : 
+                       service.providerType === 2 ? "스튜디오" : 
+                       "헤어,메이크업"}
+                    </div>
+                  </Td>
+                  <Td><div className='text'>{service.providerAddress}</div></Td>
+                  <Td><div className='text'>{service.providerPhoneNum}</div></Td>
+                  <Td>
+                    <div className='text'>
+                      <div className="dropdown">
+                        <ServiceDropdown 
+                          isOpen={isDropdownOpen}
+                          toggleDropdown={toggleDropdown}
+                          providerId={service.providerId}
+                        />
+                      </div>
+                    </div>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+          <Pagination
+            activePage={currentPage}
+            itemsCountPerPage={itemsPerPage}
+            totalItemsCount={serviceList.length}
+            pageRangeDisplayed={5}
+            onChange={handlePageChange}
+          />
+        </>
+      )}
+    </div>
+  );
 }
 
 export default ServiceList;

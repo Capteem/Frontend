@@ -111,11 +111,11 @@ function ServiceManagement() {
     }
   };
 
-  const ShowRegisteredPhoto = async (userId, providerId) => {
+  const ShowRegisteredPhoto = async (uuid) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/confirm/image/fileNames`,
         { 
-          userId : userId,
+          uuid : uuid,
 
         },
         {
@@ -179,13 +179,12 @@ function ServiceManagement() {
           <thead>
             <tr>
               <th>번호</th>
-              <th>사용자 아이디</th>
-              <th>서비스제공자 아이디</th>
+              <th>아이디</th>
+              <th>서비스 아이디</th>
               <th>서비스 이름</th>
               <th>서비스 종류</th>
               <th>제출자료</th>
               <th>상태</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -203,13 +202,14 @@ function ServiceManagement() {
                     : '스튜디오'}
                 </td>
                 <td>
-                  {serviceinfo.providerType !== 2 && serviceinfo.providerStatus === 2 ? (
-                    <button onClick={() => ShowRegisteredPhoto(serviceinfo.userId.id, serviceinfo.providerId)}><MdInsertPhoto /></button>
+                  {serviceinfo.providerType !== 3 ? (
+                    <button onClick={() => ShowRegisteredPhoto(serviceinfo.providerUuid)}><MdInsertPhoto /></button>
                   ) : (
                     ''
                   )}
                 </td>
                 <td>
+                  <>
                   <select
                     value={selectedStatus[serviceinfo.providerId] || serviceinfo.providerStatus}
                     onChange={(e) => handleStatusChange(serviceinfo.providerId, e.target.value)}
@@ -219,8 +219,6 @@ function ServiceManagement() {
                     <option value='3'>정지</option>
                     <option value='4'>차단</option>
                   </select>
-                </td>
-                <td>
                   <button
                     onClick={() =>
                       ServiceStateChange(serviceinfo.userId.id, serviceinfo.providerId, serviceinfo.providerName, serviceinfo.providerStatus)
@@ -228,6 +226,7 @@ function ServiceManagement() {
                   >
                     상태변경
                   </button>
+                  </>
                 </td>
               </tr>
             ))}
