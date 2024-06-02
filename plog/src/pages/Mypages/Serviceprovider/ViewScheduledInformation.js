@@ -40,6 +40,8 @@ function ViewScheduledInformation() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1000 ? 1 : 5);
 
+  const [showCalendarButton, setShowCalendarButton] = useState(true); // Add state for showing the calendar button
+
   useEffect(() => {
     if (!accessToken){
       navigate("/signin");
@@ -101,12 +103,15 @@ function ViewScheduledInformation() {
   const clearSelectedDate = () => {
     setSelectedDate(null);
     onChange(new Date());
+    setShowCompleted(false);
+    setShowCalendarButton(true);
     window.location.reload();
   };
 
   const showCompletedReservations = () => {
     setShowCompleted(true);
     setSelectedDate(null);
+    setShowCalendarButton(false); // Hide the calendar button
     const completedReservations = reservationList.filter(reservation => reservation.reservationStatus === 2);
     const totalProfits = completedReservations.reduce((sum, reservation) => sum + reservation.reservationPrice, 0);
     setProfits(totalProfits);
@@ -222,8 +227,6 @@ function ViewScheduledInformation() {
   const indexOfFirstReservation = indexOfLastReservation - itemsPerPage;
   const currentReservations = filteredReservations.slice(indexOfFirstReservation, indexOfLastReservation);
 
-      
-
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '5px', marginTop: '40px', }}>
       <Modal
@@ -273,13 +276,17 @@ function ViewScheduledInformation() {
           }}
         >촬영 완료 내역 보기</button>
       <div className="sort-buttons">
-      <button 
-      onClick={openModal}
-      style={{
-      backgroundColor: '#E8EEE8',
-      border : "2px solid #E8EEE8"
-      }}
-      ><FaCalendarAlt style={{color : "black"}} /> <span style={{color : "black"}}>날짜</span></button>
+      {showCalendarButton && (
+        <button 
+          onClick={openModal}
+          style={{
+            backgroundColor: '#E8EEE8',
+            border: "2px solid #E8EEE8"
+          }}
+        >
+          <FaCalendarAlt style={{color : "black"}} /> <span style={{color : "black"}}>날짜</span>
+        </button>
+      )}
         <button className="sort" onClick={() => handleSort('reservationStatus')}>상태순</button>
         <button className="sort" onClick={() => handleSort('reservationId')}>번호순</button>
         <button className="sort" onClick={() => handleSort('reservationPrice')}>가격</button>
