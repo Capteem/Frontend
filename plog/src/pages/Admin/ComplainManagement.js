@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import '../../styles/Table.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 
-//
+
+
 function ComplainManagement() {
   const [complainlist, setComplainlist] = useState([]);
   const [editingComplaintIndex, setEditingComplaintIndex] = useState(-1);
@@ -101,34 +103,35 @@ function ComplainManagement() {
       {complainlist.length === 0 ? (
       <p>Q&A가 없습니다.</p>
     ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>신고 번호</th>
-              <th>사용자 아이디</th>
-              <th>신고 유형</th>
-              <th>신고 제목</th>
-              <th>신고 내용</th>
-              <th>신고 날짜</th>
-              <th>신고 상태</th>
-              <th>답변</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>신고 번호</Th>
+              <Th>사용자 아이디</Th>
+              <Th>신고 유형</Th>
+              <Th>신고 제목</Th>
+              <Th>신고 내용</Th>
+              <Th>신고 날짜</Th>
+              <Th>신고 상태</Th>
+              <Th>답변</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             {complainlist.map((complaint, index) => (
-              <tr key={index}>
-                <td>{complaint.complaintId}</td>
-                <td>{complaint.userId}</td>
-                <td>{complaint.complaintType === 1 ? '예약' 
+              <Tr key={index}>
+                <Td><div className='text'>{complaint.complaintId}</div></Td>
+                <Td><div className='text'>{complaint.userId}</div></Td>
+                <Td><div className='text'>{complaint.complaintType === 1 ? '예약' 
                 : complaint.complaintType === 2 ? '결제'
                 : complaint.complaintType === 3 ? '사기' 
                 : "기타"
-                }</td>
-                <td>{complaint.complaintTitle}</td>
-                <td>{complaint.complaintContent}</td>
-                <td>{new Date(complaint.complaintDate).toLocaleString()}</td>
-                <td>{complaint.complaintStatus === 0 ? '처리미완료' : '처리완료'}</td>
-                <td>
+                }</div></Td>
+                <Td><div className='text'>{complaint.complaintTitle}</div></Td>
+                <Td><div className='text'>{complaint.complaintContent}</div></Td>
+                <Td><div className='text'>{new Date(complaint.complaintDate).toLocaleString()}</div></Td>
+                <Td><div className='text'>{complaint.complaintStatus === 0 ? '처리미완료' : '처리완료'}</div></Td>
+                <Td>
+                <div className='text'>
                   {editingComplaintIndex === index ? (
                     <div>
                       <textarea
@@ -150,11 +153,12 @@ function ComplainManagement() {
                       )}
                     </div>
                   )}
-                </td>
-              </tr>
+                  </div>
+                </Td>
+              </Tr>
             ))}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       )}
     </div>
   );
