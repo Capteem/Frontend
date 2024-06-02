@@ -148,49 +148,49 @@ function ReviewList(){
                     </div>
 
                     {reviewList && reviewList.map((item, index)=>{
-                let [date, time] = item.reviewDate.split("T");
-                let five = [1,2,3,4,5];
+                    let [date, time] = item.reviewDate.split("T");
+                    let five = [1,2,3,4,5];
 
-                return(
-                    <div key={index}>
-                        <div className='review-user'>
-                        <span className='review-name'>서비스제공자이름</span>
-                        <span className='review-time'>{date} {time}</span>
-                        <div style={{marginBottom:2, marginTop:-5}}>{
-                                five.map((score, index)=>{
-                                    return(
-                                        <span>{
-                                            score <= item.reviewScore ?
-                                                <GoStarFill className='review-starClick'/>
-                                            :
-                                                <GoStar className='review-star'/>
-                                        }</span>
-                                    )
-                                })
-                        }</div>
-                        </div>
-                        <textarea className='review-textarea'
-                            disabled={checkChange[index]}
-                            onChange={(event)=>{changeComment(event, item)}}
-                        >
-                            {item.reviewContent}
-                        </textarea>
+                        return(
+                            <div key={index}>
+                                <div className='review-user'>
+                                <span className='review-name'>{item.providerName}</span>
+                                <span className='review-time'>{date} {time}</span>
+                                <div style={{marginBottom:2, marginTop:-5}}>{
+                                        five.map((score, index)=>{
+                                            return(
+                                                <span key={index}>{
+                                                    score <= item.reviewScore ?
+                                                        <GoStarFill className='review-starClick'/>
+                                                    :
+                                                        <GoStar className='review-star'/>
+                                                }</span>
+                                            )
+                                        })
+                                }</div>
+                                </div>
+                                <textarea className='review-textarea'
+                                    disabled={checkChange[index]}
+                                    onChange={(event)=>{changeComment(event, item)}}
+                                >
+                                    {item.reviewContent}
+                                </textarea>
 
-                        {
-                            checkChange[index] === true ? 
-                            <div className='review-button-left'>
-                                <button className='review-button' onClick={()=>{changeReview(index);}}>수정</button>
-                                <button className='review-button' onClick={()=>{deleteReview(item.reviewId);}}>삭제</button>
+                                {
+                                    checkChange[index] === true ? 
+                                    <div className='review-button-left'>
+                                        <button className='review-button' onClick={()=>{changeReview(index);}}>수정</button>
+                                        <button className='review-button' onClick={()=>{deleteReview(item.reviewId);}}>삭제</button>
+                                    </div>
+                                    :
+                                    <div className='review-button-left'>
+                                        <button className='review-button' onClick={()=>{changeComplete(index); rewriteReview();}}>완료</button>
+                                        <button className='review-button' onClick={()=>{changeComplete(index);}}>취소</button>
+                                    </div>
+                                }
                             </div>
-                            :
-                            <div className='review-button-left'>
-                                <button className='review-button' onClick={()=>{changeComplete(index); rewriteReview();}}>완료</button>
-                                <button className='review-button' onClick={()=>{changeComplete(index);}}>취소</button>
-                            </div>
-                        }
-                    </div>
-                )
-            })}
+                        )
+                    })}
                 </div>
                 
             </div>

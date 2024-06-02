@@ -441,7 +441,7 @@ function PortfolioEnd(props){
             calculateScore(result.data.reviewList);      
         })
         .catch((error)=>{
-            if(error.response.status === 401){
+            if(error.response && error.response.status === 401){
                 alert("로그인 만료. 다시 로그인해주세요.")
                 navigate('/signin', { replace: true });
             }else{

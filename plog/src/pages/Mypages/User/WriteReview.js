@@ -33,10 +33,84 @@ function WriteReview(){
     useEffect(()=>{
         setReviewScore(0);
         setStarClick(initialStar);
+        getIdName();
+        // checkReview();
     },[])
 
-    function getIdName(){
-        
+    const [studioCheck, setStudioCheck] = useState(3);
+    const [photoCheck, setPhotoCheck] = useState(1);
+    const [hmCheck, setHmCheck] = useState(0);
+
+    const [studioName, setStudioName] = useState("D");
+    const [photoName, setPhotoName] = useState("B");
+    const [hmName, setHmName] = useState("");
+
+    const [studioDisable, setStudioDisable] = useState(false);
+    const [photoDisable, setphotoDisable] = useState(false);
+    const [hmDisable, sethmDisable] = useState(false);
+    //값 추출
+    async function getIdName(){
+        if(state.reservationCameraId !== "C"){
+            setPhotoCheck(state.reservationCameraId);
+            setPhotoName(state.reservationCameraName);
+            let send = {
+                "userId": localStorage.getItem('userId'),
+                "providerId": state.reservationCameraId,
+                "reservationId": state.reservationTableId,
+            }
+            checkReview(send, 3);
+        }
+        if(state.reservationHairId !== "C"){
+            setHmCheck(state.reservationHairId);
+            setHmName(state.reservationHairName);
+            let send = {
+                "userId": localStorage.getItem('userId'),
+                "providerId": state.reservationHairId,
+                "reservationId": state.reservationTableId,
+            }
+            checkReview(send, 2);
+        }
+        if(state.reservationStudioId !== "C"){
+            setStudioCheck(state.reservationStudioId);
+            setStudioName(state.reservationStudioName);
+            let send = {
+                "userId": localStorage.getItem('userId'),
+                "providerId": state.reservationStudioId,
+                "reservationId": state.reservationTableId,
+            }
+            checkReview(send, 1);
+        }
+    }
+
+    function checkReview(props, num){
+
+        axios.post(`${process.env.REACT_APP_URL}/review/check`, props,
+            {
+                headers:{
+                    'Auth-Token' : localStorage.getItem("accesToken")
+                }
+            }
+        )
+        .then(function(result){
+            console.log(result);
+            if(num === 1){
+                setStudioDisable(false);
+            }else if(num === 2){
+                sethmDisable(false);
+            }else if(num === 3){
+                setphotoDisable(false);
+            }
+        })
+        .catch((error)=>{
+            console.log(error);
+            if(num === 1){
+                setStudioDisable(true);
+            }else if(num === 2){
+                sethmDisable(true);
+            }else if(num === 3){
+                setphotoDisable(true);
+            }
+        })
     }
 
     function checkStar(props){
@@ -57,7 +131,6 @@ function WriteReview(){
     }
 
     function checkWrite(){
-        console.log(review);
         if(review === ""){
             alert("리뷰를 작성해주세요.")
         }else if(reviewScore === 0){
@@ -66,6 +139,32 @@ function WriteReview(){
             setModalShow(true);
         }
     }
+
+    function checkWriting(props){
+        if(review !== ""){
+            alert("작성중인 리뷰를 등록해주세요.");
+        }else if(reviewScore !== 0){
+            alert("작성중인 리뷰를 등록해주세요.");
+        }else if(props === 1){
+            setCurrentProvider(studioCheck);
+            setCurrentService(1);
+            setCurrentName(studioName);
+        }else if(props === 2){
+            setCurrentProvider(photoCheck);
+            setCurrentService(2);
+            setCurrentName(photoName);
+        }else if(props === 3){
+            setCurrentProvider(hmCheck);
+            setCurrentService(3);
+            setCurrentName(hmName);
+        }
+    }
+
+    useEffect(()=>{
+        if(studioDisable && photoDisable && hmDisable){
+            navigate("/mypage/viewreservation");
+        }
+    },[studioDisable, photoDisable, hmDisable])
 
     //todo: providerId 바꿔야함
     function sendReview(){
@@ -78,7 +177,8 @@ function WriteReview(){
             "userId": localStorage.getItem('userId'),
             "userNickName": localStorage.getItem('userNickname'),
             "reviewDate": tmp.toISOString(),
-            "providerId": 4
+            "reservationId": state.reservationTableId,
+            "providerId": currentProvider
         }
 
         console.log(send);
@@ -91,10 +191,18 @@ function WriteReview(){
         )
         .then(function(result){
             console.log(result);
+            if(currentService === 1){
+                setStudioDisable(true);
+            }else if(currentService === 2){
+                sethmDisable(true);
+            }else if(currentService === 3){
+                setphotoDisable(true);
+            }
             console.log("리뷰 작성 성공");
+            setClick(false);
         })
         .catch((error)=>{
-            if(error.response.status === 401){
+            if(error.response && error.response.status === 401){
                 alert("로그인 만료. 다시 로그인해주세요.")
                 navigate('/signin', { replace: true });
             }else{
@@ -104,36 +212,88 @@ function WriteReview(){
         })
     }
     
+    //현재 제공자
+    const [currentProvider, setCurrentProvider] = useState(0);
+    const [currentService, setCurrentService] = useState(0);
+    const [currentName, setCurrentName] = useState("");
+    const [click, setClick] = useState(false);
+    
     return(
         <div>
-            <div className='review-body'>
-                <div className='review-title'>
-                    Review
-                </div>
-            </div>
+            {console.log(review)}
             <div>
-                별점
-            </div>
-            <div>
-                {
-                    starClick.map((item, index)=>{
-                        return(
-                            item === false ? 
-                            <button className='review-star' onClick={()=>{checkStar(index);}} disabled={false}>
-                                <GoStar />
-                            </button>
-                            :
-                            <button className='review-starClick' onClick={()=>{checkStar(index);}} disabled={false}>
-                                <GoStarFill />
-                            </button>
-                        )
-                    })
+                {studioCheck === 0 ? 
+                    <button onClick={()=>{
+                        setClick(true);
+                        checkWriting(1);
+                    }} disabled={studioDisable}
+                    >스튜디오</button> 
+                    :
+                    <button onClick={()=>{
+                        setClick(true);
+                        checkWriting(1);
+                    }} disabled={studioDisable}
+                    >스튜디오</button>
+                }
+                {photoCheck === 0 ? 
+                    <button onClick={()=>{
+                        setClick(true);
+                        checkWriting(2);
+                    }} disabled={photoDisable}
+                    >사진작가</button> 
+                    :
+                    <button onClick={()=>{
+                        setClick(true);
+                        checkWriting(2);
+                    }} disabled={photoDisable}
+                    >사진작가</button>
+                }
+                {hmCheck === 0 ? 
+                    <button onClick={()=>{
+                        setClick(true);
+                        checkWriting(3);
+                    }} disabled={hmDisable}
+                    >헤어,메이크업</button> 
+                    :
+                    <button onClick={()=>{
+                        setClick(true);
+                        checkWriting(3);
+                    }} disabled={hmDisable}
+                    >헤어,메이크업</button>
                 }
             </div>
 
-            <textarea className='review-textarea' onChange={(event)=>{changeReview(event)}} placeholder="리뷰를 작성해주세요."/>
-            <br/>
-            <button className='calculate-button' onClick={()=>{checkWrite();}}>입력완료</button>
+            {click && <>
+                <div className='review-body'>
+                    <div className='review-title'>
+                        {currentName}
+                    </div>
+                </div>
+                <div>
+                    별점
+                </div>
+                <div>
+                    {
+                        starClick.map((item, index)=>{
+                            return(
+                                item === false ? 
+                                <button key={index} className='review-star' onClick={()=>{checkStar(index);}} disabled={false}>
+                                    <GoStar />
+                                </button>
+                                :
+                                <button key={index} className='review-starClick' onClick={()=>{checkStar(index);}} disabled={false}>
+                                    <GoStarFill />
+                                </button>
+                            )
+                        })
+                    }
+                </div>
+
+                <textarea className='review-textarea' onChange={(event)=>{changeReview(event)}} placeholder="리뷰를 작성해주세요."/>
+                <br/>
+                <button className='calculate-button' onClick={()=>{checkWrite();}}>입력완료</button>
+            </>
+            }
 
             {
                 modalShow &&
@@ -143,6 +303,7 @@ function WriteReview(){
                         <button className='small-modal-button' onClick={()=>{
                             setModalShow(false);
                             sendReview();
+                            setReview("");
                         }}>확인</button>
                         <button className='small-modal-button' onClick={()=>{setModalShow(false);}}>취소</button>
                     </div>
