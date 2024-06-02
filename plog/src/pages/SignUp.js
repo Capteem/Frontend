@@ -12,6 +12,10 @@ function SignUp() {
   const nickname = useRef();
   const phonenumber = useRef();
   const email = useRef();
+  const [emailDuplicate, setEmailDuplicate] = useState(false);
+  const [idDuplicate, setIdDuplicate] = useState(false);
+  const [NicknameDuplicate, setNicknameDuplicate] = useState(false);
+  
 
   const [state, setState] = useState({
     id: "",
@@ -29,6 +33,18 @@ function SignUp() {
       navigate('/');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    setEmailDuplicate(false);
+  }, [state.email]);
+  
+  useEffect(() => {
+    setIdDuplicate(false);
+  }, [state.id]);
+  
+  useEffect(() => {
+    setNicknameDuplicate(false);
+  }, [state.nickname]);
 
   const handleChangeState = (e) => {
     setState({
@@ -51,9 +67,13 @@ function SignUp() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // 유효성 검사
-    if (state.id.length < 5) {
+    if (state.id.length < 1) {
       id.current.focus();
-      alert("아이디를 5글자 이상 입력하세요");
+      alert("아이디를입력하세요");
+      return;
+    }
+    if(!idDuplicate){
+      alert("아이디 중복 확인하세요.");
       return;
     }
     if (state.password.length < 4) {
@@ -66,14 +86,18 @@ function SignUp() {
       alert("비밀번호가 다릅니다. 다시 입력하세요");
       return;
     }
-    if (state.name.length < 2) {
+    if (state.name.length < 1) {
       name.current.focus();
       alert("이름을 입력하세요");
       return;
     }
-    if (state.nickname.length < 3) {
+    if (state.nickname.length < 1) {
       nickname.current.focus();
-      alert("닉네임을 3글자 이상 입력하세요");
+      alert("닉네임을 입력하세요");
+      return;
+    }
+    if(!NicknameDuplicate){
+      alert("닉네임 중복 확인하세요.");
       return;
     }
     if (!phoneRegex.test(state.phonenumber)) {
@@ -84,6 +108,11 @@ function SignUp() {
     if (!emailRegex.test(state.email)) {
       email.current.focus();
       alert('올바른 이메일 형식이 아닙니다.');
+      return;
+    }
+
+    if(!emailDuplicate){
+      alert("이메일 중복 확인하세요.");
       return;
     }
 
@@ -118,10 +147,83 @@ function SignUp() {
     }
   };
 
+  const checkIdDuplicate = async () => {
+    if (!state.id) {
+      alert("아이디를 입력하세요.");
+      return;
+    }
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/sign-api/checkId`, {
+        params: {
+          userId: state.id
+        }
+      });
+      if (response.status === 200) {
+        alert("사용 가능한 아이디입니다.");
+        setIdDuplicate(true);
+      } 
+    } catch (error) {
+      if (error.response && error.response.status === 400){
+        alert("이미 사용 중인 아이디입니다.");
+      }
+      else{
+      console.error('아이디 중복 확인에 실패하였습니다.', error);
+      }
+    }
+  };
+  
+  const checkNicknameDuplicate = async () => {
+    if (!state.nickname) {
+      alert("닉네임을 입력하세요.");
+      return;
+    }
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/sign-api/checkNickname`, {
+        params: {
+          nickname: state.nickname
+        }
+      });
+      if (response.status === 200) {
+        alert("사용 가능한 닉네임입니다.");
+        setNicknameDuplicate(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400){
+        alert("이미 사용 중인 닉네임입니다.");
+      }else{
+      console.error('닉네임 중복 확인에 실패하였습니다.', error);
+    }
+    }
+  };
+  
+  const checkEmailDuplicate = async () => {
+    if (!state.email) {
+      alert("이메일을 입력하세요.");
+      return;
+    }
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/sign-api/checkEmail`, {
+        params: {
+          email: state.email
+        }
+      });
+      if (response.status === 200) {
+        alert("사용 가능한 이메일입니다.");
+        setEmailDuplicate(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400){
+        alert("이미 사용 중인 이메일입니다.");
+      }else{
+      console.error('이메일 중복 확인에 실패하였습니다.', error);
+    }
+    }
+  };
+  
   return (
     <div className='multi'>
       <h4>회원가입</h4>
-      <div>
+      <div style={{display: "flex"}}>
         <input 
           ref={id}
           name="id"
@@ -130,6 +232,7 @@ function SignUp() {
           onKeyDown={handleKeyDown}
           placeholder="아이디"
         /> 
+        <button onClick={checkIdDuplicate} style={{border: "none", width :"40%" }}>중복 확인</button>
       </div>
       <div>
         <input 
@@ -163,7 +266,7 @@ function SignUp() {
           placeholder="이름"
         /> 
       </div> 
-      <div>
+      <div style={{display: "flex"}}>
         <input 
           ref={nickname}
           name="nickname"
@@ -172,7 +275,8 @@ function SignUp() {
           onKeyDown={handleKeyDown}
           placeholder="닉네임"
         /> 
-      </div> 
+        <button onClick={checkNicknameDuplicate} style={{border: "none", width :"40%" }}>중복 확인</button>
+      </div>
       <div>
         <input 
           ref={phonenumber}
@@ -183,7 +287,7 @@ function SignUp() {
           placeholder="전화번호"
         /> 
       </div> 
-      <div>
+      <div style={{display: "flex"}}>
         <input 
           ref={email}
           name="email"
@@ -192,7 +296,8 @@ function SignUp() {
           onKeyDown={handleKeyDown}
           placeholder="이메일"
         /> 
-      </div> 
+        <button onClick={checkEmailDuplicate} style={{border: "none", width :"40%" }}>중복 확인</button>
+      </div>
       <br/>
       <button onClick={handleSubmit}>회원가입하기</button>
     </div>

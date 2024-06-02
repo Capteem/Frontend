@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 function UserInfo() {
   const [userInfo, setUserInfo] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editedUserInfo, setEditedUserInfo] = useState(null);
   const [isPasswordChangeMode, setIsPasswordChangeMode] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordReEnter, setNewPasswordReEnter] = useState('');
@@ -19,6 +18,10 @@ function UserInfo() {
   const phoneNumRef = useRef(null);
   const emailRef = useRef(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [emailDuplicate, setEmailDuplicate] = useState(true);
+  const [NicknameDuplicate, setNicknameDuplicate] = useState(true);
+  const [editedUserInfo, setEditedUserInfo] = useState({});
+  const [initialUserInfo, setInitialUserInfo] = useState({});
 
   useEffect(() => {
     if (!accessToken) {
@@ -28,14 +31,22 @@ function UserInfo() {
     }
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
-  };
+    };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
-        window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResize);
     };
-}, [accessToken, navigate]);
+  }, [accessToken, navigate]);
+
+  useEffect(() => {
+    setEmailDuplicate(false);
+  }, [editedUserInfo.email]);
+
+  useEffect(() => {
+    setNicknameDuplicate(false);
+  }, [editedUserInfo.nickname]);
 
   const fetchUserInfo = async () => {
     try {
@@ -50,6 +61,7 @@ function UserInfo() {
       console.log(response.data);
       setUserInfo(response.data);
       setEditedUserInfo({ ...response.data });
+      setInitialUserInfo({ ...response.data }); // Save the initial state
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("로그인 만료. 다시 로그인해주세요.");
@@ -95,9 +107,13 @@ function UserInfo() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // 유효성 검사
-    if (editedUserInfo.nickname.length < 3) {
+    if (editedUserInfo.nickname.length < 1) {
       nicknameRef.current.focus();
-      alert("닉네임을 3글자 이상 입력하세요");
+      alert("닉네임을 입력하세요");
+      return;
+    }
+    if (editedUserInfo.nickname !== initialUserInfo.nickname && !NicknameDuplicate) {
+      alert("닉네임 중복 확인하세요.");
       return;
     }
     if (!phoneRegex.test(editedUserInfo.phoneNum)) {
@@ -108,6 +124,10 @@ function UserInfo() {
     if (!emailRegex.test(editedUserInfo.email)) {
       emailRef.current.focus();
       alert('올바른 이메일 형식이 아닙니다.');
+      return;
+    }
+    if (editedUserInfo.email !== initialUserInfo.email && !emailDuplicate) {
+      alert("이메일 중복 확인하세요.");
       return;
     }
 
@@ -170,10 +190,57 @@ function UserInfo() {
     setInputPassword(event.target.value);
   };
 
+  const checkEmailDuplicate = async () => {
+    if (!editedUserInfo.email) {
+      alert("이메일을 입력하세요.");
+      return;
+    }
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/sign-api/checkEmail`, {
+        params: {
+          email: editedUserInfo.email
+        }
+      });
+      if (response.status === 200) {
+        alert("사용 가능한 이메일입니다.");
+        setEmailDuplicate(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400){
+        alert("이미 사용 중인 이메일입니다.");
+      } else {
+        console.error('이메일 중복 확인에 실패하였습니다.', error);
+      }
+    }
+  };
+  
+  const checkNicknameDuplicate = async () => {
+    if (!editedUserInfo.nickname) {
+      alert("닉네임을 입력하세요.");
+      return;
+    }
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/sign-api/checkNickname`, {
+        params: {
+          nickname: editedUserInfo.nickname
+        }
+      });
+      if (response.status === 200) {
+        alert("사용 가능한 닉네임입니다.");
+        setNicknameDuplicate(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400){
+        alert("이미 사용 중인 닉네임입니다.");
+      } else {
+        console.error('닉네임 중복 확인에 실패하였습니다.', error);
+      }
+    }
+  };
   return (
     <div className="Table">
       <h4>회원정보</h4>
-      <label style={{ width: "50%" }}>
+      <label style={{ width: window.innerWidth <= 1000 ? '80%' : '60%'}}>
         <div style={{
           backgroundColor: '#f0f0f0',
           display: 'inline-block',
@@ -183,8 +250,8 @@ function UserInfo() {
         }}>
           <FaFrog size="100" color="#162617" />
         </div>
-        <table style={{ width: window.innerWidth <= 700 ? '100%' : '70%', marginTop: '10px' }}>
-        
+        <table style={{ width: window.innerWidth <= 1000 ? '100%' : '70%', marginTop: '10px' }}>
+  
           <tbody>
             <tr>
               <th scope="row">아이디</th>
@@ -225,17 +292,21 @@ function UserInfo() {
                 )}
               </td>
             </tr>
-
+  
             <tr>
               <th scope="row">닉네임</th>
               <td>
                 {isEditMode ? (
-                  <input
-                    type="text"
-                    ref={nicknameRef}
-                    value={editedUserInfo.nickname}
-                    onChange={(e) => handleInputChange('nickname', e.target.value)}
-                  />
+                  <div style={{ display: "flex" }}>
+                    <input
+                      type="text"
+                      ref={nicknameRef}
+                      value={editedUserInfo.nickname}
+                      style={{width : "40%"}}
+                      onChange={(e) => handleInputChange('nickname', e.target.value)}
+                    />
+                    <button onClick={checkNicknameDuplicate} style={{height : "50%"}}>중복 확인</button>
+                  </div>
                 ) : (
                   userInfo.nickname
                 )}
@@ -249,6 +320,7 @@ function UserInfo() {
                     type="text"
                     ref={phoneNumRef}
                     value={editedUserInfo.phoneNum}
+                    style={{width : "40%"}}
                     onChange={(e) => handleInputChange('phoneNum', e.target.value)}
                   />
                 ) : (
@@ -260,12 +332,19 @@ function UserInfo() {
               <th scope="row">이메일</th>
               <td>
                 {isEditMode ? (
-                  <input
-                    type="email"
-                    ref={emailRef}
-                    value={editedUserInfo.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                  />
+                  <div style={{ display: "flex" }}>
+                    <input
+                      type="email"
+                      ref={emailRef}
+                      value={editedUserInfo.email}
+                      style={{width : "40%"}}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                    />
+                    <button 
+                    onClick={checkEmailDuplicate}
+                    style={{height : "50%"}}
+                    >중복 확인</button>
+                  </div>
                 ) : (
                   userInfo.email
                 )}
@@ -273,7 +352,7 @@ function UserInfo() {
             </tr>
           </tbody>
         </table>
-
+  
         {isEditMode ? (
           <button style={{ marginTop: '10px' }} onClick={handleSaveChanges}>수정 완료</button>
         ) : (
@@ -284,9 +363,10 @@ function UserInfo() {
                   type="password"
                   placeholder="비밀번호를 입력하세요"
                   value={inputPassword}
+                  style={{width : "30%"}}
                   onChange={handleInputPasswordChange}
                 />
-                <button style={{marginTop: '10px' }} onClick={handleEditMode}>비밀번호 확인</button>
+                <button style={{ marginTop: '10px', }} onClick={handleEditMode}>비밀번호 확인</button>
               </>
             ) : (
               <>
