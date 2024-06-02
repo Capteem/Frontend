@@ -86,6 +86,10 @@
   border-width: thin;
 }
 
+.blue{
+  color: blue;
+}
+
 /* inspired by: https://css-tricks.com/responsive-data-tables/ */
 .responsiveTable {
   width: 100%;

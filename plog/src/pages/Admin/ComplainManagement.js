@@ -22,9 +22,9 @@ function ComplainManagement() {
   const [sortDirection, setSortDirection] = useState('asc');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedComplaint, setSelectedComplaint] = useState(null); // State to store selected complaint
-  const [modalIsOpen, setModalIsOpen] = useState(false); // State to control modal open/close
-  
+  const [selectedComplaint, setSelectedComplaint] = useState(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState([]);
   useEffect(() => {
     if (!accessToken){
       navigate("/signin");
@@ -76,7 +76,7 @@ function ComplainManagement() {
 
   const handleReplyEdit = (index) => {
     setEditingComplaintIndex(index);
-    setNewReplyContent(complainlist[index].complaintAnswerTable?.complaintReplyContent || '');
+    setNewReplyContent('');
   };
 
   const handleReplyContentChange = (e) => {
@@ -86,7 +86,7 @@ function ComplainManagement() {
   const handleReplySubmit = async (index) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/admin/reply`, {
-        complaintId: complainlist[index].complaintId,
+        complaintId: currentComplains[index].complaintId,
         complaintReplyContent: newReplyContent,
         complaintReplyDate: new Date().toISOString(),
       }, 
@@ -94,11 +94,11 @@ function ComplainManagement() {
         headers: {
           'Auth-Token': localStorage.getItem('accesToken'),
         },
-      }
-    );
+      });
+  
       if (response.status === 200) {
         alert(`답글 등록에 성공하였습니다.`);
-        getComplainList(); // 리스트 다시 가져오기
+        getComplainList(); 
         setEditingComplaintIndex(-1);
         setNewReplyContent('');
       } else if (response.status === 400) {
@@ -112,6 +112,13 @@ function ComplainManagement() {
         console.error('답글 등록에 실패하였습니다.', error);
       }
     }
+  };
+  
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    setEditingComplaintIndex(-1); 
+    setNewReplyContent(''); 
   };
 
   const handleSort = (column) => {
@@ -131,7 +138,20 @@ function ComplainManagement() {
   };
 
   const openModal = (complaint) => {
-    setSelectedComplaint(complaint);
+    const contentArray = [
+      `질문 날짜: ${new Date(complaint.complaintDate).toLocaleDateString()}`,
+      `질문 내용: ${complaint.complaintContent}`
+    ];
+    setModalContent(contentArray);
+    setModalIsOpen(true);
+  };
+
+  const openReplyModal = (complaintAnswerTable) => {
+    const contentArray = [
+      `답변 날짜: ${new Date(complaintAnswerTable.complaintReplyDate).toLocaleDateString()}`,
+      `답변 내용: ${complaintAnswerTable.complaintReplyContent}`
+    ];
+    setModalContent(contentArray);
     setModalIsOpen(true);
   };
 
@@ -139,6 +159,8 @@ function ComplainManagement() {
     setSelectedComplaint(null);
     setModalIsOpen(false);
   };
+
+
 
   const filteredComplains = complainlist.filter((complaint) => {
     const complaintId = typeof complaint.complaintId === 'string' ? complaint.complaintId : '';
@@ -183,72 +205,117 @@ function ComplainManagement() {
             }}
           />
         </div> 
-          <div className="sort-buttons">
+        <div className="sort-buttons">
           <button className="sort" onClick={() => handleSort('complaintId')}>신고번호순</button>
           <button className="sort" onClick={() => handleSort('complaintType')}>신고 유형순</button>
           <button className="sort" onClick={() => handleSort('complaintStatus')}>신고 상태순</button>
         </div>
       </div>
       {complainlist.length === 0 ? (
-      <p>Q&A가 없습니다.</p>
-    ) : (
+        <p>Q&A가 없습니다.</p>
+      ) : (
+        <>
+          {filteredComplains.length === 0 ? (
+            <p>검색 결과가 없습니다.</p>
+          ) : (
+            <>
         <Table>
           <Thead>
             <Tr>
-              <Th>신고 번호</Th>
-              <Th>사용자 아이디</Th>
-              <Th>신고 유형</Th>
-              <Th>신고 제목</Th>
-              <Th>신고 내용</Th>
-              <Th>신고 날짜</Th>
-              <Th>신고 상태</Th>
+              <Th>질문번호</Th>
+              <Th>아이디</Th>
+              <Th>유형</Th>
+              <Th>제목</Th>
+              <Th>내용</Th>
+              <Th>상태</Th>
               <Th>답변</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {complainlist.map((complaint, index) => (
-              <Tr key={index}>
-                <Td><div className='text'>{complaint.complaintId}</div></Td>
-                <Td><div className='text'>{complaint.userId}</div></Td>
-                <Td><div className='text'>{complaint.complaintType === 1 ? '예약' 
-                : complaint.complaintType === 2 ? '결제'
-                : complaint.complaintType === 3 ? '사기' 
-                : "기타"
-                }</div></Td>
-                <Td><div className='text'>{complaint.complaintTitle}</div></Td>
-                <Td><div className='text'>{complaint.complaintContent}</div></Td>
-                <Td><div className='text'>{new Date(complaint.complaintDate).toLocaleString()}</div></Td>
-                <Td><div className='text'>{complaint.complaintStatus === 0 ? '처리미완료' : '처리완료'}</div></Td>
-                <Td>
-                <div className='text'>{editingComplaintIndex === index ? (
-                    <div>
-                      <textarea
-                        value={newReplyContent}
-                        onChange={handleReplyContentChange}
-                      />
-                      <button onClick={() => handleReplySubmit(index)}>답글 저장</button>
-                    </div>
-                  ) : (
-                    <div>
-                      {complaint.complaintAnswerTable?.complaintReplyContent && (
-                        <div>
-                          <p>답변 내용: {complaint.complaintAnswerTable.complaintReplyContent}</p>
-                          <p>답변 날짜: {new Date(complaint.complaintAnswerTable.complaintReplyDate).toLocaleString()}</p>
+            {currentComplains.map((complaint, index) => (
+             <Tr key={index}>
+             <Td><div className='text'>{complaint.complaintId}</div></Td>
+             <Td><div className='text'>{complaint.userId}</div></Td>
+             <Td><div className='text'>{complaint.complaintType === 1 ? '예약' 
+               : complaint.complaintType === 2 ? '결제'
+               : complaint.complaintType === 3 ? '사기' 
+               : "기타"
+               }</div></Td>
+             <Td><div className='text'>{complaint.complaintTitle}</div></Td>
+             <Td>
+                        <div className='text'>
+                          <button style={{padding : "0px 5px 0px 5px"}} onClick={() => openModal(complaint)}>
+                            <MdContentCopy />
+                          </button>
                         </div>
-                      )}
-                      {complaint.complaintStatus === 0 && (
-                        <button onClick={() => handleReplyEdit(index)}>답변 달기</button>
-                      )}
-                    </div>
+             </Td>
+             <Td><div className='text'>{complaint.complaintStatus === 0 ? '처리미완료' : '처리완료'}</div></Td>
+             <Td>
+               <div className='text'>
+                 {editingComplaintIndex === index ? (
+                   <div>
+                     <textarea
+                       value={newReplyContent}
+                       onChange={handleReplyContentChange}
+                     />
+                     <button onClick={() => handleReplySubmit(index)}>답글 저장</button>
+                   </div>
+                 ) : (
+                  <div>
+                  {complaint.complaintAnswerTable?.complaintReplyContent && (
+                    <>
+                      <button style={{padding : "0px 5px 0px 5px", backgroundColor : "#E8EEE8", border : "2px solid #E8EEE8"}} onClick={() => openReplyModal(complaint.complaintAnswerTable)}>
+                        <MdContentCopy color='#162617'/>
+                      </button>
+                    </>
                   )}
-                </div></Td>
-              </Tr>
+                  {complaint.complaintStatus === 0 && (
+                    <button onClick={() => handleReplyEdit(index)}>답변 달기</button>
+                  )}
+                </div>
+                 )}
+               </div>
+             </Td>
+           </Tr>
+           
             ))}
           </Tbody>
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={() => setModalIsOpen(false)}
+            style={{
+            content: {
+              height: '40%',
+              width: '40%',
+              margin: 'auto',
+              textAlign : 'center',
+              border: '1px solid #333',
+              background: '#fff',
+              WebkitOverflowScrolling: 'touch',
+              borderRadius: '4px',
+              outline: 'none',
+            }
+          }}
+          >
+      <div>
+                  {modalContent.map((item, index) => (
+                    <div key={index}>{item}</div>
+                  ))}
+                </div>
+      </Modal>
         </Table>
+        <Pagination
+            activePage={currentPage}
+            itemsCountPerPage={itemsPerPage}
+            totalItemsCount={filteredComplains.length}
+            pageRangeDisplayed={5}
+            onChange={handlePageChange}
+          />
+        </>
       )}
-    </div>
-  );
-}
-
+      </>
+      )}
+     </div>
+      );
+    }  
 export default ComplainManagement;

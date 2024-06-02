@@ -234,7 +234,10 @@ function ServiceManagement() {
           </tbody>
         </table>
       )}
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={{ content: {height: '67%' ,width: '50%', margin: 'auto' } }}>
+      <Modal 
+      isOpen={modalIsOpen} 
+      onRequestClose={closeModal} 
+      style={{ content: {height: '67%' ,width: '50%', margin: 'auto' } }}>
       <div style={{ display: 'flex', marginBottom : "10px"}}>
       <button
       onClick={closeModal}
