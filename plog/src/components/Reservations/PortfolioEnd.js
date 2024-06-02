@@ -14,6 +14,8 @@ import { GoStar } from "react-icons/go";
 
 import '../../styles/ImageGallery.css'; // CSS 파일 import
 import '../../styles/review.css'
+import '../../styles/shoppingBag.css'
+import shoppingBag from '../../assets/shoppingBag.jpg'
 
 function PortfolioEnd(props){
 
@@ -413,7 +415,7 @@ function PortfolioEnd(props){
                 reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
             })
             .catch((error)=>{
-                if(error.response.status === 401){
+                if(error.response && error.response.status === 401){
                     alert("로그인 만료. 다시 로그인해주세요.")
                     navigate('/signin', { replace: true });
                 }else{
@@ -479,23 +481,40 @@ function PortfolioEnd(props){
                 :
                 null
             }
-            <div className="gallery-container">
-                {
-                    show.map((value, index)=>{
-                        let item = repPhoto.find(photo => photo.id === value.providerId);
-                        let url = item ? item.url : null;
-                        return(
-                            <div className='image-container'>
-                            <img key={index} src={url} onClick={()=>{
-                                getDetail(value);   //모달창에 보여주기 위한 세부정보
-                                getReview(value);
-                                setModalShow(true);
-                            }}/>
-                            </div>
-                        )
-                    })
-                }
-            </div>
+            {
+                (click.studioClick === false && click.photoClick === false && click.hmClick === false) &&
+                <div className='shoppingBag-none'>
+                    <img style={{width:200, height:200}}className='shoppingBag-noneBag' src={shoppingBag}/>
+                    <div className='shoppingBag-noneText'>서비스를 선택하세요.</div>
+                </div>
+            }
+            {
+                (show.length === 0 && (click.studioClick === true || click.photoClick === true || click.hmClick === true)) &&
+                <div className='shoppingBag-none'>
+                    <img style={{width:200, height:200}}className='shoppingBag-noneBag' src={shoppingBag}/>
+                    <div className='shoppingBag-noneText'>조건에 맞는 서비스가 존재하지 않습니다.</div>
+                </div>
+            }
+            {show.length > 0 &&
+                <div className="gallery-container">
+                    {
+                        show.map((value, index)=>{
+                            let item = repPhoto.find(photo => photo.id === value.providerId);
+                            let url = item ? item.url : null;
+                            return(
+                                <div className='image-container'>
+                                <img key={index} src={url} onClick={()=>{
+                                    getDetail(value);   //모달창에 보여주기 위한 세부정보
+                                    getReview(value);
+                                    setModalShow(true);
+                                }}/>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+
+            }
             {
                 modalShow &&
                 <div className='portfolio-modal' onClick={()=>{setModalShow(false); setScore(0);}}>
@@ -533,6 +552,7 @@ function PortfolioEnd(props){
                         }
                         </div>
                         }
+
                         {(!imgReview) && <div className="gallery-container-review-modal">
                         <div className='review-score'>
                             <GoStarFill className='review-star-score'/> : {score}

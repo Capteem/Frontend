@@ -114,3 +114,26 @@
 .review-star-score{
     color:rgb(141, 207, 148);
 }
+
+
+
+
+/* WriteReview.js 코드 */
+.portfolio-button:disabled{
+    border:solid;
+    border-color:rgb(194, 193, 193);
+    border-width: 2px;
+    background-color: rgb(194, 193, 193);
+    color: white;
+    border-radius:5px;
+    width: 100px;
+    height: 30px;
+    font-size: 13px;
+    margin-bottom: 5px;
+    margin-left: 3px;
+}
+
+.writeReview-score{
+    font-size: 15px;
+    font-weight: 600;
+}

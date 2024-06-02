@@ -170,7 +170,7 @@ function ServiceInfo(){
       reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
     })
     .catch((error)=>{
-      if(error.response.status === 401){
+      if(error.response && error.response.status === 401){
         alert("로그인 만료. 다시 로그인해주세요.")
         navigate('/signin', { replace: true });
       }else{

@@ -7,6 +7,7 @@ import { GoStar } from "react-icons/go";
 
 import axios from 'axios'
 
+import '../../../styles/reserve.css'
 import '../../../styles/review.css'
 import '../../../styles/smallModal.css';
 
@@ -217,45 +218,63 @@ function WriteReview(){
     const [currentService, setCurrentService] = useState(0);
     const [currentName, setCurrentName] = useState("");
     const [click, setClick] = useState(false);
-    
+
+    const [studioBtn, setStudioBtn] = useState(false);
+    const [photoBtn, setPhotoBtn] = useState(false);
+    const [hmBtn, setHmBtn] = useState(false);
     return(
         <div>
             {console.log(review)}
-            <div>
-                {studioCheck === 0 ? 
-                    <button onClick={()=>{
+            <div className='review-body'>
+                {studioBtn === false ? 
+                    <button className='portfolio-button'
+                    onClick={()=>{
                         setClick(true);
                         checkWriting(1);
+                        setStudioBtn(true);
+                        setPhotoBtn(false);
+                        setHmBtn(false);
                     }} disabled={studioDisable}
                     >스튜디오</button> 
                     :
-                    <button onClick={()=>{
+                    <button className='portfolio-button-click'
+                    onClick={()=>{
                         setClick(true);
                         checkWriting(1);
                     }} disabled={studioDisable}
                     >스튜디오</button>
                 }
-                {photoCheck === 0 ? 
-                    <button onClick={()=>{
+                {photoBtn === false ? 
+                    <button className='portfolio-button'
+                    onClick={()=>{
                         setClick(true);
                         checkWriting(2);
+                        setStudioBtn(false);
+                        setPhotoBtn(true);
+                        setHmBtn(false);
                     }} disabled={photoDisable}
                     >사진작가</button> 
                     :
-                    <button onClick={()=>{
+                    <button className='portfolio-button-click'
+                    onClick={()=>{
                         setClick(true);
                         checkWriting(2);
                     }} disabled={photoDisable}
                     >사진작가</button>
                 }
-                {hmCheck === 0 ? 
-                    <button onClick={()=>{
+                {hmBtn === false ? 
+                    <button className='portfolio-button'
+                    onClick={()=>{
                         setClick(true);
                         checkWriting(3);
+                        setStudioBtn(false);
+                        setPhotoBtn(false);
+                        setHmBtn(true);
                     }} disabled={hmDisable}
                     >헤어,메이크업</button> 
                     :
-                    <button onClick={()=>{
+                    <button className='portfolio-button-click'
+                    onClick={()=>{
                         setClick(true);
                         checkWriting(3);
                     }} disabled={hmDisable}
@@ -263,16 +282,14 @@ function WriteReview(){
                 }
             </div>
 
+            
+
             {click && <>
                 <div className='review-body'>
-                    <div className='review-title'>
-                        {currentName}
-                    </div>
+                    <span className='review-title'>{currentName}</span>
                 </div>
-                <div>
-                    별점
-                </div>
-                <div>
+                <div style={{marginBottom:10}}>
+                    <span className='writeReview-score'>Score</span>
                     {
                         starClick.map((item, index)=>{
                             return(
@@ -291,7 +308,7 @@ function WriteReview(){
 
                 <textarea className='review-textarea' onChange={(event)=>{changeReview(event)}} placeholder="리뷰를 작성해주세요."/>
                 <br/>
-                <button className='calculate-button' onClick={()=>{checkWrite();}}>입력완료</button>
+                <button style={{marginTop:10}} className='calculate-button' onClick={()=>{checkWrite();}}>입력완료</button>
             </>
             }
 
