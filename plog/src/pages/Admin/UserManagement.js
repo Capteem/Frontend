@@ -109,13 +109,11 @@ function UserManagement() {
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
+    setCurrentPage(1); 
   };
 
   const filteredUsers = userlist.filter((user) => {
-    // Check if user.status is a string before calling toLowerCase()
     const status = typeof user.status === 'string' ? user.status.toLowerCase() : '';
-    
-    // Return true if any of the user properties contain the search query
     return (
       user.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
