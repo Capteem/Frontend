@@ -7,14 +7,19 @@ import axios from 'axios';
 import '../../../styles/Table.css';
 import '../../../styles/Calendar.css';
 import moment from "moment";
+import Modal from 'react-modal';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
+import { FaCalendarAlt } from "react-icons/fa";
 
 function ViewScheduledInformation() {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accesToken');
   const role = localStorage.getItem('role');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
+  const [sortColumn, setSortColumn] = useState('id');
+  const [sortDirection, setSortDirection] = useState('asc');
   // providerid 받기
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -78,6 +83,14 @@ function ViewScheduledInformation() {
         alert("서비스예약리스트 불러오는 중에 문제가 발생했습니다.");
       }
     }
+  };
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
   };
 
   const handleDateChange = (date) => {
@@ -181,6 +194,16 @@ function ViewScheduledInformation() {
     }
   };
 
+  const handleSort = (column) => {
+    setSortColumn(column);
+    setSortDirection('asc');
+    const sortedReservation = [...reservationList].sort((a, b) => {
+      if (a[column] < b[column]) return -1;
+      if (a[column] > b[column]) return 1;
+      return 0;
+    });
+    setReservationList(sortedReservation);
+  };
 
   const filteredReservations = showCompleted
     ? reservationList.filter(reservation => reservation.reservationStatus === 2)
@@ -199,38 +222,78 @@ function ViewScheduledInformation() {
   const indexOfFirstReservation = indexOfLastReservation - itemsPerPage;
   const currentReservations = filteredReservations.slice(indexOfFirstReservation, indexOfLastReservation);
 
+      
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '5px', marginTop: '40px', }}>
-      <Calendar
-        onChange={handleDateChange}
-        value={value}
-        formatDay={(locale, date) => moment(date).format("D")}
-        formatYear={(locale, date) => moment(date).format("YYYY")}
-        formatMonthYear={(locale, date) => moment(date).format("YYYY MM")}
-        calendarType="gregory"
-        showNeighboringMonth={false}
-        next2Label={null}
-        prev2Label={null}
-      />
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0,0,0,0.5)'
+          },
+          content: {
+            width: '400px',
+            height: '450px',
+            margin: 'auto',
+            border: '1px solid #ccc',
+            borderRadius: '15px',
+            padding: '20px'
+          }
+        }}
+      >
+        <h2>날짜 선택</h2>
+        <Calendar
+          onChange={handleDateChange}
+          value={value}
+          formatDay={(locale, date) => moment(date).format("D")}
+          formatYear={(locale, date) => moment(date).format("YYYY")}
+          formatMonthYear={(locale, date) => moment(date).format("YYYY MM")}
+          calendarType="gregory"
+          showNeighboringMonth={false}
+          next2Label={null}
+          prev2Label={null}
+        />
+      </Modal>
       <div className='Table' style={{ width: '100%', marginLeft: "10px" }}>
         <h4>예약정보조회</h4>
         <button
           onClick={clearSelectedDate}
           style={{
             marginBottom: '10px',
-           marginLeft: '15px',
+            marginLeft: '15px',
           }}
         >전체 내역 보기</button>
         <button
           onClick={showCompletedReservations}
           style={{
             marginBottom: '10px',
-          marginLeft: '15px',
+            marginLeft: '15px',
           }}
         >촬영 완료 내역 보기</button>
+      <div className="sort-buttons">
+      <button 
+      onClick={openModal}
+      style={{
+      backgroundColor: '#E8EEE8',
+      border : "2px solid #E8EEE8"
+      }}
+      ><FaCalendarAlt style={{color : "black"}} /> <span style={{color : "black"}}>날짜</span></button>
+        <button className="sort" onClick={() => handleSort('reservationStatus')}>상태순</button>
+        <button className="sort" onClick={() => handleSort('reservationId')}>번호순</button>
+        <button className="sort" onClick={() => handleSort('reservationPrice')}>가격</button>
+      </div>
+
         {currentReservations.length === 0 ? (
           <p>예약 내역이 없습니다.</p>
         ) : (
+          <>
+          {showCompleted && (
+           <div style={{ textAlign: 'right', fontWeight: 'bold', width:"90%" }}>
+           총 촬영완료 금액: {profits}
+         </div>
+          )}
           <Table>
             <Thead>
               <Tr>
@@ -248,7 +311,7 @@ function ViewScheduledInformation() {
                 <Tr key={index}>
                   <Td><div className='text'>{reservation.reservationId}</div></Td>
                   <Td>
-                  <div className='text'>{reservation.reservationStatus === 0 ? "예약대기" :
+                    <div className='text'>{reservation.reservationStatus === 0 ? "예약대기" :
                       reservation.reservationStatus === 1 ? "예약확정" :
                         reservation.reservationStatus === 2 ? "촬영완료" :
                           "예약취소"}</div>
@@ -259,30 +322,29 @@ function ViewScheduledInformation() {
                   <Td><div className='text'>{reservation.reservationPrice}</div></Td>
                   <Td>
                   <div className='text'>
-                    {reservation.reservationStatus === 0 && (
+                  {reservation.reservationStatus === 0 && (
                       <>
                         <button onClick={() => confirmReservation(reservation.reservationId)}>예약 확정</button>
                         <button onClick={() => cancelReservation(reservation.reservationId)}>예약 취소</button>
-                      </>
-                    )}
-                    {reservation.reservationStatus === 1 && (
+                        </>
+                   )}
+                   {reservation.reservationStatus === 1 && (
                       <>
                         <button onClick={() => completeFilming(reservation.reservationId)}>촬영 완료</button>
                         <button onClick={() => cancelReservation(reservation.reservationId)}>예약 취소</button>
-                      </>
+                        </>
                     )}
-                    </div>
+                    {reservation.reservationStatus !== 0 && reservation.reservationStatus !== 1 && (
+                      <span style={{color : "white"}}>null</span>
+                    )}
+                  </div>
                   </Td>
+
                 </Tr>
               ))}
-              {showCompleted && (
-                <Tr>
-                  <Td colSpan="5" style={{ textAlign: 'right', fontWeight: 'bold' }}>총 촬영완료 금액:</Td>
-                  <Td colSpan="2" style={{ fontWeight: 'bold' }}>{profits}</Td>
-                </Tr>
-              )}
             </Tbody>
           </Table>
+          </>
         )}
         <Pagination
           activePage={currentPage}
@@ -294,7 +356,6 @@ function ViewScheduledInformation() {
       </div>
     </div>
   );
-  
 }
 
 export default ViewScheduledInformation;
