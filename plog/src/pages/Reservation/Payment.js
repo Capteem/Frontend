@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../../styles/Table.css';
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 
 function Payment() {
     const location = useLocation();
@@ -79,56 +80,59 @@ function Payment() {
 
     return (
         <div className='Table'>
-             <button
-            onClick={handlepaymentinfo}
-            style={{
-              width: '15%',
-              padding: '5px',
-              marginBottom: '10px',
-              boxSizing: 'border-box',
-              borderRadius: '15px',
-              backgroundColor: '#162617',
-              color: '#E8EEE8',
-              fontWeight: 'bold'
-            }}
-            >결제완료</button>
+            <button
+                onClick={handlepaymentinfo}
+                style={{
+                    width: '15%',
+                    padding: '5px',
+                    marginBottom: '10px',
+                    boxSizing: 'border-box',
+                    borderRadius: '15px',
+                    backgroundColor: '#162617',
+                    color: '#E8EEE8',
+                    fontWeight: 'bold'
+                }}
+            >
+                결제완료
+            </button>
             {paymentInfo && (
-            <div>
-                <h2>결제 정보</h2>
-                <table>
-                    <tbody>
-                        <tr>
-                            <th>결제 날짜</th>
-                            <td>{new Date(paymentInfo.paymentDate).toLocaleString()}</td>
-                        </tr>
-                        <tr>
-                            <th>결제 금액</th>
-                            <td>{paymentInfo.paymentAmount}원</td>
-                        </tr>
-                        <tr>
-                            <th>결제 방식</th>
-                            <td>{paymentInfo.paymentType}</td>
-                        </tr>
-                        <tr>
-                            <th>카카오 포인트</th>
-                            <td>{paymentInfo.paymentPoint}</td>
-                        </tr>
-                        <tr>
-                            <th>결제 ID</th>
-                            <td>{paymentInfo.paymentId}</td>
-                        </tr>
-                        <tr>
-                            <th>결제 상태</th>
-                            <td>{
-                            paymentInfo.paymentStatus === 1 ? "결제완료" : 
-                            paymentInfo.paymentStatus === 2 ? "결제취소" : 
-                            "결제실패"
-                            }</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        )}
+                <div>
+                    <h2>결제 정보</h2>
+                    <Table>
+                        <Tbody>
+                            <Tr>
+                                <Th>결제 날짜</Th>
+                                <Td>{new Date(paymentInfo.paymentDate).toLocaleString()}</Td>
+                            </Tr>
+                            <Tr>
+                                <Th>결제 금액</Th>
+                                <Td>{paymentInfo.paymentAmount}원</Td>
+                            </Tr>
+                            <Tr>
+                                <Th>결제 방식</Th>
+                                <Td>{paymentInfo.paymentType}</Td>
+                            </Tr>
+                            <Tr>
+                                <Th>카카오 포인트</Th>
+                                <Td>{paymentInfo.paymentPoint}</Td>
+                            </Tr>
+                            <Tr>
+                                <Th>결제 ID</Th>
+                                <Td>{paymentInfo.paymentId}</Td>
+                            </Tr>
+                            <Tr>
+                                <Th>결제 상태</Th>
+                                <Td>
+                                    {paymentInfo.paymentStatus === 1 ? "결제완료" :
+                                        paymentInfo.paymentStatus === 2 ? "결제취소" :
+                                            "결제실패"
+                                    }
+                                </Td>
+                            </Tr>
+                        </Tbody>
+                    </Table>
+                </div>
+            )}
         </div>
     );
 }

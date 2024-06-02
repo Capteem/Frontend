@@ -206,9 +206,9 @@ function ComplainManagement() {
           />
         </div> 
         <div className="sort-buttons">
-          <button className="sort" onClick={() => handleSort('complaintId')}>신고번호순</button>
-          <button className="sort" onClick={() => handleSort('complaintType')}>신고 유형순</button>
-          <button className="sort" onClick={() => handleSort('complaintStatus')}>신고 상태순</button>
+          <button className="sort" onClick={() => handleSort('complaintId')}>번호순</button>
+          <button className="sort" onClick={() => handleSort('complaintType')}>유형순</button>
+          <button className="sort" onClick={() => handleSort('complaintStatus')}>상태순</button>
         </div>
       </div>
       {complainlist.length === 0 ? (
