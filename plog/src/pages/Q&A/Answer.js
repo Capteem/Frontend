@@ -17,6 +17,7 @@ function Answer() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState([]);
   const [isReply, setIsReply] = useState(false);
+  const [sortKey, setSortKey] = useState('complaintId');
 
   useEffect(() => {
     if (!accessToken) {
@@ -78,6 +79,26 @@ function Answer() {
     setCurrentPage(pageNumber);
   };
 
+  const sortComplains = (key) => {
+    setSortKey(key);
+  };
+
+  useEffect(() => {
+    if (sortKey) {
+      setComplainlist((prevList) => {
+        return [...prevList].sort((a, b) => {
+          if (a[sortKey] < b[sortKey]) {
+            return -1;
+          }
+          if (a[sortKey] > b[sortKey]) {
+            return 1;
+          }
+          return 0;
+        });
+      });
+    }
+  }, [sortKey]);
+
   const indexOfLastComplaint = currentPage * itemsPerPage;
   const indexOfFirstComplaint = indexOfLastComplaint - itemsPerPage;
   const currentComplains = complainlist.slice(indexOfFirstComplaint, indexOfLastComplaint);
@@ -85,26 +106,32 @@ function Answer() {
   return (
     <div className='Table'>
       <h4>Q&A</h4>
+      <div style={{
+        display: "flex",
+        justifyContent: "center", 
+        alignItems: "center",
+      }}>
+      <div className="sort-buttons">
+            <button className="sort" onClick={() => sortComplains('complaintId')}>번호순</button>
+            <button className="sort" onClick={() => sortComplains('complaintStatus')}>상태순</button>
+            <button className="sort" onClick={() => sortComplains('complaintType')}>유형순</button>
+          </div>
       <button
         onClick={handleQuestion}
         style={{
-          width: '15%',
-          padding: '5px',
           marginBottom: '10px',
-          boxSizing: 'border-box',
-          borderRadius: '15px',
-          backgroundColor: '#162617',
-          color: '#E8EEE8',
-          fontWeight: 'bold'
+          marginLeft: '15px',
         }}
       >
         질문하기
       </button>
+      </div>
       {complainlist.length === 0 ? (
         <p>등록된 질문이 없습니다.</p>
       ) : (
         <>
-          <Table style = {{width: "70%"}}>
+           
+          <Table style={{ width: "70%" }}>
             <Thead>
               <Tr>
                 <Th>Q&A 번호</Th>
@@ -126,28 +153,29 @@ function Answer() {
                   }</div></Td>
                   <Td><div className='text'>{complaint.complaintTitle}</div></Td>
                   <Td>
-                  <div className='text'>
-                    <button onClick={() => openModal([
-                      `질문 날짜: ${new Date(complaint.complaintDate).toLocaleDateString()}`,
-                      `질문 내용: ${complaint.complaintContent}`], false)}>
-                      <MdContentCopy />
-                    </button>
+                    <div className='text'>
+                      <button onClick={() => openModal([
+                        `질문 날짜: ${new Date(complaint.complaintDate).toLocaleDateString()}`,
+                        `질문 내용: ${complaint.complaintContent}`], false)}>
+                        <MdContentCopy />
+                      </button>
                     </div>
                   </Td>
                   <Td><div className='text'>{complaint.complaintStatus === 0 ? '처리미완료' : '처리완료'}</div></Td>
                   <Td>
-                  <div className='text'>
-                  {complaint.complaintAnswerTable?.complaintReplyContent ? (
-                      <button onClick={() => openModal([
-                        `답변 날짜: ${new Date(complaint.complaintAnswerTable.complaintReplyDate).toLocaleDateString()}`,
-                        `답변 내용: ${complaint.complaintAnswerTable.complaintReplyContent}`,
-                      ], true)} style={{padding : "0px 5px 0px 5px", backgroundColor : "#E8EEE8", border : "2px solid #E8EEE8"}}>
-                        <MdContentCopy color='#162617'/>
-                      </button>
-                     ) : (
-                      <span style={{color:'white'}}>null</span>
-                    )}
-                  </div></Td>
+                    <div className='text'>
+                      {complaint.complaintAnswerTable?.complaintReplyContent ? (
+                        <button onClick={() => openModal([
+                          `답변 날짜: ${new Date(complaint.complaintAnswerTable.complaintReplyDate).toLocaleDateString()}`,
+                          `답변 내용: ${complaint.complaintAnswerTable.complaintReplyContent}`,
+                        ], true)} style={{ padding: "0px 5px 0px 5px", backgroundColor: "#E8EEE8", border: "2px solid #E8EEE8" }}>
+                          <MdContentCopy color='#162617' />
+                        </button>
+                      ) : (
+                        <span style={{ color: 'white' }}>null</span>
+                      )}
+                    </div>
+                  </Td>
                 </Tr>
               ))}
             </Tbody>

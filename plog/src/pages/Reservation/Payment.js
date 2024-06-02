@@ -9,6 +9,7 @@ function Payment() {
     const { sendList } = location.state || {};
     const userId = localStorage.getItem('userId');
     const accessToken = localStorage.getItem('accesToken');
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     console.log('sendList:', sendList);
 
@@ -21,7 +22,17 @@ function Payment() {
         } else {
             PaymentReady();
         }
-      }, [accessToken, navigate]);
+
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [accessToken, navigate]);
 
     const PaymentReady = async () => {
         try {
@@ -44,7 +55,11 @@ function Payment() {
             if (error.response && error.response.status === 401) {
                 alert("로그인 만료. 다시 로그인해주세요.");
                 navigate('/signin', { replace: true });
-              } else {
+              }else if (error.response && error.response.status === 500) {
+                alert("결제오류 다시 시도해주세요. ")
+                navigate(-1);
+              }
+              else {
                 console.error('결제 준비 중 오류가 발생했습니다:', error);
               }
             return false;
@@ -95,7 +110,10 @@ function Payment() {
             {paymentInfo && (
             <div>
                 <h2>결제 정보</h2>
-                <table>
+                <table style={{
+                        width: window.innerWidth <= 700 ? '90%' : '50%',
+                        marginTop: '30px'
+                }}>
                     <tbody>
                         <tr>
                             <th>결제 날짜</th>

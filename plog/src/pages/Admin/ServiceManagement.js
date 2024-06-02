@@ -199,8 +199,8 @@ function ServiceManagement() {
                   {serviceinfo.providerType === 1
                     ? '사진작가'
                     : serviceinfo.providerType === 2
-                    ? '스튜디오'
-                    : '헤어,메이크업'}
+                    ? '헤어,메이크업'
+                    : '스튜디오'}
                 </td>
                 <td>
                   {serviceinfo.providerType !== 2 && serviceinfo.providerStatus === 2 ? (
