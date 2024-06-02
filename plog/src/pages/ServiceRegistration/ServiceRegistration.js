@@ -21,6 +21,7 @@ function ServiceRegistration() {
     const [isFileUploaded, setIsFileUploaded] = useState(false);
     const accessToken = localStorage.getItem('accesToken');
     const [uuid, setUuid] = useState(uuidv4());
+    
     console.log(uuid);
     const [state, setState] = useState({
         provider_name: "",
