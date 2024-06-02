@@ -48,6 +48,9 @@ import ComplainManagement from './pages/Admin/ComplainManagement.js';
 import UserManagement from './pages/Admin/UserManagement.js';
 import ServiceManagement from './pages/Admin/ServiceManagement.js';
 
+
+import NotFound from './pages/NotFound.js';
+
 function App() {
   const role = localStorage.getItem('role');
   return (
@@ -95,7 +98,7 @@ function App() {
       <Route path='/servicemanagement' element={<ServiceManagement/>} />
       
       {/* Handle 404 - Not Found */}
-      <Route path='*' element={<Navigate to="/" replace />} />
+      <Route path='*' element={<NotFound />} />
       </Routes>
       </div> 
     </BrowserRouter>
