@@ -243,8 +243,8 @@ function ComplainManagement() {
                }</div></Td>
              <Td><div className='text'>{complaint.complaintTitle}</div></Td>
              <Td>
-                        <div className='text'>
-                          <button style={{padding : "0px 5px 0px 5px"}} onClick={() => openModal(complaint)}>
+                  <div className='text'>
+                       <button style={{padding : "0px 5px 0px 5px"}} onClick={() => openModal(complaint)}>
                             <MdContentCopy />
                           </button>
                         </div>
