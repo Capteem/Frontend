@@ -7,6 +7,8 @@ import axios from 'axios';
 import '../../../styles/Table.css';
 import '../../../styles/Calendar.css';
 import moment from "moment";
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import Pagination from 'react-js-pagination';
 
 function ViewScheduledInformation() {
   const navigate = useNavigate();
@@ -17,10 +19,9 @@ function ViewScheduledInformation() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const providerId = queryParams.get('providerId');
-  //console.log(providerId);
 
   // 예약 정보 리스트
-  const [reservationList, setreservationList] = useState([]);
+  const [reservationList, setReservationList] = useState([]);
 
   // 캘린더
   const [selectedDate, setSelectedDate] = useState(null);
@@ -28,7 +29,11 @@ function ViewScheduledInformation() {
   const [showCompleted, setShowCompleted] = useState(false);
 
   // 총 촬영완료된 금액
-  const [profits, setprofits] = useState(0);
+  const [profits, setProfits] = useState(0);
+
+  // 페이징
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1000 ? 1 : 5);
 
   useEffect(() => {
     if (!accessToken){
@@ -40,7 +45,14 @@ function ViewScheduledInformation() {
     else{
       getServiceReservationList();
     }
-  }, [accessToken, navigate]);
+
+    const handleResize = () => {
+      setItemsPerPage(window.innerWidth < 1000 ? 1 : 5);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [accessToken, navigate, role]);
 
   const getServiceReservationList = async () => {
     try {
@@ -53,7 +65,7 @@ function ViewScheduledInformation() {
         },
       });
       if (response.status === 200) {
-        setreservationList(response.data);
+        setReservationList(response.data);
         console.log(response.data);
       } else {
         alert("서비스예약리스트 가져오기에 실패하였습니다.");
@@ -84,11 +96,15 @@ function ViewScheduledInformation() {
     setSelectedDate(null);
     const completedReservations = reservationList.filter(reservation => reservation.reservationStatus === 2);
     const totalProfits = completedReservations.reduce((sum, reservation) => sum + reservation.reservationPrice, 0);
-    setprofits(totalProfits);
+    setProfits(totalProfits);
   };
 
-  // 예약확정
-  const confirmReservation = async (reservationId) => {
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+   // 예약확정
+   const confirmReservation = async (reservationId) => {
     try {
       await axios.post(`${process.env.REACT_APP_URL}/service/accept`, null, { params: { reservationId: reservationId, providerId: providerId },
         headers:{
@@ -165,6 +181,7 @@ function ViewScheduledInformation() {
     }
   };
 
+
   const filteredReservations = showCompleted
     ? reservationList.filter(reservation => reservation.reservationStatus === 2)
     : selectedDate
@@ -178,8 +195,12 @@ function ViewScheduledInformation() {
       })
       : reservationList;
 
+  const indexOfLastReservation = currentPage * itemsPerPage;
+  const indexOfFirstReservation = indexOfLastReservation - itemsPerPage;
+  const currentReservations = filteredReservations.slice(indexOfFirstReservation, indexOfLastReservation);
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '5px', marginTop: '40px' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '5px', marginTop: '40px', }}>
       <Calendar
         onChange={handleDateChange}
         value={value}
@@ -196,62 +217,47 @@ function ViewScheduledInformation() {
         <button
           onClick={clearSelectedDate}
           style={{
-            width: '15%',
-            padding: '5px',
             marginBottom: '10px',
-            boxSizing: 'border-box',
-            borderRadius: '15px',
-            backgroundColor: '#162617',
-            color: '#E8EEE8',
-            fontWeight: 'bold'
+           marginLeft: '15px',
           }}
         >전체 내역 보기</button>
         <button
           onClick={showCompletedReservations}
           style={{
-            width: '15%',
-            padding: '5px',
             marginBottom: '10px',
-            marginLeft: '10px',
-            boxSizing: 'border-box',
-            borderRadius: '15px',
-            backgroundColor: '#162617',
-            color: '#E8EEE8',
-            fontWeight: 'bold'
+          marginLeft: '15px',
           }}
         >촬영 완료 내역 보기</button>
-        <table>
-          <thead>
-            <tr>
-              <th>예약 번호</th>
-              <th>예약 상태</th>
-              <th>날짜</th>
-              <th>시작 시간</th>
-              <th>끝나는 시간</th>
-              <th>가격</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredReservations.length === 0 ? (
-              <tr>
-                <td colSpan="7" style={{ textAlign: 'center' }}>예약 내역이 없습니다.</td>
-              </tr>
-            ) : (
-              filteredReservations.map((reservation, index) => (
-                <tr key={index}>
-                  <td>{reservation.reservationId}</td>
-                  <td>
+        {currentReservations.length === 0 ? (
+          <p>예약 내역이 없습니다.</p>
+        ) : (
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>예약 번호</Th>
+                <Th>예약 상태</Th>
+                <Th>날짜</Th>
+                <Th>시작 시간</Th>
+                <Th>끝나는 시간</Th>
+                <Th>가격</Th>
+                <Th></Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {currentReservations.map((reservation, index) => (
+                <Tr key={index}>
+                  <Td>{reservation.reservationId}</Td>
+                  <Td>
                     {reservation.reservationStatus === 0 ? "예약대기" :
                       reservation.reservationStatus === 1 ? "예약확정" :
                         reservation.reservationStatus === 2 ? "촬영완료" :
                           "예약취소"}
-                  </td>
-                  <td>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</td>
-                  <td>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</td>
-                  <td>{new Date(reservation.reservationEndTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</td>
-                  <td>{reservation.reservationPrice}</td>
-                  <td>
+                  </Td>
+                  <Td>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</Td>
+                  <Td>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</Td>
+                  <Td>{new Date(reservation.reservationEndTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</Td>
+                  <Td>{reservation.reservationPrice}</Td>
+                  <Td>
                     {reservation.reservationStatus === 0 && (
                       <>
                         <button onClick={() => confirmReservation(reservation.reservationId)}>예약 확정</button>
@@ -264,21 +270,29 @@ function ViewScheduledInformation() {
                         <button onClick={() => cancelReservation(reservation.reservationId)}>예약 취소</button>
                       </>
                     )}
-                  </td>
-                </tr>
-              ))
-            )}
-            {showCompleted && (
-              <tr>
-                <td colSpan="5" style={{ textAlign: 'right', fontWeight: 'bold' }}>총 촬영완료 금액:</td>
-                <td colSpan="2" style={{ fontWeight: 'bold' }}>{profits}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                  </Td>
+                </Tr>
+              ))}
+              {showCompleted && (
+                <Tr>
+                  <Td colSpan="5" style={{ textAlign: 'right', fontWeight: 'bold' }}>총 촬영완료 금액:</Td>
+                  <Td colSpan="2" style={{ fontWeight: 'bold' }}>{profits}</Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        )}
+        <Pagination
+          activePage={currentPage}
+          itemsCountPerPage={itemsPerPage}
+          totalItemsCount={filteredReservations.length}
+          pageRangeDisplayed={5}
+          onChange={handlePageChange}
+        />
       </div>
     </div>
   );
+  
 }
 
 export default ViewScheduledInformation;
