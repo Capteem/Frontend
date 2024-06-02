@@ -240,24 +240,25 @@ function ViewScheduledInformation() {
                 <Th>시작 시간</Th>
                 <Th>끝나는 시간</Th>
                 <Th>가격</Th>
-                <Th></Th>
+                <Th>상태 변경</Th>
               </Tr>
             </Thead>
             <Tbody>
               {currentReservations.map((reservation, index) => (
                 <Tr key={index}>
-                  <Td>{reservation.reservationId}</Td>
+                  <Td><div className='text'>{reservation.reservationId}</div></Td>
                   <Td>
-                    {reservation.reservationStatus === 0 ? "예약대기" :
+                  <div className='text'>{reservation.reservationStatus === 0 ? "예약대기" :
                       reservation.reservationStatus === 1 ? "예약확정" :
                         reservation.reservationStatus === 2 ? "촬영완료" :
-                          "예약취소"}
+                          "예약취소"}</div>
                   </Td>
-                  <Td>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</Td>
-                  <Td>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</Td>
-                  <Td>{new Date(reservation.reservationEndTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</Td>
-                  <Td>{reservation.reservationPrice}</Td>
+                  <Td><div className='text'>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</div></Td>
+                  <Td><div className='text'>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
+                  <Td><div className='text'>{new Date(reservation.reservationEndTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
+                  <Td><div className='text'>{reservation.reservationPrice}</div></Td>
                   <Td>
+                  <div className='text'>
                     {reservation.reservationStatus === 0 && (
                       <>
                         <button onClick={() => confirmReservation(reservation.reservationId)}>예약 확정</button>
@@ -270,6 +271,7 @@ function ViewScheduledInformation() {
                         <button onClick={() => cancelReservation(reservation.reservationId)}>예약 취소</button>
                       </>
                     )}
+                    </div>
                   </Td>
                 </Tr>
               ))}
