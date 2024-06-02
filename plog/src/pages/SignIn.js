@@ -10,6 +10,7 @@ import KakaoImage from '../assets/kakaologo.png';
 //todo: 로그인 했는지 체크 + 로그아웃(token 다 삭제) 기능
 function SignIn(){
 
+    console.log(process.env.REACT_APP_URL);
     let [id, setId] = useState('');
     let [password, setPassword] = useState('');
 

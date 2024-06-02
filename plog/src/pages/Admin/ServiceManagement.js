@@ -307,7 +307,7 @@ function ServiceManagement() {
                     {serviceinfo.providerType !== 3 ? (
                       <button onClick={() => ShowRegisteredPhoto(serviceinfo.providerUuid)}><MdInsertPhoto /></button>
                     ) : (
-                      ''
+                      <span style = {{color : "white"}}>null</span>
                     )}
                   </div>
                   </Td>

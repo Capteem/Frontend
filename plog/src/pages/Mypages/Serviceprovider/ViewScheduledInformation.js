@@ -109,6 +109,7 @@ function ViewScheduledInformation() {
   };
 
   const showCompletedReservations = () => {
+    setCurrentPage(1); 
     setShowCompleted(true);
     setSelectedDate(null);
     setShowCalendarButton(false); // Hide the calendar button
@@ -274,7 +275,7 @@ function ViewScheduledInformation() {
             marginBottom: '10px',
             marginLeft: '15px',
           }}
-        >촬영 완료 내역 보기</button>
+        >촬영완료 내역보기</button>
       <div className="sort-buttons">
       {showCalendarButton && (
         <button 
