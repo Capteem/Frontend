@@ -132,8 +132,8 @@ function ServiceList() {
                   <Td>
                     <div className='text'>
                       {service.providerType === 1 ? "사진작가" : 
-                       service.providerType === 2 ? "스튜디오" : 
-                       "헤어,메이크업"}
+                       service.providerType === 2 ? "헤어,메이크업" : 
+                       "스튜디오"}
                     </div>
                   </Td>
                   <Td><div className='text'>{service.providerAddress}</div></Td>

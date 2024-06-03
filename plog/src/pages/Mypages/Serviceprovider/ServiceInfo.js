@@ -488,6 +488,7 @@ function ServiceInfo(){
   }
   function sendTime(props, id){
     console.log("sendTime 함수 안");
+    console.log(props);
     let tmp = {
       "providerId" : id,
       "dateList" : props

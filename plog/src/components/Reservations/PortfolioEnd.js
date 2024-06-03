@@ -465,7 +465,7 @@ function PortfolioEnd(props){
         <>
         {/* {console.log(show)} */}
         {/* {console.log(showStudio)} */}
-            {windowSize.width > 768 ?
+            {windowSize.width > 850 ?
                 <div>
                     {click.studioClick === false ? <button className='portfolio-button' onClick={()=>{changeClick(3); setShow(showStudio);}}>스튜디오</button> :
                         <button className='portfolio-button-click' onClick={()=>{changeClick(3); setShow(showStudio);}}>스튜디오</button>}
