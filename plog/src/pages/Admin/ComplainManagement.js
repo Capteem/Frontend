@@ -224,7 +224,7 @@ function ComplainManagement() {
           height : "20%",
         }}
         />
-           <p  style={{fontSize : window.innerWidth < "500" ? "10px": "40px", border : "bold"}}>Q&A가 없습니다.</p>
+           <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>Q&A가 없습니다.</p>
         </>
       ) : (
         <>

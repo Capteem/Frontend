@@ -286,7 +286,7 @@ function ServiceManagement() {
            height : "20%",
          }}
          />
-           <p  style={{fontSize : window.innerWidth < "500" ? "10px": "40px", border : "bold"}}>제공자가 없습니다.</p>
+           <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>제공자가 없습니다.</p>
          </>
       ) : filteredServices.length === 0 ? (
         <p>검색 결과가 없습니다.</p>
@@ -319,7 +319,7 @@ function ServiceManagement() {
                   </Td>
                   <Td>
                   <div className='text'>
-                    {serviceinfo.providerType !== 3 ? (
+                    {(serviceinfo.providerType !== 3 && serviceinfo.providerStatus===2)? (
                       <button onClick={() => ShowRegisteredPhoto(serviceinfo.providerUuid)}><MdInsertPhoto /></button>
                     ) : (
                       <span style = {{color : "white"}}>null</span>

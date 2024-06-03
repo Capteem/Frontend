@@ -175,7 +175,7 @@ function UserManagement() {
           height : "20%",
         }}
         />
-        <p  style={{fontSize : window.innerWidth < "500" ? "10px": "40px", border : "bold"}}>사용자가 없습니다.</p>
+        <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>사용자가 없습니다.</p>
         </>
       ) : filteredUsers.length === 0 ? (
         <p>검색 결과가 없습니다.</p>

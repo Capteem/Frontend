@@ -66,6 +66,7 @@ function ServiceRegistrationList() {
 
   const sortRegistrations = (key) => {
     setSortKey(key);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -123,7 +124,7 @@ function ServiceRegistrationList() {
            height : "20%",
          }}
          />
-         <p  style={{fontSize : "40px", border : "bold"}}>신청 이력이 없습니다.</p>
+          <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>신청 이력이 없습니다.</p>
          </>
       ) : (
         <>
