@@ -7,6 +7,8 @@ import Pagination from 'react-js-pagination';
 import { IoSearch } from "react-icons/io5";
 import Modal from 'react-modal';
 import { MdContentCopy } from "react-icons/md";
+import NoData from '../../assets/noReview.png';
+
 
 
 function ComplainManagement() {
@@ -212,7 +214,17 @@ function ComplainManagement() {
         </div>
       </div>
       {complainlist.length === 0 ? (
-        <p>Q&A가 없습니다.</p>
+        <>
+        <img 
+        src={NoData} 
+        alt=""
+        style={{
+          width : "20%",
+          height : "20%",
+        }}
+        />
+        <p  style={{fontSize : "40px", border : "bold"}}>Q&A가 없습니다.</p>
+        </>
       ) : (
         <>
           {filteredComplains.length === 0 ? (

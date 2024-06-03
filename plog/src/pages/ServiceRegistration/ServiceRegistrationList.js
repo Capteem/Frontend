@@ -4,6 +4,7 @@ import axios from 'axios';
 import '../../styles/Table.css';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
+import NoData from '../../assets/noReview.png';
 
 function ServiceRegistrationList() {
   const navigate = useNavigate();
@@ -113,7 +114,17 @@ function ServiceRegistrationList() {
       </button>
       </div>
       {registrations.length === 0 ? (
-        <p>서비스 등록을 신청한 이력이 없습니다.</p>
+        <>
+         <img 
+         src={NoData} 
+         alt=""
+         style={{
+           width : "20%",
+           height : "20%",
+         }}
+         />
+         <p  style={{fontSize : "40px", border : "bold"}}>신청 이력이 없습니다.</p>
+         </>
       ) : (
         <>
           <Table style={{ width: window.innerWidth <= 1000 ? '60%' : '40%'}}>

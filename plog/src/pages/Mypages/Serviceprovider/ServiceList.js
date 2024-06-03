@@ -5,6 +5,8 @@ import '../../../styles/Table.css';
 import ServiceDropdown from './ServiceDropdown';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
+import NoData from '../../../assets/noReview.png';
+
 
 function ServiceList() {
   const [serviceList, setServiceList] = useState([]);
@@ -110,7 +112,17 @@ function ServiceList() {
         <button className="sort" onClick={() => handleSort('providerType')}>종류순</button>
       </div>
       {serviceList.length === 0 ? (
-        <p>서비스가 없습니다.</p>
+        <>
+         <img 
+         src={NoData} 
+         alt=""
+         style={{
+           width : "20%",
+           height : "20%",
+         }}
+         />
+         <p  style={{fontSize : "40px", border : "bold"}}>서비스가 없습니다.</p>
+         </>
       ) : (
         <>
           <Table>

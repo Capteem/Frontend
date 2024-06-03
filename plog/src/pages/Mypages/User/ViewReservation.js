@@ -4,6 +4,7 @@ import axios from 'axios';
 import '../../../styles/Table.css';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
+import NoData from '../../../assets/noReview.png';
 
 function ViewReservation() {
   const [reservations, setReservations] = useState([]);
@@ -143,7 +144,18 @@ function ViewReservation() {
        
         </div>
         {reservations.length === 0 ? (
-          <p style={{ marginTop: "10px" }}>예약내역이 없습니다.</p>
+          <>
+           <img 
+           src={NoData} 
+           alt=""
+           style={{
+             width : "20%",
+             height : "20%",
+           }}
+           />
+           <p  style={{fontSize : "40px", border : "bold"}}>
+   예약내역이 없습니다.</p>
+   </>
         ) : (
           <>
              {showCompletedReservations && (

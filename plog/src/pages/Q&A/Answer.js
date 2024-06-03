@@ -6,6 +6,7 @@ import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import Modal from 'react-modal';
 import { MdContentCopy } from "react-icons/md";
+import NoData from '../../assets/noReview.png';
 
 function Answer() {
   const navigate = useNavigate();
@@ -127,7 +128,16 @@ function Answer() {
       </button>
       </div>
       {complainlist.length === 0 ? (
-        <p>등록된 질문이 없습니다.</p>
+        <>
+         <img 
+         src={NoData} 
+         alt=""
+         style={{
+           width : "20%",
+           height : "20%",
+         }}
+         />
+         <p  style={{fontSize : "40px", border : "bold"}}>등록된 질문이 없습니다.</p></>
       ) : (
         <>
            

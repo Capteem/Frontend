@@ -11,6 +11,7 @@ import Modal from 'react-modal';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import { FaCalendarAlt } from "react-icons/fa";
+import NoData from '../../../assets/noReview.png';
 
 function ViewScheduledInformation() {
   const navigate = useNavigate();
@@ -294,7 +295,17 @@ function ViewScheduledInformation() {
       </div>
 
         {currentReservations.length === 0 ? (
-          <p>예약 내역이 없습니다.</p>
+          <>
+           <img 
+           src={NoData} 
+           alt=""
+           style={{
+             width : "20%",
+             height : "20%",
+           }}
+           />
+           <p  style={{fontSize : "40px", border : "bold"}}>예약 내역이 없습니다.</p>
+           </>
         ) : (
           <>
           {showCompleted && (
