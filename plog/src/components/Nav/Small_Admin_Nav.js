@@ -25,11 +25,21 @@ function Admin_Nav() {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  //페이지 새로고침
+  const handleNavigation = (path) => {
+    if (window.location.pathname === path) {
+        window.location.reload(); // 현재 페이지를 새로고침합니다.
+    } else {
+        navigate(path); // 다른 경로로 이동합니다.
+    }
+  };
+
   return (
     <div className="Nav">
     <nav>
       <div className='nav-small-left'>
-        <NavLink to="/">
+        <NavLink to="/" onClick={()=>{handleNavigation('/');}}>
           <div style={{display:"flex"}}>
             <img
               src={Plog} alt=""
@@ -44,7 +54,7 @@ function Admin_Nav() {
             checkLogin === false ?
             <>
               <div>
-                <NavLink to="/signin">
+                <NavLink to="/signin" onClick={()=>{handleNavigation('/signin');}}>
                   로그인
                 </NavLink>
               </div>
@@ -55,9 +65,9 @@ function Admin_Nav() {
                 <RiMenu3Line className="dropbtn-icon" onClick={()=>{toggleDropdown();}}/>
                 {isDropdownOpen && (
                   <div className="dropdown-content">
-                      <Link to="/usermanagement">사용자관리</Link>
-                      <Link to="/servicemanagement">서비스관리</Link>
-                      <Link to="/complainmanagement">Q&A관리</Link>
+                      <Link to="/usermanagement" onClick={()=>{handleNavigation('/usermanagement');}}>사용자관리</Link>
+                      <Link to="/servicemanagement" onClick={()=>{handleNavigation('/servicemanagement');}}>서비스관리</Link>
+                      <Link to="/complainmanagement" onClick={()=>{handleNavigation('/complainmanagement');}}>Q&A관리</Link>
                       <Link onClick={()=>{ setModalShow(true);}}>로그아웃</Link>
                     </div>
                 )}
@@ -68,7 +78,7 @@ function Admin_Nav() {
       <>
         {
           checkLogin === false ?
-            <NavLink to="/signup">
+            <NavLink to="/signup" onClick={()=>{handleNavigation('/signup');}}>
               회원가입
             </NavLink>
             :

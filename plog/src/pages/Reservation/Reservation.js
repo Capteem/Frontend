@@ -184,7 +184,6 @@ function Reservation(){
     return(
 
         <div className='reservation-start-container'>
-            {console.log(checkFinal)}
             {windowSize.width > 850 ?
                 <div className="reservation-container">
                     <div className="calendar">

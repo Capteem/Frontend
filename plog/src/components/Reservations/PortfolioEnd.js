@@ -18,6 +18,7 @@ import '../../styles/review.css'
 import '../../styles/shoppingBag.css'
 import '../../styles/shoppingBag.css'
 import shoppingBag from '../../assets/shoppingBag.jpg'
+import noReview from '../../assets/noReview.png'
 
 function PortfolioEnd(props){
 
@@ -555,7 +556,7 @@ function PortfolioEnd(props){
                         {(!imgReview) && <div className="gallery-container-review-modal">
                         {((!imgReview) && (!detailReview)) &&
                             <div className='shoppingBag-none'>
-                                <img style={{width:150, height:150}} className='shoppingBag-noneBag' src={shoppingBag}/>
+                                <img style={{width:150, height:150}} className='shoppingBag-noneBag' src={noReview}/>
                                 <div className='shoppingBag-noneText'>작성된 리뷰가 없습니다.</div>
                             </div>
                         }

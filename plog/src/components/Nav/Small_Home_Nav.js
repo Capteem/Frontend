@@ -12,7 +12,6 @@ import { FaFrog } from "react-icons/fa";
 import { FaList } from "react-icons/fa6";
 import { FaShoppingBag } from "react-icons/fa";
 import { MdOutlineRateReview } from "react-icons/md";
-import { MdMiscellaneousServices } from "react-icons/md";
 import { IoChatboxEllipses } from "react-icons/io5"
 
 function SmallNav() {
@@ -36,12 +35,22 @@ function SmallNav() {
     setIsOpen(!isOpen);
   };
 
+  //페이지 새로고침
+  const handleNavigation = (path) => {
+    if (window.location.pathname === path) {
+        window.location.reload(); // 현재 페이지를 새로고침합니다.
+    } else {
+        navigate(path); // 다른 경로로 이동합니다.
+    }
+  };
+
+
   return (
     <>
       <div className="Nav_small">
         <nav>
           <div className='nav-small-left'>
-            <NavLink to="/">
+            <NavLink to="/" onClick={()=>{handleNavigation('/');}}>
               <div style={{display:"flex"}}>
                 <img
                   src={Plog} alt=""
@@ -56,7 +65,7 @@ function SmallNav() {
             checkLogin === false ?
               <>
                 <div>
-                  <NavLink to="/signin">
+                  <NavLink to="/signin" onClick={()=>{handleNavigation('/signin');}}>
                     로그인
                   </NavLink>
                 </div>
@@ -67,23 +76,23 @@ function SmallNav() {
                   <RiMenu3Line className="dropbtn-icon" onClick={()=>{toggleDropdown();}}/>
                   {isOpen && (
                     <div className="dropdown-content">
-                      <Link to="/reservation">예약</Link>
-                      <Link to="/serviceregistrationlist">서비스등록</Link>
-                      <Link to="/gallery">갤러리</Link>
-                      <Link to="/answer">Q&A</Link>
+                      <Link to="/reservation" onClick={()=>{ setMyPage(false); handleNavigation('/reservation');}}>예약</Link>
+                      <Link to="/serviceregistrationlist" onClick={()=>{ setMyPage(false); handleNavigation('/serviceregistrationlist');}}>서비스등록</Link>
+                      <Link to="/gallery" onClick={()=>{ setMyPage(false); handleNavigation('/gallery');}}>갤러리</Link>
+                      <Link to="/answer" onClick={()=>{ setMyPage(false); handleNavigation('/answer');}}>Q&A</Link>
                       <Link onClick={()=>{ setModalShow(true);}}>로그아웃</Link>
                       <Link onClick={()=>{ setMyPage(!myPage);}}>마이페이지</Link>
                       {
                         myPage &&
                         <div>
-                          <Link to="/mypage/userinfo" onClick={()=>{ setMyPage(false);}}><FaFrog/> 회원 정보</Link>
-                          <Link to="/mypage/viewreservation" onClick={()=>{ setMyPage(false);}}><FaList/> 예약 내역</Link>
-                          <Link to="/mypage/shoppingbag" onClick={()=>{ setMyPage(false);}}><FaShoppingBag/> 장바구니</Link>
-                          <Link to="/mypage/reviewlist" onClick={()=>{ setMyPage(false);}}><MdOutlineRateReview/> 리뷰 관리</Link>
+                          <Link to="/mypage/userinfo" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/userinfo');}}><FaFrog/> 회원 정보</Link>
+                          <Link to="/mypage/viewreservation" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/viewreservation');}}><FaList/> 예약 내역</Link>
+                          <Link to="/mypage/shoppingbag" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/shoppingbag');}}><FaShoppingBag/> 장바구니</Link>
+                          <Link to="/mypage/reviewlist" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/reviewlist');}}><MdOutlineRateReview/> 리뷰 관리</Link>
                           <Link><IoChatboxEllipses/> 1:1 채팅</Link>
                             {role === "PROVIDER" && (
                               <Link to="/mypage/servicelist" style={{ backgroundColor : "#efbb54", borderRadius : "0px 0px 15px 15px"}}
-                              onClick={()=>{ setMyPage(false);}}>서비스 리스트</Link>
+                              onClick={()=>{ setMyPage(false); handleNavigation('/mypage/servicelist');}}>서비스 리스트</Link>
                             )}
                         </div>
                       }
@@ -96,7 +105,7 @@ function SmallNav() {
           <>
             {
               checkLogin === false ?
-                <NavLink to="/signup">
+                <NavLink to="/signup" onClick={()=>{handleNavigation('/signup');}}>
                   회원가입
                 </NavLink>
               :

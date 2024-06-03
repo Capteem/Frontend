@@ -627,7 +627,7 @@ function ServiceInfo(){
             <div>
               <form onSubmit={(event)=>{uploadRep(event)}}>
                 <img className='serviceinfo-repImg' src={selectImage} onClick={()=>{handleClickRep();}}/>
-                <input className='input-delete' accept='.png, .jpeg, .jpg' type='file' multiple={true} 
+                <input className='input-delete' accept='.png, .jpg' type='file' multiple={true} 
                   ref={repInputRef}
                   disabled={change}
                   onChange={(event)=>{uploadRep(event)}}/>

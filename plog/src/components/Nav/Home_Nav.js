@@ -29,6 +29,15 @@ function Nav(){
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  //페이지 새로고침
+  const handleNavigation = (path) => {
+    if (window.location.pathname === path) {
+        window.location.reload(); // 현재 페이지를 새로고침합니다.
+    } else {
+        navigate(path); // 다른 경로로 이동합니다.
+    }
+  };
+
     return (
       <div className="Nav">
       <nav>
@@ -36,7 +45,7 @@ function Nav(){
               checkLogin === false ?
               <>
                 <div>
-                    <NavLink to="/">
+                    <NavLink to="/" onClick={()=>{handleNavigation('/');}}>
                       <div style={{display:"flex"}}>
                       <img
                       src={Plog} alt=""
@@ -47,7 +56,7 @@ function Nav(){
                     </NavLink>
                 </div>
                 <div>
-                  <NavLink to="/signin">
+                  <NavLink to="/signin" onClick={()=>{handleNavigation('/signin');}}>
                     로그인
                   </NavLink>
                 </div>
@@ -55,7 +64,7 @@ function Nav(){
               :
               <>
                 <div>
-                  <NavLink to="/">
+                  <NavLink to="/" onClick={()=>{handleNavigation('/');}}>
                   <div style={{display:"flex"}}>
                       <img
                       src={Plog} alt=""
@@ -66,22 +75,22 @@ function Nav(){
                   </NavLink>
                 </div>
                 <div>
-                  <NavLink to="/reservation">
+                  <NavLink to="/reservation" onClick={()=>{handleNavigation('/reservation');}}>
                     예약
                   </NavLink>
                 </div>
                 <div>
-                  <NavLink to="/serviceregistrationlist">
+                  <NavLink to="/serviceregistrationlist" onClick={()=>{handleNavigation('/serviceregistrationlist');}}>
                     서비스등록
                   </NavLink>
                 </div>
                 <div>
-                  <NavLink to="/gallery">
+                  <NavLink to="/gallery" onClick={()=>{handleNavigation('/gallery');}}>
                       갤러리
                   </NavLink>
                 </div>
                 <div>
-                  <NavLink to="/answer">
+                  <NavLink to="/answer" onClick={()=>{handleNavigation('/answer');}}>
                       Q&A
                   </NavLink>
                 </div>
@@ -104,7 +113,7 @@ function Nav(){
           <div>
             {
               checkLogin === false ?
-                <NavLink to="/signup">
+                <NavLink to="/signup" onClick={()=>{handleNavigation('/signup');}}>
                   회원가입
                 </NavLink>
               :

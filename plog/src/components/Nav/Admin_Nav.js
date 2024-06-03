@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import Modal from 'react-modal';
 import {Cookies} from 'react-cookie';
 import { useEffect, useState } from 'react';
 import '../../styles/Nav.css';
@@ -21,15 +20,23 @@ function Admin_Nav() {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  //페이지 새로고침
+  const handleNavigation = (path) => {
+    if (window.location.pathname === path) {
+        window.location.reload(); // 현재 페이지를 새로고침합니다.
+    } else {
+        navigate(path); // 다른 경로로 이동합니다.
+    }
+  };
   return (
     <div className="Nav">
-
     <nav>
           {
             checkLogin === false ?
             <>
               <div>
-                  <NavLink to="/">
+                  <NavLink to="/" onClick={()=>{handleNavigation('/');}}>
                   <div style={{display:"flex"}}>
                       <img
                       src={Plog} alt=""
@@ -40,7 +47,7 @@ function Admin_Nav() {
                   </NavLink>
               </div>
               <div>
-                <NavLink to="/signin">
+                <NavLink to="/signin" onClick={()=>{handleNavigation('/signin');}}>
                   로그인
                 </NavLink>
               </div>
@@ -48,7 +55,7 @@ function Admin_Nav() {
             :
             <>
               <div>
-          <NavLink to="/">
+          <NavLink to="/" onClick={()=>{handleNavigation('/');}}>
           <div style={{display:"flex"}}>
                       <img
                       src={Plog} alt=""
@@ -59,17 +66,17 @@ function Admin_Nav() {
           </NavLink>
         </div>
         <div>
-          <NavLink to="/usermanagement">
+          <NavLink to="/usermanagement" onClick={()=>{handleNavigation('/usermanagement');}}>
             사용자관리
           </NavLink>
         </div> 
         <div>
-          <NavLink to="/servicemanagement">
+          <NavLink to="/servicemanagement" onClick={()=>{handleNavigation('/servicemanagement');}}>
             서비스관리
           </NavLink>
         </div>
         <div>
-          <NavLink to="/complainmanagement">
+          <NavLink to="/complainmanagement" onClick={()=>{handleNavigation('/complainmanagement');}}>
             Q&A관리
           </NavLink>
         </div>
@@ -87,7 +94,7 @@ function Admin_Nav() {
         <div>
           {
             checkLogin === false ?
-              <NavLink to="/signup">
+              <NavLink to="/signup" onClick={()=>{handleNavigation('/signup');}}>
                 회원가입
               </NavLink>
             :
