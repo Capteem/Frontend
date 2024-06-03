@@ -51,6 +51,16 @@ function Calendar(){
         setHandlebutton2(100);
     }, [finalDate]);
 
+    useEffect(()=>{
+        console.log(checkFinal.finalDate);
+        if(checkFinal.finalDate === undefined || checkFinal.finalDate === ""){
+            setCheckTimeSelect([
+                false, false, false, false, false, false, false, false,
+                false, false, false, false, false, false, false, false,
+            ]);
+        }
+    },[checkFinal.finalDate])
+
     function handleButton(index){
         if(handlebutton1 === 100){
             setHandlebutton1(index);

@@ -30,6 +30,12 @@ const sendReservation = createSlice({
         },
         changeStudio(state, action){
             state.fianlStudio = action.payload;
+
+            if(state.fianlStudio[0] === "" && state.finalPhotographer[0] === "" && 
+            state.finalHair[0] === ""){
+                state.finalArea = "";
+                state.finalSubarea = "";
+            }
         },
         changePhotographer(state, action){
             state.finalPhotographer = action.payload;

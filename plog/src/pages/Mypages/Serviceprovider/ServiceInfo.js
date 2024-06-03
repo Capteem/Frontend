@@ -460,7 +460,7 @@ function ServiceInfo(){
 
     const today = new Date();
     const twoMonthsLater = new Date(today);
-    twoMonthsLater.setMonth(today.getMonth() + 1);
+    twoMonthsLater.setMonth(today.getMonth() + 3);
 
     props.map((item, dayIndex)=>{
       let currentDay = new Date(today);

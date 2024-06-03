@@ -20,8 +20,8 @@ function RegionSelect(){
     const [selectedSubArea, setSelectedSubArea] = useState(""); // 선택된 하위 지역
 
     //서버 전송용
-    const [finalArea, setFinalArea] = useState("");
-    const [finalSubArea, setFinalSubArea] = useState("");
+    // const [finalArea, setFinalArea] = useState("");
+    // const [finalSubArea, setFinalSubArea] = useState("");
 
     function check(){
         if(checkArea.fianlStudio[0] === "" && checkArea.finalPhotographer[0] === "" && 
@@ -32,28 +32,32 @@ function RegionSelect(){
         }
     }
 
-    // useEffect(()=>{
-    //     if(check.finalArea === ""){
-    //         let tmp = "";
-    //         setSelectedArea(tmp);
-    //     }
-    //     // setFinalArea("");
-    //     // setFinalSubArea("");
-    //     // dispatch(changeArea(""));
-    //     // dispatch(changeSubarea(""));
-    // },[checkArea.finalArea, checkArea.finalSubArea])
+    useEffect(()=>{
+        console.log(checkArea);
+        if((checkArea.finalArea === undefined || checkArea.finalArea === "") && (checkArea.finalSubArea == undefined || checkArea.finalSubArea == "")){
+            console.log("둘다");
+            setSelectedArea("");
+            setSelectedSubArea("");
+            // setFinalArea("");
+            // setFinalSubArea("");
+        }else if(checkArea.finalArea !== undefined && (checkArea.finalSubArea === undefined || checkArea.finalSubArea === "")){
+            console.log("서브지역만");
+            setSelectedSubArea("");
+            // setFinalSubArea("");
+        }
+    },[checkArea.finalArea, checkArea.finalSubArea])
 
     //선택시 변수들 업데이트
     const handleAreaChange = (event) => {   //지역 선택
         setSelectedArea(event.target.value);
-        setFinalArea(event.target.value);
+        // setFinalArea(event.target.value);
         dispatch(changeArea(event.target.value));
         setSelectedSubArea("");
         dispatch(changeSubarea(""));
     };
     const handleSubAreaChange = (event) => {    //서브 지역 선택
         setSelectedSubArea(event.target.value);
-        setFinalSubArea(event.target.value);
+        // setFinalSubArea(event.target.value);
         dispatch(changeSubarea(event.target.value));
     };
 
@@ -80,8 +84,8 @@ function RegionSelect(){
                 </div>
             )}
 
-            <br/>
-            {/* {check() == false ? null : 
+            {/* <br/>
+            {check() == false ? null : 
                 <button 
                     className='calculate-button'
                     onClick={()=>{

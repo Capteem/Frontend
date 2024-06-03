@@ -65,14 +65,6 @@ function Reservation(){
 
     const checkFinal = useSelector((state)=>state.sendReservation);
 
-    function resetArea(){
-        if(checkFinal.fianlStudio[0] === "" && checkFinal.finalPhotographer[0] === "" && 
-        checkFinal.finalHair[0] === ""){
-            dispatch(changeArea(""));
-            dispatch(changeSubarea(""));
-        }
-    }
-
     //필수적인것들 체크했는지 확인
     //todo: server check
     //todo: 스튜디오 등 선택 체크
@@ -192,6 +184,7 @@ function Reservation(){
     return(
 
         <div className='reservation-start-container'>
+            {console.log(checkFinal)}
             {windowSize.width > 768 ?
                 <div className="reservation-container">
                     <div className="calendar">
@@ -219,7 +212,7 @@ function Reservation(){
                                 {checkFinal.fianlStudio.providerName}
                                 {checkFinal.fianlStudio.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : <button
                                     className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeStudio([""])); resetArea();}}
+                                    onClick={()=>{dispatch(changeStudio([""]));}}
                                 >x</button>}
                             </span>
                         </div>
@@ -230,7 +223,7 @@ function Reservation(){
                                 {checkFinal.finalPhotographer.providerName}
                                 {checkFinal.finalPhotographer.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : <button
                                     className='reservation-x-button'
-                                    onClick={()=>{dispatch(changePhotographer([""])); resetArea();}}
+                                    onClick={()=>{dispatch(changePhotographer([""]));}}
                                 >x</button>}
                             </span>
                         </div>
@@ -241,7 +234,7 @@ function Reservation(){
                                 {checkFinal.finalHair.providerName}
                                 {checkFinal.finalHair.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : <button
                                     className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeHair([""])); resetArea();}}
+                                    onClick={()=>{dispatch(changeHair([""]));}}
                                 >x</button>}
                             </span>
                         </div>
@@ -304,7 +297,7 @@ function Reservation(){
                                 스튜디오:{checkFinal.fianlStudio.providerName}
                                 {checkFinal.fianlStudio.providerName === undefined ? null : <button
                                     className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeStudio([""])); resetArea();}}
+                                    onClick={()=>{dispatch(changeStudio([""]));}}
                                 >x</button>}
                             </Accordion.Header>
                             <Accordion.Body>
@@ -317,7 +310,7 @@ function Reservation(){
                                 사진작가:{checkFinal.finalPhotographer.providerName}
                                 {checkFinal.finalPhotographer.providerName === undefined ? null : <button
                                     className='reservation-x-button'
-                                    onClick={()=>{dispatch(changePhotographer([""])); resetArea();}}
+                                    onClick={()=>{dispatch(changePhotographer([""]));}}
                                 >x</button>}
                             </Accordion.Header>
                             <Accordion.Body>
@@ -330,7 +323,7 @@ function Reservation(){
                                 헤메:{checkFinal.finalHair.providerName}
                                 {checkFinal.finalHair.providerName === undefined ? null : <button
                                     className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeHair([""])); resetArea();}}
+                                    onClick={()=>{dispatch(changeHair([""]));}}
                                 >x</button>}
                             </Accordion.Header>
                             <Accordion.Body>

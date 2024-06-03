@@ -28,7 +28,6 @@ function PortfolioEnd(props){
     });
 
     useEffect(()=>{
-        console.log("화면바뀜 실행");
         window.addEventListener('resize', handleResize);
         return()=>{
             window.removeEventListener('resize', handleResize);
@@ -61,13 +60,13 @@ function PortfolioEnd(props){
 
     //서버한테 제공자들 데이터 받아옴
     useEffect(()=>{
-        console.log(props.sendToPortfolio);
         initialSetting(props.sendToPortfolio);
         setProviderAll(props.sendToPortfolio);
         getRep(props.sendToPortfolio);
     },[props.sendToPortfolio]);
 
     function initialSetting(props){
+        console.log("initialSetting 실행");
         const studioTmp = [];
         const photoTmp = [];
         const hmTmp = [];
@@ -81,23 +80,8 @@ function PortfolioEnd(props){
                 studioTmp.push(item);
             }
         })
-
-        // props.forEach((provider) => {
-        //     switch (provider.providerType) {
-        //         case 1:
-        //             photoTmp.push(provider);
-        //             break;
-        //         case 2:
-        //             hmTmp.push(provider);
-        //             break;
-        //         case 3:
-        //             studioTmp.push(provider);
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        // });
     
+        console.log(studioTmp);
         setServerStudio(studioTmp);
         setServerPhoto(photoTmp);
         setServerHM(hmTmp);
@@ -106,21 +90,30 @@ function PortfolioEnd(props){
         setShowHM(hmTmp);
     }
 
+    useEffect(()=>{
+        console.log(showStudio);
+        console.log(serverStudio);
+    },[showStudio])
+
     //여기서부턴 날짜, 지역 선택 시
     useEffect(()=>{
+        console.log("날짜 지역 선택");
         settingShowStudio(serverStudio);
         settingShowPhoto(serverPhoto);
         settingShowHM(serverHM);
+        changeClick(0);
+        setShow([]);
     },[checkSelect.finalDate, checkSelect.finalArea, checkSelect.finalSubarea])
 
     function settingShowStudio(props){
-
+        console.log(props);
         const filteredData = props.filter(item => {
             return (checkDate(item.dateList) || checkSelect.finalDate === '') 
             && (item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
 
+        console.log(showStudio);
         setShowStudio(filteredData);
     }
     function settingShowPhoto(props){
@@ -235,8 +228,6 @@ function PortfolioEnd(props){
         galleryClick:false,
     });
     useEffect(()=>{
-        console.log(props.selectNum);
-
         if(props.selectNum === 1){
             setShow(showPhoto);
         }else if(props.selectNum === 2){
@@ -257,8 +248,6 @@ function PortfolioEnd(props){
     }, [checkSelect.finalDate])
 
     useEffect(()=>{
-        console.log("시간 저장");
-
         saveTimeListWithSelect();
     },[checkSelect.fianlStudio, checkSelect.finalPhotographer, checkSelect.finalHair]);
     
@@ -330,6 +319,14 @@ function PortfolioEnd(props){
                 hmClick: true,
                 galleryClick: true,
             }));
+        }else{
+            setClick(prevClick => ({
+                ...prevClick, // 이전 상태를 복사
+                photoClick: false,
+                studioClick: false,
+                hmClick: false,
+                galleryClick: false,
+            }));
         }
     }
     
@@ -348,13 +345,13 @@ function PortfolioEnd(props){
         })
         .catch((error)=>{
             if(error.response.status === 404){
-                console.log("포트폴리오 존재 안함");
+                // console.log("포트폴리오 존재 안함");
             }
             else if(error.response.status === 401){
                 alert("로그인 만료. 다시 로그인해주세요.")
                 navigate('/signin', { replace: true });
             }else{
-                console.log(error);
+                // console.log(error);
             }
         })
         setDetail(props);
@@ -403,7 +400,6 @@ function PortfolioEnd(props){
                 responseType: "blob",
             })
             .then((result)=>{
-                console.log("대표사진 성공");
                 const newFile = new File([result.data], detailPhoto);   //blob 객체를 File 객체로 변환시켜줌
     
                 const reader = new FileReader(); // 변환한 File 객체를 읽기 위해 FileReader 객체 생성(비동기)
@@ -416,8 +412,8 @@ function PortfolioEnd(props){
             })
             .catch((error)=>{
                 if(error.response && error.response.status === 401){
-                    alert("로그인 만료. 다시 로그인해주세요.")
                     navigate('/signin', { replace: true });
+                    alert("로그인 만료. 다시 로그인해주세요.")
                 }else{
                     console.log("대표사진 요청 에러");
                     console.log(error);
@@ -430,7 +426,7 @@ function PortfolioEnd(props){
     const [detailReview, setDetailReview]= useState([]);
     const [score, setScore] = useState(0);
     function getReview(props){
-        console.log(props);
+        // console.log(props);
         setDetailPhoto([]);
         axios.get(`${process.env.REACT_APP_URL}/review/provider/get/${props.providerId}`,{
             headers:{
@@ -438,7 +434,6 @@ function PortfolioEnd(props){
             },
         })
         .then((result)=>{
-            console.log(result.data);  
             setDetailReview(result.data.reviewList);
             calculateScore(result.data.reviewList);      
         })
@@ -447,14 +442,14 @@ function PortfolioEnd(props){
                 alert("로그인 만료. 다시 로그인해주세요.")
                 navigate('/signin', { replace: true });
             }else{
-                console.log("review받기 실패");
-                console.log(error);
+                // console.log("review받기 실패");
+                // console.log(error);
             }
         })
         setDetail(props);
     }
     function calculateScore(props){
-        console.log(props);
+        // console.log(props);
         let tmpScore = 0;
         props && props.map((item,index)=>{
             tmpScore = tmpScore+item.reviewScore;
@@ -466,6 +461,8 @@ function PortfolioEnd(props){
     const [imgReview, setImgReview] = useState(true)
     return(
         <>
+        {/* {console.log(show)} */}
+        {/* {console.log(showStudio)} */}
             {windowSize.width > 768 ?
                 <div>
                     {click.studioClick === false ? <button className='portfolio-button' onClick={()=>{changeClick(3); setShow(showStudio);}}>스튜디오</button> :
