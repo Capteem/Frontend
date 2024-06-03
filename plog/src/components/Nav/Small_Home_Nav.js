@@ -18,6 +18,7 @@ import { IoChatboxEllipses } from "react-icons/io5"
 function SmallNav() {
 
   const role = localStorage.getItem('role');
+  const userId = localStorage.getItem('userId');
 
   //여기서부터
   const [checkLogin, setCheckLogin] = useState(false);
@@ -80,7 +81,7 @@ function SmallNav() {
                           <Link to="/mypage/viewreservation" onClick={()=>{ setMyPage(false);}}><FaList/> 예약 내역</Link>
                           <Link to="/mypage/shoppingbag" onClick={()=>{ setMyPage(false);}}><FaShoppingBag/> 장바구니</Link>
                           <Link to="/mypage/reviewlist" onClick={()=>{ setMyPage(false);}}><MdOutlineRateReview/> 리뷰 관리</Link>
-                          <Link><IoChatboxEllipses/> 1:1 채팅</Link>
+                          <Link to={`/servicelist/chatlist?userId=${userId}`}><IoChatboxEllipses/> 1:1 채팅</Link>
                             {role === "PROVIDER" && (
                               <Link to="/mypage/servicelist" style={{ backgroundColor : "#efbb54", borderRadius : "0px 0px 15px 15px"}}
                               onClick={()=>{ setMyPage(false);}}>서비스 리스트</Link>

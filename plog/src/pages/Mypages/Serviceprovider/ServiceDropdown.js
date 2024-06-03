@@ -25,7 +25,7 @@ function ServiceDropdown(props) {
           <Link to={`/servicelist/serviceinfo?providerId=${providerId}`}><FaPhotoFilm /> 포토폴리오 관리</Link>
           <Link to={`/servicelist/viewscheduledinformation?providerId=${providerId}`}><MdCalendarMonth /> 예약된 내역 관리</Link>
           <Link to={`/servicelist/review?providerId=${providerId}`}><MdRateReview/> 리뷰 관리</Link>
-          <Link><MdOutlineMarkUnreadChatAlt/> 1:1 채팅 관리</Link>
+          <Link to={`/servicelist/chatlist?providerId=${providerId}`}><MdOutlineMarkUnreadChatAlt/> 1:1 채팅 관리</Link>
         </div>
       )}
     </div>

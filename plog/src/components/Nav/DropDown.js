@@ -11,6 +11,7 @@ function Dropdown({ role }) {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  const userId = localStorage.getItem('userId');
 
   return (
     <div className="dropdown">
@@ -28,7 +29,7 @@ function Dropdown({ role }) {
           <Link to="/mypage/viewreservation"><FaList/> 예약 내역</Link>
           <Link to="/mypage/shoppingbag"><FaShoppingBag/> 장바구니</Link>
           <Link to="/mypage/reviewlist" ><MdOutlineRateReview/> 리뷰 관리</Link>
-          <Link><IoChatboxEllipses/> 1:1 채팅</Link>
+          <Link to={`/servicelist/chatlist?userId=${userId}`}><IoChatboxEllipses/> 1:1 채팅</Link>
           {role === "PROVIDER" && (
             <Link to="/mypage/servicelist" style={{ backgroundColor : "#efbb54", borderRadius : "0px 0px 15px 15px"}}>
               <MdMiscellaneousServices/> 서비스 리스트</Link>

@@ -230,14 +230,17 @@ function ServiceRegistration() {
                     alert("사진 등록에 성공하였습니다.");
                 } else if (response.status === 400) {
                     alert("사진 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
+                    setIsFileUploaded(false);
                 }
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
                     alert("로그인 만료. 다시 로그인해주세요.");
                     navigate('/signin', { replace: true });
+                    setIsFileUploaded(false);
                 } else {
                     alert("사진 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
+                    setIsFileUploaded(false);
                 }
             });
     };
