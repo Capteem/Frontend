@@ -31,6 +31,7 @@ function ServiceRegistration() {
         provider_submission: "",
         provider_phonenumber: "",
     });
+    console.log(address.current);
 
     useEffect(() => {
         if (!accessToken) {
@@ -261,6 +262,13 @@ function ServiceRegistration() {
             /> 
             </div>
             <div>
+            <button onClick={openModal}>주소찾기</button>
+            <Modal isOpen={isOpen} onRequestClose={closeModal}>
+                <DaumPostcode
+                    onComplete={handleComplete}
+                />
+            </Modal>
+            <div>
             <input 
             ref={address}
             name = "address"
@@ -268,15 +276,10 @@ function ServiceRegistration() {
             onChange={handleChangeState}
             onKeyDown={handleKeyDown}
             placeholder="서비스주소"
+            disabled
             /> 
-            <button onClick={openModal}>주소찾기</button>
-            <Modal isOpen={isOpen} onRequestClose={closeModal}>
-                <DaumPostcode
-                    onComplete={handleComplete}
-                />
-            </Modal>
             </div>
-            <div>
+            {address.current === undefined ? (
             <input 
             ref={detail_address}
             name = "detail_address"
@@ -284,7 +287,21 @@ function ServiceRegistration() {
             onChange={handleChangeState}
             onKeyDown={handleKeyDown}
             placeholder="상세주소"
+            disabled
             /> 
+            ) : (
+                <div>
+                <input 
+                ref={detail_address}
+                name = "detail_address"
+                value={state.detail_address} 
+                onChange={handleChangeState}
+                onKeyDown={handleKeyDown}
+                placeholder="상세주소"
+                /> 
+                </div>
+            )}
+            
             </div>
             <div>
                 <select
