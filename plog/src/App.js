@@ -57,6 +57,7 @@ import NotFound from './pages/NotFound.js';
 
 function App() {
   const role = localStorage.getItem('role');
+  console.log(window.innerWidth);
   return (
     <BrowserRouter>
       {/* {role === 'ADMIN' ?  <Admin_Nav/>: <Home_Nav/>} */}
