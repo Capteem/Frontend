@@ -5,6 +5,8 @@ import '../../../styles/Table.css';
 import ServiceDropdown from './ServiceDropdown';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
+import NoData from '../../../assets/noReview.png';
+
 
 function ServiceList() {
   const [serviceList, setServiceList] = useState([]);
@@ -74,6 +76,7 @@ function ServiceList() {
   };
 
   const handleSort = (key) => {
+    setCurrentPage(1); 
     let order = 'asc';
     if (sortKey === key && sortOrder === 'asc') {
       order = 'desc';
@@ -110,17 +113,27 @@ function ServiceList() {
         <button className="sort" onClick={() => handleSort('providerType')}>종류순</button>
       </div>
       {serviceList.length === 0 ? (
-        <p>서비스가 없습니다.</p>
+        <>
+         <img 
+         src={NoData} 
+         alt=""
+         style={{
+           width : "20%",
+           height : "20%",
+         }}
+         />
+          <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>서비스가 없습니다.</p>
+         </>
       ) : (
         <>
           <Table>
             <Thead>
               <Tr>
                 <Th>번호</Th>
-                <Th>서비스 이름</Th>
-                <Th>서비스 종류</Th>
-                <Th>서비스 주소</Th>
-                <Th>서비스 전화번호</Th>
+                <Th>이름</Th>
+                <Th>종류</Th>
+                <Th>주소</Th>
+                <Th>전화번호</Th>
                 <Th>서비스 관리</Th>
               </Tr>
             </Thead>

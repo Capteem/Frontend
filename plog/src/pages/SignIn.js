@@ -105,21 +105,7 @@ function SignIn(){
 
             <br/>
             <button className='login-button' onClick={()=>{onClickLogin()}}>로그인</button>
-            <div>
-            <button 
-            onClick={handleLogin}
-            style={{
-                backgroundColor: "#FEE500",
-                border: "none",
-                color: "black",
-                fontWeight: "blod",
-            }}
-            ><img 
-            src={KakaoImage}
-            style={{width:"25px", height:"25px"}}
-            />               카카오로그인</button>
-            
-            </div>
+           
         </div>
     )
 }

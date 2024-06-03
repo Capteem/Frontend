@@ -42,13 +42,13 @@ function FindPassword() {
   };
 
   const validateId = (id) => {
-    return id.length >= 5;
+    return id.length >= 1;
   };
 
   const handleSubmit = async () => {
     if (!validateId(id)) {
       idRef.current.focus();
-      alert('아이디는 5글자 이상이어야 합니다.');
+      alert('아이디 입력해주세요.');
       return;
     }
 

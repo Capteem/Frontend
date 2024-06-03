@@ -7,6 +7,8 @@ import Pagination from 'react-js-pagination';
 import { IoSearch } from "react-icons/io5";
 import Modal from 'react-modal';
 import { MdContentCopy } from "react-icons/md";
+import NoData from '../../assets/noReview.png';
+
 
 
 function ComplainManagement() {
@@ -36,7 +38,7 @@ function ComplainManagement() {
       getComplainList();
     }
     const handleResize = () => {
-      setItemsPerPage(window.innerWidth < 1000 ? 1 : 5);
+      setItemsPerPage(window.innerWidth < 500 ? 1 : window.innerWidth < 1000 ? 1 :5);
     };
 
     window.addEventListener('resize', handleResize);
@@ -185,12 +187,13 @@ function ComplainManagement() {
     <div className='Table'>
       <h4>Q&A관리</h4>
       <div style={{
-        display: "flex",
+         display: window.innerWidth < 500 ? "": "flex",
         justifyContent: "center", 
         alignItems: "center",
       }}>
         <div className="search" style={{ position: "relative" }}>
-          <IoSearch style={{ position: "absolute", top: "20%", left: "5%", zIndex: 1 }} />
+          <IoSearch style={{ position: "absolute", top: "20%", 
+           left: window.innerWidth < 500 ? "30%" :"5%", zIndex: 1 }} />
           <input
             type="text"
             placeholder="검색"
@@ -212,7 +215,17 @@ function ComplainManagement() {
         </div>
       </div>
       {complainlist.length === 0 ? (
-        <p>Q&A가 없습니다.</p>
+        <>
+        <img 
+        src={NoData} 
+        alt=""
+        style={{
+          width : "20%",
+          height : "20%",
+        }}
+        />
+           <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>Q&A가 없습니다.</p>
+        </>
       ) : (
         <>
           {filteredComplains.length === 0 ? (

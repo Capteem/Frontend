@@ -11,12 +11,15 @@ import Modal from 'react-modal';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import { FaCalendarAlt } from "react-icons/fa";
+import NoData from '../../../assets/noReview.png';
+import { MdCalendarToday } from "react-icons/md";
 
 function ViewScheduledInformation() {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accesToken');
   const role = localStorage.getItem('role');
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [monthModalIsOpen, setMonthModalIsOpen] = useState(false);
 
   const [sortColumn, setSortColumn] = useState('id');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -30,6 +33,7 @@ function ViewScheduledInformation() {
 
   // 캘린더
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [value, onChange] = useState(new Date());
   const [showCompleted, setShowCompleted] = useState(false);
 
@@ -95,13 +99,31 @@ function ViewScheduledInformation() {
     setModalIsOpen(false);
   };
 
+  const openMonthModal = () => {
+    setMonthModalIsOpen(true);
+  };
+
+  const closeMonthModal = () => {
+    setMonthModalIsOpen(false);
+  };
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    setSelectedMonth(null); // Clear selected month when a date is selected
     onChange(date);
+    closeModal();
+  };
+
+  const handleMonthChange = (date) => {
+    setSelectedMonth(date);
+    setSelectedDate(null); // Clear selected date when a month is selected
+    onChange(date);
+    closeMonthModal();
   };
 
   const clearSelectedDate = () => {
     setSelectedDate(null);
+    setSelectedMonth(null); // Clear selected month as well
     onChange(new Date());
     setShowCompleted(false);
     setShowCalendarButton(true);
@@ -112,6 +134,7 @@ function ViewScheduledInformation() {
     setCurrentPage(1); 
     setShowCompleted(true);
     setSelectedDate(null);
+    setSelectedMonth(null); // Clear selected month as well
     setShowCalendarButton(false); // Hide the calendar button
     const completedReservations = reservationList.filter(reservation => reservation.reservationStatus === 2);
     const totalProfits = completedReservations.reduce((sum, reservation) => sum + reservation.reservationPrice, 0);
@@ -201,6 +224,7 @@ function ViewScheduledInformation() {
   };
 
   const handleSort = (column) => {
+    setCurrentPage(1); 
     setSortColumn(column);
     setSortDirection('asc');
     const sortedReservation = [...reservationList].sort((a, b) => {
@@ -222,7 +246,15 @@ function ViewScheduledInformation() {
           reservationDay.getDate() === selectedDate.getDate()
         );
       })
-      : reservationList;
+      : selectedMonth
+        ? reservationList.filter(reservation => {
+          const reservationMonth = new Date(reservation.reservationStartTime);
+          return (
+            reservationMonth.getFullYear() === selectedMonth.getFullYear() &&
+            reservationMonth.getMonth() === selectedMonth.getMonth()
+          );
+        })
+        : reservationList;
 
   const indexOfLastReservation = currentPage * itemsPerPage;
   const indexOfFirstReservation = indexOfLastReservation - itemsPerPage;
@@ -238,7 +270,7 @@ function ViewScheduledInformation() {
             backgroundColor: 'rgba(0,0,0,0.5)'
           },
           content: {
-            width: '400px',
+            width: window.innerWidth < 500 ? '300px' : '400px',
             height: '450px',
             margin: 'auto',
             border: '1px solid #ccc',
@@ -260,6 +292,33 @@ function ViewScheduledInformation() {
           prev2Label={null}
         />
       </Modal>
+      <Modal
+        isOpen={monthModalIsOpen}
+        onRequestClose={closeMonthModal}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0,0,0,0.5)'
+          },
+          content: {
+            width: window.innerWidth < 500 ? '300px' : '400px',
+            height: '450px',
+            margin: 'auto',
+            border: '1px solid #ccc',
+            borderRadius: '15px',
+            padding: '20px'
+          }
+        }}
+      >
+        <h2>월 선택</h2>
+        <Calendar
+          onChange={handleMonthChange}
+          value={value}
+          view="year"
+          maxDetail="year"
+          formatMonth={(locale, date) => moment(date).format("MMMM")}
+          calendarType="gregory"
+        />
+      </Modal>
       <div className='Table' style={{ width: '100%', marginLeft: "10px" }}>
         <h4>예약정보조회</h4>
         <button
@@ -276,82 +335,105 @@ function ViewScheduledInformation() {
             marginLeft: '15px',
           }}
         >촬영완료 내역보기</button>
-      <div className="sort-buttons">
-      {showCalendarButton && (
-        <button 
-          onClick={openModal}
-          style={{
-            backgroundColor: '#E8EEE8',
-            border: "2px solid #E8EEE8"
-          }}
-        >
-          <FaCalendarAlt style={{color : "black"}} /> <span style={{color : "black"}}>날짜</span>
-        </button>
-      )}
-        <button className="sort" onClick={() => handleSort('reservationStatus')}>상태순</button>
-        <button className="sort" onClick={() => handleSort('reservationId')}>번호순</button>
-        <button className="sort" onClick={() => handleSort('reservationPrice')}>가격</button>
-      </div>
+        <div className="sort-buttons">
+          {showCalendarButton && (
+            <>
+            <button 
+                onClick={openMonthModal}
+                style={{
+                  backgroundColor: '#E8EEE8',
+                  border: "2px solid #E8EEE8"
+                }}
+              >
+                <FaCalendarAlt style={{color : "black"}} /> <span style={{color : "black"}}>월</span>
+              </button>
+              <button 
+                onClick={openModal}
+                style={{
+                  backgroundColor: '#E8EEE8',
+                  border: "2px solid #E8EEE8",
+                  marginRight: '10px'
+                }}
+              >
+                <MdCalendarToday style={{color : "black"}} /> <span style={{color : "black"}}>날짜</span>
+              </button>
+            </>
+          )}
+          <button className="sort" onClick={() => handleSort('reservationStatus')}>상태순</button>
+          <button className="sort" onClick={() => handleSort('reservationId')}>번호순</button>
+          <button className="sort" onClick={() => handleSort('reservationPrice')}>가격</button>
+        </div>
 
         {currentReservations.length === 0 ? (
-          <p>예약 내역이 없습니다.</p>
+          <>
+            <img 
+              src={NoData} 
+              alt=""
+              style={{
+                width : "20%",
+                height : "20%",
+              }}
+            />
+            <p style={{
+              fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"
+              }}>예약 내역이 없습니다.</p>
+          </>
         ) : (
           <>
-          {showCompleted && (
-           <div style={{ textAlign: 'right', fontWeight: 'bold', width:"90%" }}>
-           총 촬영완료 금액: {profits}
-         </div>
-          )}
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>예약 번호</Th>
-                <Th>예약 상태</Th>
-                <Th>날짜</Th>
-                <Th>시작 시간</Th>
-                <Th>끝나는 시간</Th>
-                <Th>가격</Th>
-                <Th>상태 변경</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {currentReservations.map((reservation, index) => (
-                <Tr key={index}>
-                  <Td><div className='text'>{reservation.reservationId}</div></Td>
-                  <Td>
-                    <div className='text'>{reservation.reservationStatus === 0 ? "예약대기" :
-                      reservation.reservationStatus === 1 ? "예약확정" :
-                        reservation.reservationStatus === 2 ? "촬영완료" :
-                          "예약취소"}</div>
-                  </Td>
-                  <Td><div className='text'>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</div></Td>
-                  <Td><div className='text'>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
-                  <Td><div className='text'>{new Date(reservation.reservationEndTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
-                  <Td><div className='text'>{reservation.reservationPrice}</div></Td>
-                  <Td>
-                  <div className='text'>
-                  {reservation.reservationStatus === 0 && (
-                      <>
-                        <button onClick={() => confirmReservation(reservation.reservationId)}>예약 확정</button>
-                        <button onClick={() => cancelReservation(reservation.reservationId)}>예약 취소</button>
-                        </>
-                   )}
-                   {reservation.reservationStatus === 1 && (
-                      <>
-                        <button onClick={() => completeFilming(reservation.reservationId)}>촬영 완료</button>
-                        <button onClick={() => cancelReservation(reservation.reservationId)}>예약 취소</button>
-                        </>
-                    )}
-                    {reservation.reservationStatus !== 0 && reservation.reservationStatus !== 1 && (
-                      <span style={{color : "white"}}>null</span>
-                    )}
-                  </div>
-                  </Td>
-
+            {showCompleted && (
+              <div style={{ textAlign: 'right', fontWeight: 'bold', width:"90%" }}>
+                총 촬영완료 금액: {profits}
+              </div>
+            )}
+            <Table>
+              <Thead>
+                <Tr>
+                  <Th>예약 번호</Th>
+                  <Th>예약 상태</Th>
+                  <Th>날짜</Th>
+                  <Th>시작 시간</Th>
+                  <Th>끝나는 시간</Th>
+                  <Th>가격</Th>
+                  <Th>상태 변경</Th>
                 </Tr>
-              ))}
-            </Tbody>
-          </Table>
+              </Thead>
+              <Tbody>
+                {currentReservations.map((reservation, index) => (
+                  <Tr key={index}>
+                    <Td><div className='text'>{reservation.reservationId}</div></Td>
+                    <Td>
+                      <div className='text'>{reservation.reservationStatus === 0 ? "예약대기" :
+                        reservation.reservationStatus === 1 ? "예약확정" :
+                          reservation.reservationStatus === 2 ? "촬영완료" :
+                            "예약취소"}</div>
+                    </Td>
+                    <Td><div className='text'>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</div></Td>
+                    <Td><div className='text'>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
+                    <Td><div className='text'>{new Date(reservation.reservationEndTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
+                    <Td><div className='text'>{reservation.reservationPrice}</div></Td>
+                    <Td>
+                      <div className='text'>
+                        {reservation.reservationStatus === 0 && (
+                          <>
+                            <button onClick={() => confirmReservation(reservation.reservationId)}>예약 확정</button>
+                            <button onClick={() => cancelReservation(reservation.reservationId)}>예약 취소</button>
+                          </>
+                        )}
+                        {reservation.reservationStatus === 1 && (
+                          <>
+                            <button onClick={() => completeFilming(reservation.reservationId)}>촬영 완료</button>
+                            <button onClick={() => cancelReservation(reservation.reservationId)}>예약 취소</button>
+                          </>
+                        )}
+                        {reservation.reservationStatus !== 0 && reservation.reservationStatus !== 1 && (
+                          <span style={{color : "white"}}>null</span>
+                        )}
+                      </div>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
           </>
         )}
         <Pagination
@@ -367,3 +449,4 @@ function ViewScheduledInformation() {
 }
 
 export default ViewScheduledInformation;
+

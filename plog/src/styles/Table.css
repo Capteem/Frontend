@@ -203,3 +203,108 @@
   background-color: #fff;
   border-color: #dee2e6;
 }
+
+@media screen and (max-width: 500px) {
+  /*
+    Force table elements to not behave like tables anymore
+    Hide table headers (but not display: none;, for accessibility)
+  */
+
+  .responsiveTable table,
+  .responsiveTable thead,
+  .responsiveTable tbody,
+  .responsiveTable th,
+  .responsiveTable td,
+  .responsiveTable tr {
+    display: block;
+    
+  }
+
+  .responsiveTable thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .responsiveTable tbody tr {
+    border-right: 1px solid #000;
+    border-left: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-radius: 10px;
+    padding: .01em;
+    padding : 0px;
+  }
+
+  .responsiveTable td.pivoted {
+    /* Behave like a "row" */
+    border-top: 1px solid #333 !important;
+    position: relative;
+    padding-left: 37%;
+    border-radius: 10px;
+    text-align: center;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .responsiveTable td .tdBefore {
+    /* Now like a table header */
+    position: absolute;
+    display: block;
+    /* Top/left values mimic padding */
+    left: 0.3rem;
+    width: 30%;
+    text-align: center;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    font-weight: 600;
+    padding: 10px 0px 10px 0px;
+  }
+  .responsiveTable td .text {
+    padding: 10px 0px 10px 0px;
+    border-left: 1px solid #333;
+  }
+  
+}
+
+
+/* Pagination.css */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  list-style-type: none;
+  padding-top: 40px;
+}
+
+.pagination li {
+  margin: 0 0.25rem;
+}
+
+.pagination li a {
+  text-decoration: none;
+  color: #162617;
+  border: 1px solid #dee2e6;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination li a:hover {
+  background-color: #e9ecef;
+  color: #162617;
+}
+
+.pagination li.active a {
+  background-color: #162617;
+  color: white;
+  border-color: #162617;
+}
+
+.pagination li.disabled a {
+  color: #6c757d;
+  pointer-events: none;
+  cursor: not-allowed;
+  background-color: #fff;
+  border-color: #dee2e6;
+}

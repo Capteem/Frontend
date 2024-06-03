@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import { IoSearch } from "react-icons/io5";
+import NoData from '../../assets/noReview.png';
 
 function UserManagement() {
   const [userlist, setUserlist] = useState([]);
@@ -29,7 +30,7 @@ function UserManagement() {
     }
 
     const handleResize = () => {
-      setItemsPerPage(window.innerWidth < 1000 ? 1 : 5);
+      setItemsPerPage(window.innerWidth < 500 ? 1 : window.innerWidth < 1000 ? 1 :5);
     };
 
     window.addEventListener('resize', handleResize);
@@ -133,12 +134,16 @@ function UserManagement() {
     <div className='Table'>
       <h4>사용자 관리</h4>
       <div style={{
-      display: "flex",
+      display: window.innerWidth < 500 ? "": "flex",
       justifyContent: "center", 
       alignItems: "center", 
       }}>
       <div className="search" style={{ position: "relative" }}>
-    <IoSearch style={{ position: "absolute", top: "20%", left: "5%", zIndex: 1 }} />
+    <IoSearch style={{ 
+      position: "absolute", 
+      top: "20%", 
+      left: window.innerWidth < 500 ? "30%" :"5%", 
+      zIndex: 1 }} />
     <input
         type="text"
         placeholder="검색"
@@ -161,7 +166,17 @@ function UserManagement() {
       </div>
       </div>
       {userlist.length === 0 ? (
-        <p>사용자가 없습니다.</p>
+        <>
+         <img 
+        src={NoData} 
+        alt=""
+        style={{
+          width : "20%",
+          height : "20%",
+        }}
+        />
+        <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>사용자가 없습니다.</p>
+        </>
       ) : filteredUsers.length === 0 ? (
         <p>검색 결과가 없습니다.</p>
       ) : (
