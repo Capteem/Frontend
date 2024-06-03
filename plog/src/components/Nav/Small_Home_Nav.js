@@ -70,7 +70,6 @@ function SmallNav() {
                       <Link to="/reservation">예약</Link>
                       <Link to="/serviceregistrationlist">서비스등록</Link>
                       <Link to="/gallery">갤러리</Link>
-                      <Link to="/mypage/reviewlist">커뮤니티</Link>
                       <Link to="/answer">Q&A</Link>
                       <Link onClick={()=>{ setModalShow(true);}}>로그아웃</Link>
                       <Link onClick={()=>{ setMyPage(!myPage);}}>마이페이지</Link>
