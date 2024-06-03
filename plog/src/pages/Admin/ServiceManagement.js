@@ -347,7 +347,7 @@ function ServiceManagement() {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        style={{ content: { height: '67%', width: '50%', margin: 'auto' } }}>
+        style={{ content: { height: '60%', width: '50%', margin: 'auto', marginTop : "15%" } }}>
         <div style={{ display: 'flex', marginBottom: "10px" }}>
           <button
             onClick={closeModal}
@@ -370,8 +370,8 @@ function ServiceManagement() {
               src={image}
               alt={`등록된 사진 ${index + 1}`}
               style={{
-                width: window.innerWidth < 800 ? '200px' : modalImages.length === 1 ? '450px' : '200px',
-                height: window.innerWidth < 800 ? '200px' : modalImages.length === 1 ? '400px' : '200px',
+                width: window.innerWidth < 800 ? '90%' : modalImages.length === 1 ? '50%' : '200px',
+                height: window.innerWidth < 800 ? '90%' : modalImages.length === 1 ? '50%' : '200px',
                 marginRight: '2px',
                 marginBottom: '5px'
               }}
