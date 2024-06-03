@@ -9,6 +9,8 @@ import { GoStar } from "react-icons/go";
 import axios from 'axios'
 
 import '../../../styles/review.css'
+import '../../../styles/shoppingBag.css'
+import noReview from '../../../assets/shoppingBag.jpg'
 
 function Review(){
     const locate = useLocation();
@@ -41,9 +43,9 @@ function Review(){
             calculateScore(result.data.reviewList);
         })
         .catch((error)=>{
-            if(error.response.status === 401){
-                alert("로그인 만료. 다시 로그인해주세요.")
+            if(error.response && error.response.status === 401){
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.");
             }else{
                 console.log(error);
                 console.log("리뷰 리스트 받기 실패");
@@ -66,7 +68,7 @@ function Review(){
 
     const [checkCommentChange, setCheckCommentChange] = useState([]);
     function initialcheckSetting(){
-        let tmp = reviewList.map(() => false);
+        let tmp = reviewList && reviewList.map(() => false);
         setCheckCommentChange(tmp);
     }
 
@@ -111,9 +113,9 @@ function Review(){
             getInfo();
         })
         .catch((error)=>{
-            if(error.response.status === 401){
-                alert("로그인 만료. 다시 로그인해주세요.")
+            if(error.response && error.response.status === 401){
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.")
             }else{
                 console.log(error);
                 alert('comment 달기 실패');
@@ -147,9 +149,9 @@ function Review(){
             getInfo();
         })
         .catch((error)=>{
-            if(error.response.status === 401){
-                alert("로그인 만료. 다시 로그인해주세요.")
+            if(error.response && error.response.status === 401){
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.");
             }else{
                 console.log(error);
                 alert('리뷰 댓글 수정 실패');
@@ -163,9 +165,20 @@ function Review(){
             <div className='review-title'>
                 Review
             </div>
-            <div className='review-score'>
-                <GoStarFill className='review-star-score'/> : {score}
-            </div>
+            {
+                (!reviewList) && 
+                <div className='shoppingBag-none'>
+                    <img className='shoppingBag-noneBag' src={noReview}/>
+                    <div className='shoppingBag-noneText'>작성된 리뷰가 아직 없습니다.</div>
+                </div>
+            }
+
+            {
+                reviewList &&  <div className='review-score'>
+                    <GoStarFill className='review-star-score'/> : {score}
+                </div>
+            }
+           
             {reviewList && reviewList.map((item, index)=>{
                 let [date, time] = item.reviewDate.split("T");
                 let five = [1,2,3,4,5];

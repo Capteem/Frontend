@@ -12,8 +12,10 @@ import { debounce } from 'lodash';
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 
+
 import '../../styles/ImageGallery.css'; // CSS 파일 import
 import '../../styles/review.css'
+import '../../styles/shoppingBag.css'
 import '../../styles/shoppingBag.css'
 import shoppingBag from '../../assets/shoppingBag.jpg'
 
@@ -344,12 +346,12 @@ function PortfolioEnd(props){
             detailImg(result.data.portfolioList);          
         })
         .catch((error)=>{
-            if(error.response.status === 404){
+            if(error.response && error.response.status === 404){
                 // console.log("포트폴리오 존재 안함");
             }
-            else if(error.response.status === 401){
-                alert("로그인 만료. 다시 로그인해주세요.")
+            else if(error.response && error.response.status === 401){
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.")
             }else{
                 // console.log(error);
             }
@@ -379,9 +381,9 @@ function PortfolioEnd(props){
                 reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
             })
             .catch((error)=>{
-                if(error.response.status === 401){
-                    alert("로그인 만료. 다시 로그인해주세요.")
+                if(error.response && error.response.status === 401){
                     navigate('/signin', { replace: true });
+                    alert("로그인 만료. 다시 로그인해주세요.")
                 }else{
                     console.log("포폴 detail사진 재요청 에러");
                     console.log(error);
@@ -439,8 +441,8 @@ function PortfolioEnd(props){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
-                alert("로그인 만료. 다시 로그인해주세요.")
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.")
             }else{
                 // console.log("review받기 실패");
                 // console.log(error);
@@ -479,7 +481,7 @@ function PortfolioEnd(props){
                 null
             }
             {
-                (click.studioClick === false && click.photoClick === false && click.hmClick === false) &&
+                (click.studioClick === false && click.photoClick === false && click.hmClick === false && show.length === 0) &&
                 <div className='shoppingBag-none'>
                     <img style={{width:200, height:200}}className='shoppingBag-noneBag' src={shoppingBag}/>
                     <div className='shoppingBag-noneText'>서비스를 선택하세요.</div>
@@ -551,9 +553,17 @@ function PortfolioEnd(props){
                         }
 
                         {(!imgReview) && <div className="gallery-container-review-modal">
-                        <div className='review-score'>
-                            <GoStarFill className='review-star-score'/> : {score}
-                        </div>
+                        {((!imgReview) && (!detailReview)) &&
+                            <div className='shoppingBag-none'>
+                                <img style={{width:150, height:150}} className='shoppingBag-noneBag' src={shoppingBag}/>
+                                <div className='shoppingBag-noneText'>작성된 리뷰가 없습니다.</div>
+                            </div>
+                        }
+                        {
+                            detailReview && <div className='review-score'>
+                                <GoStarFill className='review-star-score'/> : {score}
+                            </div>
+                        }
                         {
                             detailReview && detailReview.map((item, index)=>{
                                 let five = [1,2,3,4,5];
