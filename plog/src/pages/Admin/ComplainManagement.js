@@ -38,7 +38,7 @@ function ComplainManagement() {
       getComplainList();
     }
     const handleResize = () => {
-      setItemsPerPage(window.innerWidth < 1000 ? 1 : 5);
+      setItemsPerPage(window.innerWidth < 500 ? 1 : window.innerWidth < 1000 ? 1 :5);
     };
 
     window.addEventListener('resize', handleResize);
@@ -187,12 +187,13 @@ function ComplainManagement() {
     <div className='Table'>
       <h4>Q&A관리</h4>
       <div style={{
-        display: "flex",
+         display: window.innerWidth < 500 ? "": "flex",
         justifyContent: "center", 
         alignItems: "center",
       }}>
         <div className="search" style={{ position: "relative" }}>
-          <IoSearch style={{ position: "absolute", top: "20%", left: "5%", zIndex: 1 }} />
+          <IoSearch style={{ position: "absolute", top: "20%", 
+           left: window.innerWidth < 500 ? "30%" :"5%", zIndex: 1 }} />
           <input
             type="text"
             placeholder="검색"
@@ -223,7 +224,7 @@ function ComplainManagement() {
           height : "20%",
         }}
         />
-        <p  style={{fontSize : "40px", border : "bold"}}>Q&A가 없습니다.</p>
+           <p  style={{fontSize : window.innerWidth < "500" ? "10px": "40px", border : "bold"}}>Q&A가 없습니다.</p>
         </>
       ) : (
         <>

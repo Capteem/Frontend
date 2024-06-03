@@ -37,7 +37,7 @@ function ServiceManagement() {
       getServiceList();
     }
     const handleResize = () => {
-      setItemsPerPage(window.innerWidth < 1000 ? 1 : 5);
+      setItemsPerPage(window.innerWidth < 500 ? 1 : window.innerWidth < 1000 ? 1 :5);
     };
 
     window.addEventListener('resize', handleResize);
@@ -245,12 +245,16 @@ function ServiceManagement() {
     <div className='Table'>
       <h4>서비스 관리</h4>
       <div style={{
-      display: "flex",
+      display: window.innerWidth < 500 ? "": "flex",
       justifyContent: "center", 
       alignItems: "center", 
       }}>
         <div className="search" style={{ position: "relative" }}>
-          <IoSearch style={{ position: "absolute", top: "20%", left: "5%", zIndex: 1 }} />
+          <IoSearch style={{ 
+            position: "absolute", 
+            top: "20%", 
+            left: window.innerWidth < 500 ? "30%" :"5%", 
+            zIndex: 1 }} />
           <input
             type="text"
             placeholder="검색"
@@ -282,7 +286,7 @@ function ServiceManagement() {
            height : "20%",
          }}
          />
-         <p  style={{fontSize : "40px", border : "bold"}}>등록된 유저가 없습니다.</p>
+           <p  style={{fontSize : window.innerWidth < "500" ? "10px": "40px", border : "bold"}}>제공자가 없습니다.</p>
          </>
       ) : filteredServices.length === 0 ? (
         <p>검색 결과가 없습니다.</p>

@@ -372,7 +372,9 @@ function ViewScheduledInformation() {
                 height : "20%",
               }}
             />
-            <p style={{fontSize : "40px", border : "bold"}}>예약 내역이 없습니다.</p>
+            <p style={{
+              fontSize : window.innerWidth < "500" ? "10px": "40px", border : "bold"
+              }}>예약 내역이 없습니다.</p>
           </>
         ) : (
           <>
