@@ -31,6 +31,7 @@ function ServiceRegistration() {
         provider_submission: "",
         provider_phonenumber: "",
     });
+    console.log(address.current);
 
     useEffect(() => {
         if (!accessToken) {
@@ -230,14 +231,17 @@ function ServiceRegistration() {
                     alert("사진 등록에 성공하였습니다.");
                 } else if (response.status === 400) {
                     alert("사진 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
+                    setIsFileUploaded(false);
                 }
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
                     alert("로그인 만료. 다시 로그인해주세요.");
                     navigate('/signin', { replace: true });
+                    setIsFileUploaded(false);
                 } else {
                     alert("사진 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
+                    setIsFileUploaded(false);
                 }
             });
     };
@@ -258,6 +262,13 @@ function ServiceRegistration() {
             /> 
             </div>
             <div>
+            <button onClick={openModal}>주소찾기</button>
+            <Modal isOpen={isOpen} onRequestClose={closeModal}>
+                <DaumPostcode
+                    onComplete={handleComplete}
+                />
+            </Modal>
+            <div>
             <input 
             ref={address}
             name = "address"
@@ -265,15 +276,10 @@ function ServiceRegistration() {
             onChange={handleChangeState}
             onKeyDown={handleKeyDown}
             placeholder="서비스주소"
+            disabled
             /> 
-            <button onClick={openModal}>주소찾기</button>
-            <Modal isOpen={isOpen} onRequestClose={closeModal}>
-                <DaumPostcode
-                    onComplete={handleComplete}
-                />
-            </Modal>
             </div>
-            <div>
+            {address.current === undefined ? (
             <input 
             ref={detail_address}
             name = "detail_address"
@@ -281,7 +287,21 @@ function ServiceRegistration() {
             onChange={handleChangeState}
             onKeyDown={handleKeyDown}
             placeholder="상세주소"
+            disabled
             /> 
+            ) : (
+                <div>
+                <input 
+                ref={detail_address}
+                name = "detail_address"
+                value={state.detail_address} 
+                onChange={handleChangeState}
+                onKeyDown={handleKeyDown}
+                placeholder="상세주소"
+                /> 
+                </div>
+            )}
+            
             </div>
             <div>
                 <select

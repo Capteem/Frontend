@@ -41,6 +41,8 @@ import ServiceList from './pages/Mypages/Serviceprovider/ServiceList.js';
 import ServiceInfo from './pages/Mypages/Serviceprovider/ServiceInfo.js';
 import ViewScheduledInformation from './pages/Mypages/Serviceprovider/ViewScheduledInformation.js';
 import Review from './pages/Mypages/Serviceprovider/Review.js';
+import ChatRoom from './pages/Chatting/ChatRoom.js'
+import ChatList from './pages/Chatting/ChatList.js'
 
 
 // Admin_Nav
@@ -50,6 +52,8 @@ import ServiceManagement from './pages/Admin/ServiceManagement.js';
 
 
 import NotFound from './pages/NotFound.js';
+
+;
 
 function App() {
   const role = localStorage.getItem('role');
@@ -91,6 +95,8 @@ function App() {
       <Route path='/servicelist/viewscheduledinformation' element={<ViewScheduledInformation/>} />
       <Route path='/servicelist/serviceinfo' element={<ServiceInfo/>} />
       <Route path='/servicelist/review' element={<Review/>} />
+      <Route path='/chattingroom' element={<ChatRoom/>} />
+      <Route path='/servicelist/chatlist' element={<ChatList/>} />
 
       {/*admin_Nav*/}
       <Route path='/usermanagement' element={<UserManagement/>}/>
@@ -99,6 +105,7 @@ function App() {
       
       {/* Handle 404 - Not Found */}
       <Route path='*' element={<NotFound />} />
+
       </Routes>
       </div> 
     </BrowserRouter>
