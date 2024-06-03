@@ -213,9 +213,9 @@ function ServiceInfo(){
           }
       })
       .catch((error)=>{
-        if(error.response.status === 401){
-          alert("로그인 만료. 다시 로그인해주세요.")
+        if(error.response && error.response.status === 401){
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.");
         }else{
           console.log(error);
           alert("사진 추가 실패");

@@ -56,6 +56,7 @@
 
 .review-provider{
     /* border-bottom: 1.5px solid #69876b; */
+    width: 100%;
     border-radius: 4px;
     text-align: left;
     padding: 5px;
@@ -63,7 +64,7 @@
 }
 
 .review-name{
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
 }
 
@@ -136,4 +137,10 @@
 .writeReview-score{
     font-size: 15px;
     font-weight: 600;
+}
+
+
+/* review-portfolio */
+.portfolio-modal-review{
+    display: flex;
 }

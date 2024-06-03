@@ -11,6 +11,7 @@ import {changeStudio, changePhotographer, changeHair,
 import { debounce } from 'lodash';
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
+import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
 
 import '../../styles/ImageGallery.css'; // CSS 파일 import
@@ -502,12 +503,15 @@ function PortfolioEnd(props){
                             let item = repPhoto.find(photo => photo.id === value.providerId);
                             let url = item ? item.url : null;
                             return(
-                                <div className='image-container'>
-                                <img key={index} src={url} onClick={()=>{
-                                    getDetail(value);   //모달창에 보여주기 위한 세부정보
-                                    getReview(value);
-                                    setModalShow(true);
-                                }}/>
+                                <div style={{padding:1}}>
+                                <div className='image-container-change'>
+                                    <img key={index} src={url} onClick={()=>{
+                                        getDetail(value);   //모달창에 보여주기 위한 세부정보
+                                        getReview(value);
+                                        setModalShow(true);
+                                    }}/>
+                                    <div className='provider-name-change'>{value.providerName}</div>
+                                </div>
                                 </div>
                             )
                         })
@@ -591,10 +595,14 @@ function PortfolioEnd(props){
                                             <div className='review-content'>{item.reviewContent}</div>
                                         </div>
                                         {
-                                            item.comment && <div className='review-provider'>
-                                                <span className='review-name'>{detail.providerName}</span>
-                                                <span className='review-time'>{dateComment[0]} {dateComment[1]}</span>
-                                                <div className='review-content'>{item.comment.commentContent}</div>
+                                            item.comment && 
+                                            <div className='portfolio-modal-review'>
+                                                <MdOutlineSubdirectoryArrowRight />
+                                                <div className='review-provider'>
+                                                    <span style={{fontSize:14}} className='review-name'>{detail.providerName}</span>
+                                                    <span className='review-time'>{dateComment[0]} {dateComment[1]}</span>
+                                                    <div className='review-content'>{item.comment.commentContent}</div>
+                                                </div>
                                             </div>
                                         }
                                     </div>
