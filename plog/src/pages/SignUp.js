@@ -232,7 +232,7 @@ function SignUp() {
           onKeyDown={handleKeyDown}
           placeholder="아이디"
         /> 
-        <button onClick={checkIdDuplicate} style={{border: "none", width :"40%" }}>중복 확인</button>
+        <button onClick={checkIdDuplicate} style={{border: "none", width :"50%" }}>중복 확인</button>
       </div>
       <div>
         <input 
@@ -275,7 +275,7 @@ function SignUp() {
           onKeyDown={handleKeyDown}
           placeholder="닉네임"
         /> 
-        <button onClick={checkNicknameDuplicate} style={{border: "none", width :"40%" }}>중복 확인</button>
+        <button onClick={checkNicknameDuplicate} style={{border: "none", width :"50%" }}>중복 확인</button>
       </div>
       <div>
         <input 
@@ -296,7 +296,7 @@ function SignUp() {
           onKeyDown={handleKeyDown}
           placeholder="이메일"
         /> 
-        <button onClick={checkEmailDuplicate} style={{border: "none", width :"40%" }}>중복 확인</button>
+        <button onClick={checkEmailDuplicate} style={{border: "none", width :"50%" }}>중복 확인</button>
       </div>
       <br/>
       <button onClick={handleSubmit}>회원가입하기</button>
