@@ -104,7 +104,8 @@ function Payment() {
               color: '#E8EEE8',
               fontWeight: 'bold'
             }}
-            >결제완료</button>
+            >결제정보보기</button>
+            <p>결제완료후 눌러주세요</p>
             {paymentInfo && (
             <div>
                 <h2>결제 정보</h2>

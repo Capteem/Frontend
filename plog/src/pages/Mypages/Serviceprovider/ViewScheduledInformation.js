@@ -111,6 +111,7 @@ function ViewScheduledInformation() {
     setSelectedDate(date);
     setSelectedMonth(null); // Clear selected month when a date is selected
     onChange(date);
+    closeModal();
   };
 
   const handleMonthChange = (date) => {
@@ -223,6 +224,7 @@ function ViewScheduledInformation() {
   };
 
   const handleSort = (column) => {
+    setCurrentPage(1); 
     setSortColumn(column);
     setSortDirection('asc');
     const sortedReservation = [...reservationList].sort((a, b) => {
@@ -268,7 +270,7 @@ function ViewScheduledInformation() {
             backgroundColor: 'rgba(0,0,0,0.5)'
           },
           content: {
-            width: '400px',
+            width: window.innerWidth < 500 ? '300px' : '400px',
             height: '450px',
             margin: 'auto',
             border: '1px solid #ccc',
@@ -298,7 +300,7 @@ function ViewScheduledInformation() {
             backgroundColor: 'rgba(0,0,0,0.5)'
           },
           content: {
-            width: '400px',
+            width: window.innerWidth < 500 ? '300px' : '400px',
             height: '450px',
             margin: 'auto',
             border: '1px solid #ccc',
@@ -373,7 +375,7 @@ function ViewScheduledInformation() {
               }}
             />
             <p style={{
-              fontSize : window.innerWidth < "500" ? "10px": "40px", border : "bold"
+              fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"
               }}>예약 내역이 없습니다.</p>
           </>
         ) : (

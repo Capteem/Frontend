@@ -76,6 +76,7 @@ function ServiceList() {
   };
 
   const handleSort = (key) => {
+    setCurrentPage(1); 
     let order = 'asc';
     if (sortKey === key && sortOrder === 'asc') {
       order = 'desc';
@@ -121,7 +122,7 @@ function ServiceList() {
            height : "20%",
          }}
          />
-         <p  style={{fontSize : "40px", border : "bold"}}>서비스가 없습니다.</p>
+          <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>서비스가 없습니다.</p>
          </>
       ) : (
         <>
@@ -129,10 +130,10 @@ function ServiceList() {
             <Thead>
               <Tr>
                 <Th>번호</Th>
-                <Th>서비스 이름</Th>
-                <Th>서비스 종류</Th>
-                <Th>서비스 주소</Th>
-                <Th>서비스 전화번호</Th>
+                <Th>이름</Th>
+                <Th>종류</Th>
+                <Th>주소</Th>
+                <Th>전화번호</Th>
                 <Th>서비스 관리</Th>
               </Tr>
             </Thead>

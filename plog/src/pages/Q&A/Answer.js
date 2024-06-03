@@ -82,6 +82,7 @@ function Answer() {
 
   const sortComplains = (key) => {
     setSortKey(key);
+    setCurrentPage(1); 
   };
 
   useEffect(() => {
