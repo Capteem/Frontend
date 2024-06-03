@@ -137,7 +137,7 @@ function Answer() {
            height : "20%",
          }}
          />
-         <p  style={{fontSize : "40px", border : "bold"}}>등록된 질문이 없습니다.</p></>
+          <p  style={{fontSize : window.innerWidth < "500" ? "25px": "40px", border : "bold"}}>등록된 질문이 없습니다.</p></>
       ) : (
         <>
            

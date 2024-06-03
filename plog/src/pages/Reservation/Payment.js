@@ -97,8 +97,6 @@ function Payment() {
              <button
             onClick={handlepaymentinfo}
             style={{
-              width: '15%',
-              padding: '5px',
               marginBottom: '10px',
               boxSizing: 'border-box',
               borderRadius: '15px',
