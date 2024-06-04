@@ -1,6 +1,8 @@
 # Plog - 나만의 사진촬영 패키지를 만들어 보자
 <img width="771" alt="SW캡스톤디자인_Capteem" src="https://github.com/Capteem/Frontend/assets/80399640/08f4c090-0b5c-472f-b4e4-52ce54e6b589">
 
+https://picturewithlog.com/
+
 ## 0. 목차
 1. [Plog 서비스 소개](#1-Plog-서비스-소개)
 2. [Plog 핵심기능](#2-Plog-핵심기능)
