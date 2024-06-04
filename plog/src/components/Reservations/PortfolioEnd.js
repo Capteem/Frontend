@@ -29,6 +29,7 @@ function PortfolioEnd(props){
     const navigate = useNavigate();
     const [providerId, setProviderId] = useState(null);
     const [providerName, setProviderName] = useState(null);
+    const [Id, setID] = useState(null);
     //화면 크기 담는 state
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
@@ -474,7 +475,11 @@ function PortfolioEnd(props){
 
     const handleChatButtonClick = () => {
         const userId = localStorage.getItem('userId');
-        navigate(`/chattingroom?userId=${userId}&providerId=${providerId}&providerName=${providerName}&role=USER`);
+        if(userId === Id){
+            alert("본인의 서비스와 채팅할 수 없습니다.");
+        }
+        else{
+        navigate(`/chattingroom?userId=${userId}&providerId=${providerId}&providerName=${providerName}&role=USER`);}
       };
 
     return(
@@ -523,6 +528,7 @@ function PortfolioEnd(props){
                                         getDetail(value);   //모달창에 보여주기 위한 세부정보
                                         getReview(value);
                                         setModalShow(true);
+                                        setID(value.userId);
                                         setProviderId(value.providerId);
                                         setProviderName(value.providerName);
                                     }}/>
@@ -537,7 +543,7 @@ function PortfolioEnd(props){
             }
             {
                 modalShow &&
-                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setProviderId(null); setProviderName(null); setScore(0);}}>
+                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setProviderId(null); setProviderName(null); setID(null); setScore(0);}}>
                     <div className='portfolio-modalBody' onClick={(event)=>{event.stopPropagation(); setModalShow(true);}}>
                         <pre className='portfolio-modal-text'>
                             이름 : {detail.providerName}<br/>
@@ -640,6 +646,7 @@ function PortfolioEnd(props){
                                 setModalShow(false);
                                 setProviderId(null);
                                 setProviderName(null);
+                                setID(null);
                                 setScore(0);
                             }}>선택</button>
                         </div>

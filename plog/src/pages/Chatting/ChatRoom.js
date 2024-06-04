@@ -82,13 +82,8 @@ function ChatRoom() {
       console.error('Failed to create chat room.', error);
     }
   };
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      sendMessage(e);
-    }
-  };
 
-  const fetchMessages = async (e) => {
+  const fetchMessages = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_URL}/ch/${roomId}`, {
         headers: {
@@ -134,7 +129,7 @@ function ChatRoom() {
 
   const sendMessage = () => {
     if(roomId === null){
-      alert("채팅방 중 오류가 발생했습니다.");
+      alert("채팅방을 생성할 수 없습니다.");
       navigate(-1);
     }
 
@@ -229,7 +224,6 @@ function ChatRoom() {
           value={chat}
           onChange={(e) => setChat(e.target.value)}
           placeholder="message"
-          onKeyDown={handleKeyDown}
         />
         <button onClick={sendMessage} style={{ border: "none", width: "20%" }}><FaRegArrowAltCircleUp /></button>
       </div>

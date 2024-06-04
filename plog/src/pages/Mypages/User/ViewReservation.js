@@ -187,7 +187,7 @@ function ViewReservation() {
                 총 결제금액: {totalCompletedAmount}
               </div>
             )}
-            <Table style={{width : "60%"}}>
+            <Table style={{width : "70%"}}>
               <Thead>
                 <Tr>
                   <Th>예약 번호</Th>
@@ -208,7 +208,7 @@ function ViewReservation() {
                         {reservation.reservationHairName && <p>헤어,메이크업 : {reservation.reservationHairName}</p>}
                       </div>
                     </Td>
-                    <Td><div className='text'>{new Date(reservation.reservationStartDate).toLocaleDateString()}</div></Td>
+                    <Td><div className='text'>{new Date(reservation.reservationStartDate).toLocaleDateString()}<br/>{new Date(reservation.reservationStartDate).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}<br/>~{new Date(new Date(reservation.reservationEndDate).getTime() + 60 * 60 * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
                     <Td><div className='text'>{reservation.amount} </div></Td>
                     <Td>
                       <div className='text'>

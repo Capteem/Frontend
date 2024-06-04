@@ -5,6 +5,7 @@ import { FaFrog } from "react-icons/fa";
 import axios from 'axios';
 import NoData from '../../assets/noReview.png';
 import Pagination from 'react-js-pagination';
+import remove from '../../assets/remove';
 
 function ChatList() {
   const location = useLocation();
@@ -67,8 +68,9 @@ function ChatList() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       }
       else if (error.response && error.response.status === 409) {
         alert("채팅방이 존재하지 않습니다");
@@ -100,8 +102,10 @@ function ChatList() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
+        
       }
       else if (error.response && error.response.status === 409) {
         alert("채팅방이 존재하지 않습니다");
@@ -129,8 +133,9 @@ function ChatList() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       }
       else if (error.response && error.response.status === 404) {
         alert("채팅방이 존재하지 않습니다");
