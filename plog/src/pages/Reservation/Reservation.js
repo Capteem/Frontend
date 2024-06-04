@@ -6,6 +6,7 @@ import PortfolioEnd from '../../components/Reservations/PortfolioEnd.js';
 import { debounce } from 'lodash';
 import { Cookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import remove from '../../assets/remove.js';
 
 import axios from 'axios'
 
@@ -54,6 +55,7 @@ function Reservation(){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             }else{

@@ -5,6 +5,7 @@ import '../../styles/Table.css';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import NoData from '../../assets/noReview.png';
+import remove from '../../assets/remove';
 
 function ServiceRegistrationList() {
   const navigate = useNavigate();
@@ -52,8 +53,9 @@ function ServiceRegistrationList() {
       if (error.response && error.response.status === 400) {
         alert('잘못된 요청 형식입니다. 다시 시도해 주세요.');
       } else if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         alert('서비스등록내역을 불러오는 중에 문제가 발생했습니다.');
       }

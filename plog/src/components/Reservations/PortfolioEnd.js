@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 import {changeStudio, changePhotographer, changeHair, 
     changeArea, changeSubarea, changeCommonTimeList} from '../../assets/store.js';
 
+import remove from '../../assets/remove.js';
 import { debounce } from 'lodash';
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
@@ -352,6 +353,7 @@ function PortfolioEnd(props){
                 // console.log("포트폴리오 존재 안함");
             }
             else if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             }else{
@@ -384,6 +386,7 @@ function PortfolioEnd(props){
             })
             .catch((error)=>{
                 if(error.response && error.response.status === 401){
+                    remove();
                     navigate('/signin', { replace: true });
                     alert("로그인 만료. 다시 로그인해주세요.")
                 }else{
@@ -416,6 +419,7 @@ function PortfolioEnd(props){
             })
             .catch((error)=>{
                 if(error.response && error.response.status === 401){
+                    remove();
                     navigate('/signin', { replace: true });
                     alert("로그인 만료. 다시 로그인해주세요.")
                 }else{
@@ -443,11 +447,12 @@ function PortfolioEnd(props){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             }else{
-                // console.log("review받기 실패");
-                // console.log(error);
+                console.log("review받기 실패");
+                console.log(error);
             }
         })
         setDetail(props);

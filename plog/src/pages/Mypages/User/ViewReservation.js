@@ -5,6 +5,7 @@ import '../../../styles/Table.css';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import NoData from '../../../assets/noReview.png';
+import remove from '../../../assets/remove';
 
 function ViewReservation() {
   const [reservations, setReservations] = useState([]);
@@ -55,8 +56,9 @@ function ViewReservation() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         alert("예약 정보를 불러오는 중에 문제가 발생했습니다.");
       }
@@ -82,8 +84,9 @@ function ViewReservation() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         alert("예약 취소 중에 문제가 발생했습니다.");
       }

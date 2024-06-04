@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import remove from '../../../assets/remove';
 
 import selectImage from '../../../assets/select-image.png';
 import addImg from '../../../assets/addImg.png';
@@ -67,8 +68,9 @@ function ServiceInfo(){
     })
     .catch((error)=>{
       if(error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
       }else{
         console.log(error);
         console.log("정보 받기 실패");
@@ -87,8 +89,9 @@ function ServiceInfo(){
     })
     .catch((error)=>{
       if(error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
       }else{
         console.log(error);
         console.log("정보 받기 실패");
@@ -109,8 +112,9 @@ function ServiceInfo(){
         if(error.response.status === 404){
             console.log("포트폴리오 존재 안함");
         } else if(error.response.status === 401){
-          alert("로그인 만료. 다시 로그인해주세요.")
+          remove();
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.")
         }else{
           console.log(error);
           console.log("정보 받기 실패");
@@ -140,8 +144,9 @@ function ServiceInfo(){
         })
         .catch((error)=>{
           if(error.response.status === 401){
-            alert("로그인 만료. 다시 로그인해주세요.")
+            remove();
             navigate('/signin', { replace: true });
+            alert("로그인 만료. 다시 로그인해주세요.")
           }else{
             console.log("포폴 detail사진 재요청 에러");
             console.log(error);
@@ -171,8 +176,9 @@ function ServiceInfo(){
     })
     .catch((error)=>{
       if(error.response && error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
       }else{
         console.log("포폴 detail사진 재요청 에러");
         console.log(error);
@@ -214,6 +220,7 @@ function ServiceInfo(){
       })
       .catch((error)=>{
         if(error.response && error.response.status === 401){
+          remove();
           navigate('/signin', { replace: true });
           alert("로그인 만료. 다시 로그인해주세요.");
         }else{
@@ -256,8 +263,9 @@ function ServiceInfo(){
       })
       .catch((error)=>{
         if(error.response.status === 401){
-          alert("로그인 만료. 다시 로그인해주세요.")
+          remove();
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.")
         }else{
             console.log(error);
         }
@@ -281,8 +289,9 @@ function ServiceInfo(){
     })
     .catch((error) => {
       if(error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
       }else{
           console.log(error);
       }
@@ -448,6 +457,11 @@ function ServiceInfo(){
       console.log(result);
     })
     .catch((error)=>{
+      if(error.response && error.response.status === 401){
+        remove();
+        navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
+      }
       console.log(error);
     })
   }
@@ -605,6 +619,7 @@ function ServiceInfo(){
       })
       .catch((error)=>{
         if(error.response && error.response.status === 401){
+          remove();
           navigate('/signin', { replace: true });
           alert("로그인 만료. 다시 로그인해주세요.")
         }else{

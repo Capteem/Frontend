@@ -7,6 +7,7 @@ import Pagination from 'react-js-pagination';
 import Modal from 'react-modal';
 import { MdContentCopy } from "react-icons/md";
 import NoData from '../../assets/noReview.png';
+import remove from '../../assets/remove';
 
 function Answer() {
   const navigate = useNavigate();
@@ -58,8 +59,9 @@ function Answer() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         console.error('Q&A리스트 가져오기에 실패하였습니다.', error);
       }

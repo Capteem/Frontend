@@ -13,6 +13,7 @@ import Pagination from 'react-js-pagination';
 import { FaCalendarAlt } from "react-icons/fa";
 import NoData from '../../../assets/noReview.png';
 import { MdCalendarToday } from "react-icons/md";
+import remove from '../../../assets/remove';
 
 function ViewScheduledInformation() {
   const navigate = useNavigate();
@@ -83,8 +84,9 @@ function ViewScheduledInformation() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         alert("서비스예약리스트 불러오는 중에 문제가 발생했습니다.");
       }
@@ -162,8 +164,9 @@ function ViewScheduledInformation() {
         alert("예약확정에 실패하였습니다.");
       } else {
         if (error.response && error.response.status === 401) {
-          alert("로그인 만료. 다시 로그인해주세요.");
+          remove();
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.");
         } else {
           console.error('예약확정에 실패하였습니다.', error);
         }
@@ -214,8 +217,9 @@ function ViewScheduledInformation() {
         alert("예약취소에 실패하였습니다.");
       } else {
         if (error.response && error.response.status === 401) {
-          alert("로그인 만료. 다시 로그인해주세요.");
+          remove();
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.");
         } else {
           console.error('예약취소에 실패하였습니다.', error);
         }

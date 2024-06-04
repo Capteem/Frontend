@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/multi.css';
 import { v4 as uuidv4 } from 'uuid';
+import remove from '../../assets/remove';
 
 function ServiceRegistration() {
     const provider_name = useRef();
@@ -126,8 +127,9 @@ function ServiceRegistration() {
 
         } catch (error) {
             if (error.response && error.response.status === 401) {
-                alert("로그인 만료. 다시 로그인해주세요.");
+                remove();
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.");
             } else {
                 alert("서비스 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
             }
@@ -174,8 +176,9 @@ function ServiceRegistration() {
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
-                alert("로그인 만료. 다시 로그인해주세요.");
+                remove();
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.");
             } else {
                 alert("사업자 번호 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
                 setIsBusinessNumberValid(false);
@@ -236,8 +239,9 @@ function ServiceRegistration() {
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
-                    alert("로그인 만료. 다시 로그인해주세요.");
+                    remove();
                     navigate('/signin', { replace: true });
+                    alert("로그인 만료. 다시 로그인해주세요.");
                     setIsFileUploaded(false);
                 } else {
                     alert("사진 등록 중 문제가 발생했습니다. 다시 시도해주세요.");

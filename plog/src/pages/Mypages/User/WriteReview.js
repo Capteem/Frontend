@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from "react-router";
+import remove from '../../../assets/remove';
 
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
@@ -204,6 +205,7 @@ function WriteReview(){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.");      
             }else{

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import remove from '../../../assets/remove';
 
 import axios from 'axios'
 
@@ -45,6 +46,7 @@ function ReviewList(){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             }else{
@@ -92,6 +94,7 @@ function ReviewList(){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             }else{
@@ -133,6 +136,7 @@ function ReviewList(){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.");
             }else{
