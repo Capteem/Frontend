@@ -10,6 +10,7 @@ function ChatList() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const providerId = queryParams.get('providerId');
+  const providerName= queryParams.get('providerName');
   const userId = queryParams.get('userId');
   const accessToken = localStorage.getItem('accesToken');
   const navigate = useNavigate();
@@ -18,15 +19,17 @@ function ChatList() {
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [currentPage, setCurrentPage] = useState(1);
   const [editingComplaintIndex, setEditingComplaintIndex] = useState(-1);
-
+  const [role, setRole] = useState("");
   useEffect(() => {
     if (!accessToken || localStorage.getItem('userId') !== userId) {
       navigate("/signin");
     } else {
       if (providerId === null) {
         getUserChatList();
+        setRole('USER');
       } else {
         getProviderChatList();
+        setRole('PROVIDER');
       }
     }
     const handleResize = () => {
@@ -168,10 +171,10 @@ function ChatList() {
                 </p>
                 <div>
                   <button
-                    style={{ margin: "0px", padding: "0px", width: "70%", paddingBottom: "1px",  paddingTop: "1px", border: "none" }}
-                    onClick={() => navigate(`/chattingroom?userId=${userId}&roomId=${chatRoom.roomId}`)}>참여</button>
+                    style={{ margin: "0px", padding: "0px", width: "70%", paddingBottom: "1px",  paddingTop: "1px",  marginBottom: "1px", border: "none" }}
+                    onClick={() => navigate(`/chattingroom?userId=${userId}&roomId=${chatRoom.roomId}&role=${role}&providerName=${chatRoom.providerName}`)}>참여</button>
                   <button
-                    style={{ margin: "0px", padding: "0px", width: "70%", paddingTop: "1px",paddingBottom: "1px", border: "none" }}
+                    style={{ margin: "0px", padding: "0px", width: "70%", paddingTop: "1px",paddingBottom: "1px", marginTop: "1px", border: "none" }}
                     onClick={() => deleteChatRoom(chatRoom.roomId)}>삭제</button>
                 </div>
               </div>
