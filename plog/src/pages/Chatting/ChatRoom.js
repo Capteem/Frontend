@@ -27,8 +27,12 @@ function ChatRoom() {
   console.log(sender);
   console.log(userNickname);
   console.log(providerName);
+  console.log(role);
 
   useEffect(() => {
+    if (!accessToken){
+      navigate("/signin");
+    }
     if (!roomId) {
       createChatRoom();
     } else {
@@ -72,7 +76,7 @@ function ChatRoom() {
       );
       if (response.status === 200) {
         const newRoomId = response.data.roomId;
-        navigate(`/chattingroom?userId=${userId}&roomId=${newRoomId}`);
+        navigate(`/chattingroom?userId=${userId}&roomId=${newRoomId}&providerId=${providerId}&providerName=${providerName}&role=USER`);
       } else {
         alert("Failed to create chat room.");
       }
@@ -141,8 +145,8 @@ function ChatRoom() {
   };
 
   const handlechangepage = () => {
-    disconnectWebSocket();
     navigate(-1);
+    disconnectWebSocket();
   }
 
   return (
@@ -152,7 +156,7 @@ function ChatRoom() {
           style={{ border: "none", width: "20%", height: "20%", marginBottom: "20px" }}
           onClick={handlechangepage}
         ><FaArrowLeft /></button>
-        <h4 style={{ marginTop: "5px", marginLeft: "10px" }}>{role === "USER" ? providerName : userNickname}</h4>
+        <h4 style={{ marginTop: "5px", marginLeft: "10px" }}>{ (role === "USER" ||role === null  ) ? providerName : userNickname}</h4>
       </div>
       <label
         style={{

@@ -474,7 +474,7 @@ function PortfolioEnd(props){
 
     const handleChatButtonClick = () => {
         const userId = localStorage.getItem('userId');
-        navigate(`/chattingroom?userId=${userId}&providerId=${providerId}&providerName=${providerName}`);
+        navigate(`/chattingroom?userId=${userId}&providerId=${providerId}&providerName=${providerName}&role=USER`);
       };
 
     return(
