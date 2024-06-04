@@ -156,7 +156,7 @@ function ChatList() {
             alt=""
             style={{ width: "40%", height: "40%" }}
           />
-          <p style={{ fontSize: window.innerWidth < "500" ? "25px" : "40px", border: "bold" }}>채팅방이 없습니다.</p>
+          <p style={{ fontSize: "30px", border: "bold" }}>채팅방이 없습니다.</p>
         </>
       ) : (
         <>
