@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import '../../App.css'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux"
@@ -14,6 +15,7 @@ import { GoStar } from "react-icons/go";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
 
+
 import '../../styles/ImageGallery.css'; // CSS 파일 import
 import '../../styles/review.css'
 import '../../styles/shoppingBag.css'
@@ -24,7 +26,8 @@ import noReview from '../../assets/noReview.png'
 function PortfolioEnd(props){
 
     const navigate = useNavigate();
-
+    const [providerId, setProviderId] = useState(null);
+    const [providerName, setProviderName] = useState(null);
     //화면 크기 담는 state
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
@@ -463,6 +466,12 @@ function PortfolioEnd(props){
     }
 
     const [imgReview, setImgReview] = useState(true)
+
+    const handleChatButtonClick = () => {
+        const userId = localStorage.getItem('userId');
+        navigate(`/chattingroom?userId=${userId}&providerId=${providerId}&providerName=${providerName}`);
+      };
+
     return(
         <>
         {/* {console.log(show)} */}
@@ -509,6 +518,8 @@ function PortfolioEnd(props){
                                         getDetail(value);   //모달창에 보여주기 위한 세부정보
                                         getReview(value);
                                         setModalShow(true);
+                                        setProviderId(value.providerId);
+                                        setProviderName(value.providerName);
                                     }}/>
                                     <div className='provider-name-change'>{value.providerName}</div>
                                 </div>
@@ -521,7 +532,7 @@ function PortfolioEnd(props){
             }
             {
                 modalShow &&
-                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setScore(0);}}>
+                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setProviderId(null); setProviderName(null); setScore(0);}}>
                     <div className='portfolio-modalBody' onClick={(event)=>{event.stopPropagation(); setModalShow(true);}}>
                         <pre className='portfolio-modal-text'>
                             이름 : {detail.providerName}<br/>
@@ -613,11 +624,17 @@ function PortfolioEnd(props){
                         }
 
                         <div className='portfolio-selection'>
-                            <button className='portfolio-chatting-button'>채팅</button>
+                             <button className='portfolio-chatting-button'
+                             onClick={handleChatButtonClick}
+                             >
+                                채팅
+                            </button>
                             <button className='portfolio-selection-button' onClick={(event)=>{
                                 event.stopPropagation();
                                 setFinal(detail, detail.providerType);
                                 setModalShow(false);
+                                setProviderId(null);
+                                setProviderName(null);
                                 setScore(0);
                             }}>선택</button>
                         </div>
