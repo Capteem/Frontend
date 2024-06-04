@@ -53,7 +53,7 @@ function FindId() {
 
       if (response.status === 200) {
         setIsEmailSent(true);
-        console.log('이메일 전송 성공');
+        alert('인증번호 전송 성공');
       } else {
         alert('이메일 전송 중 문제가 발생했습니다. 다시 시도해주세요.');
       }

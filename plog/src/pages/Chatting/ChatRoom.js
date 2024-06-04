@@ -15,7 +15,7 @@ function ChatRoom() {
   const userId = queryParams.get('userId');
   const role = queryParams.get('role');
   const roomId = queryParams.get('roomId');
-  const userNickname = localStorage.getItem('userNickname');
+  const userNickname = queryParams.get('userNickName') === null ? localStorage.getItem('userNickname') :  queryParams.get('userNickName');
   const accessToken = localStorage.getItem('accesToken');
   const navigate = useNavigate();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -24,11 +24,9 @@ function ChatRoom() {
   const client = useRef(null);
   const messagesEndRef = useRef(null);
   const [sender, setSender] = useState(role === 'USER' ? userNickname : providerName);
-  console.log(sender);
+  console.log(roomId);
+  console.log(chatList);
   console.log(userNickname);
-  console.log(providerName);
-  console.log(role);
-
   useEffect(() => {
     if (!accessToken){
       navigate("/signin");
@@ -84,8 +82,13 @@ function ChatRoom() {
       console.error('Failed to create chat room.', error);
     }
   };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      sendMessage(e);
+    }
+  };
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (e) => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_URL}/ch/${roomId}`, {
         headers: {
@@ -130,6 +133,11 @@ function ChatRoom() {
   };
 
   const sendMessage = () => {
+    if(roomId === null){
+      alert("채팅방 중 오류가 발생했습니다.");
+      navigate(-1);
+    }
+
     if (chat && client.current) {
       const chatMessage = {
         roomId: roomId,
@@ -221,6 +229,7 @@ function ChatRoom() {
           value={chat}
           onChange={(e) => setChat(e.target.value)}
           placeholder="message"
+          onKeyDown={handleKeyDown}
         />
         <button onClick={sendMessage} style={{ border: "none", width: "20%" }}><FaRegArrowAltCircleUp /></button>
       </div>
