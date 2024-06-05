@@ -26,7 +26,12 @@ function ChatList() {
 
 
   useEffect(() => {
-    if (!accessToken || localStorage.getItem('userId') !== userId) {
+    console.log(localStorage.getItem('userId'));
+    console.log(userId);
+    if(userId === null){
+      console.log("userId가 null임")
+    }
+    else if (!accessToken || localStorage.getItem('userId') !== userId) {
       navigate("/signin");
     } else {
       if (providerId === null) {
@@ -46,7 +51,7 @@ function ChatList() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [accessToken, navigate]);
+  }, [accessToken, navigate, filterId, userId]);
 
   const getUserChatList = async () => {
     try {
