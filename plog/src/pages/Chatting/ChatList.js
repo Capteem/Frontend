@@ -12,6 +12,7 @@ function ChatList() {
   const queryParams = new URLSearchParams(location.search);
   const providerId = queryParams.get('providerId');
   const providerName= queryParams.get('providerName');
+  const filterId= queryParams.get('filterId');
   const userId = queryParams.get('userId');
   const accessToken = localStorage.getItem('accesToken');
   const navigate = useNavigate();
@@ -61,8 +62,14 @@ function ChatList() {
         }
       );
       if (response.status === 200) {
-        setChatList(response.data.chatRoomDtoList);
-        console.log(response.data.chatRoomDtoList);
+        let chatRoomList = response.data.chatRoomDtoList;
+        if (filterId !== null) {
+          let filteredChatList = chatRoomList.filter(chat => chat.providerId === parseInt(filterId));
+          setChatList(filteredChatList);
+        } else {
+          setChatList(chatRoomList);
+        }
+        console.log(chatRoomList);
       } else {
         alert("사용자 채팅리스트 가져오기에 실패하였습니다.");
       }

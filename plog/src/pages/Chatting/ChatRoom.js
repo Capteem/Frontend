@@ -81,7 +81,7 @@ function ChatRoom() {
         alert("로그인 만료. 다시 로그인해주세요.");
       } else if (error.response && error.response.status === 409) {
         console.log("채팅방이 존재합니다");
-        navigate(`/chatlist?userId=${userId}`);
+        navigate(`/chatlist?userId=${userId}&filterId=${providerId}`);
       } else {
         console.error('Failed to create chat room.', error);
       }
