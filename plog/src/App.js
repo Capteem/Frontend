@@ -97,7 +97,7 @@ function App() {
       <Route path='/servicelist/serviceinfo' element={<ServiceInfo/>} />
       <Route path='/servicelist/review' element={<Review/>} />
       <Route path='/chattingroom' element={<ChatRoom/>} />
-      <Route path='/servicelist/chatlist' element={<ChatList/>} />
+      <Route path='/chatlist' element={<ChatList/>} />
 
       {/*admin_Nav*/}
       <Route path='/usermanagement' element={<UserManagement/>}/>

@@ -52,8 +52,8 @@ function ServiceDropdown(props) {
           onClick={()=>{ setMyPage(false); handleNavigation(`/servicelist/review?providerId=${providerId}&providerName=${providerName}`)}}>
           <MdRateReview/> 리뷰 관리
           </Link>
-          <Link to={`/servicelist/chatlist?userId=${localStorage.getItem('userId')}&providerId=${providerId}&providerName=${providerName}`}
-          onClick={()=>{ setMyPage(false); handleNavigation(`/servicelist/chatlist?userId=${localStorage.getItem('userId')}&providerId=${providerId}&providerName=${providerName}`)}}>
+          <Link to={`/chatlist?userId=${localStorage.getItem('userId')}&providerId=${providerId}&providerName=${providerName}`}
+          onClick={()=>{ setMyPage(false); handleNavigation(`/chatlist?userId=${localStorage.getItem('userId')}&providerId=${providerId}&providerName=${providerName}`)}}>
           <MdOutlineMarkUnreadChatAlt/> 1:1 채팅 관리
           </Link>
         </div>

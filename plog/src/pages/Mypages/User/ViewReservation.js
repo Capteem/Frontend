@@ -248,23 +248,62 @@ function ViewReservation() {
                 isOpen={isModalOpen}
                onRequestClose={closeModal}
                contentLabel="Service Modal"
+               style={{
+                overlay: {
+                  backgroundColor: 'rgba(0,0,0,0.5)'
+                },
+                content: {
+                  textAlign : "center",
+                  width: '280px',
+                  height: '200px',
+                  margin: 'auto',
+                  border: '1px solid #ccc',
+                  borderRadius: '15px',
+                  padding: '20px'
+                }
+              }}
                >
                       {selectedReservation && (
                         <div>
                           <h2>서비스 선택</h2>
+                          <div style={{margin : "5px"}}> 
                           {(selectedReservation.reservationCameraName !== null) && (
-                             <button onClick={() => handleChatButtonClick(selectedReservation.reservationCameraId, selectedReservation.reservationCameraName)}>
+                             <button 
+                             onClick={() => handleChatButtonClick(selectedReservation.reservationCameraId, selectedReservation.reservationCameraName)}
+                             style={{
+                              borderRadius : "10px",
+                              border : "none",
+                              background : "#E8EEE8"
+                             }}
+                             >
                              {selectedReservation.reservationCameraName} 
                              </button>
                           )}
+                           </div>
+                           <div  style={{margin : "5px"}}> 
                          {(selectedReservation.reservationStudioName !== null) && (
-                          <button onClick={() => handleChatButtonClick(selectedReservation.reservationStudioId, selectedReservation.reservationStudioName)}>
+                          <button onClick={() => handleChatButtonClick(selectedReservation.reservationStudioId, selectedReservation.reservationStudioName)}
+                          style={{
+                            borderRadius : "10px",
+                            border : "none",
+                            background : "#E8EEE8"
+                           }}
+                          >
                           {selectedReservation.reservationStudioName} 
                           </button>)}
+                          </div>
+                          <div> 
                           {(selectedReservation.reservationHairName !== null) && (
-                          <button onClick={() => handleChatButtonClick(selectedReservation.reservationHairId, selectedReservation.reservationHairName)}>
+                          <button onClick={() => handleChatButtonClick(selectedReservation.reservationHairId, selectedReservation.reservationHairName)}
+                          style={{
+                            borderRadius : "10px",
+                            border : "none",
+                            background : "#E8EEE8"
+                           }}
+                          >
                           {selectedReservation.reservationHairName} 
                           </button>)}
+                          </div>
                           </div>
                       )}
                     </Modal>

@@ -3,9 +3,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import { FaRegArrowAltCircleUp } from "react-icons/fa";
+import { FaRegArrowAltCircleUp, FaArrowLeft } from "react-icons/fa";
 import NoData from '../../assets/noReview.png';
-import { FaArrowLeft } from "react-icons/fa";
+import remove from '../../assets/remove';
 
 function ChatRoom() {
   const location = useLocation();
@@ -15,7 +15,7 @@ function ChatRoom() {
   const userId = queryParams.get('userId');
   const role = queryParams.get('role');
   const roomId = queryParams.get('roomId');
-  const userNickname = queryParams.get('userNickName') === null ? localStorage.getItem('userNickname') :  queryParams.get('userNickName');
+  const userNickname = queryParams.get('userNickName') || localStorage.getItem('userNickname');
   const accessToken = localStorage.getItem('accesToken');
   const navigate = useNavigate();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -23,12 +23,10 @@ function ChatRoom() {
   const [chat, setChat] = useState('');
   const client = useRef(null);
   const messagesEndRef = useRef(null);
-  const [sender, setSender] = useState(role === 'USER' ? userNickname : providerName);
-  console.log(roomId);
-  console.log(chatList);
-  console.log(userNickname);
+  const sender = role === 'USER' ? userNickname : providerName;
+
   useEffect(() => {
-    if (!accessToken){
+    if (!accessToken) {
       navigate("/signin");
     }
     if (!roomId) {
@@ -75,11 +73,18 @@ function ChatRoom() {
       if (response.status === 200) {
         const newRoomId = response.data.roomId;
         navigate(`/chattingroom?userId=${userId}&roomId=${newRoomId}&providerId=${providerId}&providerName=${providerName}&role=USER`);
-      } else {
-        alert("Failed to create chat room.");
       }
     } catch (error) {
-      console.error('Failed to create chat room.', error);
+      if (error.response && error.response.status === 401) {
+        remove();
+        navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
+      } else if (error.response && error.response.status === 409) {
+        console.log("채팅방이 존재합니다");
+        navigate(`/chatlist?userId=${userId}`);
+      } else {
+        console.error('Failed to create chat room.', error);
+      }
     }
   };
 
@@ -97,7 +102,15 @@ function ChatRoom() {
         alert("Failed to fetch chat messages.");
       }
     } catch (error) {
-      console.error('Failed to fetch chat messages.', error);
+      if (error.response && error.response.status === 401) {
+        remove();
+        navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
+      } else if (error.response && error.response.status === 404) {
+        console.log("채팅방이 존재하지 않습니다.");
+      } else {
+        console.error('Failed to fetch chat messages.', error);
+      }
     }
   };
 
@@ -128,7 +141,7 @@ function ChatRoom() {
   };
 
   const sendMessage = () => {
-    if(roomId === null){
+    if (!roomId) {
       alert("채팅방을 생성할 수 없습니다.");
       navigate(-1);
     }
@@ -147,7 +160,7 @@ function ChatRoom() {
     }
   };
 
-  const handlechangepage = () => {
+  const handleChangePage = () => {
     navigate(-1);
     disconnectWebSocket();
   }
@@ -157,9 +170,9 @@ function ChatRoom() {
       <div style={{ display: "flex" }}>
         <button
           style={{ border: "none", width: "20%", height: "20%", marginBottom: "20px" }}
-          onClick={handlechangepage}
+          onClick={handleChangePage}
         ><FaArrowLeft /></button>
-        <h4 style={{ marginTop: "5px", marginLeft: "10px" }}>{ (role === "USER" ||role === null  ) ? providerName : userNickname}</h4>
+        <h4 style={{ marginTop: "5px", marginLeft: "10px" }}>{(role === "USER" || !role) ? providerName : userNickname}</h4>
       </div>
       <label
         style={{
@@ -169,52 +182,49 @@ function ChatRoom() {
           padding: "10px",
         }}
       >
-        {chatList && chatList.length === 0 ? (
-          <>
-            <img
-              src={NoData}
-              alt="No Data"
-              style={{ width: "50%", height: "50%" }}
-            />
-          </>
+        {chatList.length === 0 ? (
+          <img
+            src={NoData}
+            alt="No Data"
+            style={{ width: "50%", height: "50%" }}
+          />
         ) : (
           <div id="messageArea">
-  {chatList.map((message, index) => (
-    <div
-    style={{
-      display: "flex",
-      justifyContent:
-        role === "USER"
-          ? message.senderType === "USER" 
-            ? "flex-end" 
-            : "flex-start"
-          : message.senderType === "PROVIDER"
-          ? "flex-end"
-          : "flex-start",
-      marginBottom: "10px",
-    }}
-    key={index}
-  >
-      <div
-        style={{
-          padding: "10px",
-          borderRadius: "10px",
-          backgroundColor: message.senderType === "USER" ? "#162617" : "#E8EEE8",
-          color: message.senderType === "USER" ? "white" : "black",
-          fontSize: "15px",
-          maxWidth: "60%",
-          whiteSpace: "pre-wrap",
-          wordWrap: "break-word",
-          boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        {message.message}
-      </div>
-    </div>
-  ))}
-  <div ref={messagesEndRef} />
-</div>
-
+            {chatList.map((message, index) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent:
+                    role === "USER"
+                      ? message.senderType === "USER"
+                        ? "flex-end"
+                        : "flex-start"
+                      : message.senderType === "PROVIDER"
+                      ? "flex-end"
+                      : "flex-start",
+                  marginBottom: "10px",
+                }}
+                key={index}
+              >
+                <div
+                  style={{
+                    padding: "10px",
+                    borderRadius: "10px",
+                    backgroundColor: message.senderType === "USER" ? "#162617" : "#E8EEE8",
+                    color: message.senderType === "USER" ? "white" : "black",
+                    fontSize: "15px",
+                    maxWidth: "60%",
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  {message.message}
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         )}
       </label>
       <div style={{ display: "flex" }}>
