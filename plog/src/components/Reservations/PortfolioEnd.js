@@ -15,11 +15,9 @@ import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
-
-
-import '../../styles/ImageGallery.css'; // CSS 파일 import
+// CSS 파일 import
+import '../../styles/ImageGallery.css';
 import '../../styles/review.css'
-import '../../styles/shoppingBag.css'
 import '../../styles/shoppingBag.css'
 import shoppingBag from '../../assets/shoppingBag.jpg'
 import noReview from '../../assets/noReview.png'
@@ -111,6 +109,7 @@ function PortfolioEnd(props){
         settingShowHM(serverHM);
         changeClick(0);
         setShow([]);
+        console.log(checkSelect);
     },[checkSelect.finalDate, checkSelect.finalArea, checkSelect.finalSubarea])
 
     function settingShowStudio(props){
@@ -630,7 +629,7 @@ function PortfolioEnd(props){
 
                         <div className='portfolio-selection'>
                              <button className='portfolio-chatting-button'
-                             onClick={handleChatButtonClick}
+                                onClick={handleChatButtonClick}
                              >
                                 채팅
                             </button>

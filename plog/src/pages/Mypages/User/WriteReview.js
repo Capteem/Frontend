@@ -29,8 +29,12 @@ function WriteReview(){
     const [reviewScore, setReviewScore] = useState(0);
     const [starClick, setStarClick] = useState([false, false, false, false, false]);
 
+    function resetStar(){
+        let tmp = [false, false, false, false, false];
+        setStarClick(tmp);
+    }
+
     const { state } = useLocation();
-    console.log(state);
 
     useEffect(()=>{
         setReviewScore(0);
@@ -50,6 +54,8 @@ function WriteReview(){
     const [studioDisable, setStudioDisable] = useState(false);
     const [photoDisable, setphotoDisable] = useState(false);
     const [hmDisable, sethmDisable] = useState(false);
+
+    const [checkReviewCamera, setCheckReviewCamera] = useState(false);
     //값 추출
     async function getIdName(){
         if(state.reservationCameraId !== "C"){
@@ -62,6 +68,7 @@ function WriteReview(){
             }
             checkReview(send, 3);
         }
+
         if(state.reservationHairId !== "C"){
             setHmCheck(state.reservationHairId);
             setHmName(state.reservationHairName);
@@ -148,14 +155,17 @@ function WriteReview(){
         }else if(reviewScore !== 0){
             alert("작성중인 리뷰를 등록해주세요.");
         }else if(props === 1){
+            console.log("studionName 바꿈");
             setCurrentProvider(studioCheck);
             setCurrentService(1);
             setCurrentName(studioName);
         }else if(props === 2){
+            console.log("photoName 바꿈");
             setCurrentProvider(photoCheck);
             setCurrentService(2);
             setCurrentName(photoName);
         }else if(props === 3){
+            console.log("hmName 바꿈");
             setCurrentProvider(hmCheck);
             setCurrentService(3);
             setCurrentName(hmName);
@@ -165,6 +175,7 @@ function WriteReview(){
     useEffect(()=>{
         if(studioDisable && photoDisable && hmDisable){
             navigate("/mypage/viewreservation");
+            alert("리뷰를 모두 작성하셨습니다.");
         }
     },[studioDisable, photoDisable, hmDisable])
 
@@ -195,9 +206,9 @@ function WriteReview(){
             console.log(result);
             if(currentService === 1){
                 setStudioDisable(true);
-            }else if(currentService === 2){
-                sethmDisable(true);
             }else if(currentService === 3){
+                sethmDisable(true);
+            }else if(currentService === 2){
                 setphotoDisable(true);
             }
             console.log("리뷰 작성 성공");
@@ -284,8 +295,6 @@ function WriteReview(){
                 }
             </div>
 
-            
-
             {click && <>
                 <div className='review-body'>
                     <span className='review-title'>{currentName}</span>
@@ -323,6 +332,9 @@ function WriteReview(){
                             setModalShow(false);
                             sendReview();
                             setReview("");
+                            resetStar();
+                            setReviewScore(0);
+                            window.location.reload();
                         }}>확인</button>
                         <button className='small-modal-button' onClick={()=>{setModalShow(false);}}>취소</button>
                     </div>

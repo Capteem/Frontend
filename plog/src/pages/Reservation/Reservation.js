@@ -40,7 +40,8 @@ function Reservation(){
     //서버한테 제공자들 데이터 받아옴
     useEffect(()=>{
         console.log("실행");
-        dispatch(reset());
+        console.log(checkFinal);
+        // dispatch(reset());
         axios.get(`${process.env.REACT_APP_URL}/service/confirmed`,
             {
                 headers:{
@@ -144,6 +145,10 @@ function Reservation(){
         width: window.innerWidth,
         height: window.innerHeight,
     });
+
+    // useEffect(()=>{
+    //     window.location.reload();
+    // },[windowSize])
 
     useEffect(()=>{
         window.addEventListener('resize', handleResize);
