@@ -14,6 +14,11 @@ import noReview from '../assets/noReview.png'
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
+import { RiChatSmileLine } from "react-icons/ri";
+import { TbPhotoSquareRounded } from "react-icons/tb";
+import { TiPhoneOutline } from "react-icons/ti";
+import { IoLocationOutline } from "react-icons/io5";
+import { LiaWonSignSolid } from "react-icons/lia";
 
 //Redux
 import { useDispatch } from "react-redux"
@@ -77,6 +82,9 @@ function Gallery(){
             if(error.response && error.response.status === 401){
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
+            } if(error.response && error.response.status === 404){
+                console.log("data 다 불러옴");
+                setHasMore(false);
             }else{
                 alert('서버로부터 data 받아오는 것 실패');
                 console.log(error);
@@ -173,6 +181,7 @@ function Gallery(){
         .then((result)=>{
             console.log(result.data);
             setDetail(result.data);
+            setID(result.data.uerId);
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
@@ -248,21 +257,28 @@ function Gallery(){
         }
     }
 
+    const [Id, setID] = useState(null);
     function handleChatButtonClick(props){
         const userId = localStorage.getItem('userId');
-        navigate(`/chattingroom?userId=${userId}&providerId=${props.providerId}&providerName=${props.providerName}`);
+        if(userId === Id){
+            alert("본인의 서비스와 채팅할 수 없습니다.");
+        }else{
+            navigate(`/chattingroom?userId=${userId}&providerId=${props.providerId}&providerName=${props.providerName}`);
+        }
     };
 
     const [imgReview, setImgReview] = useState(true);
 
     return(
         <>
+            <div className='gallery-gallery-text'>Photo Gallery</div>
+            <div className='gallery-gallery-subtext'>Take a look at the photos and if you have any experts you want, make a reservation</div>
             <div style={{display:'flex', justifyContent:'center'}}>
                 <div className="gallery-container-gallery">
                     {
                         imgList.map((value, index)=>{
                             return(
-                                <div className='image-container'>
+                                <div className='image-container-gallery'>
                                 <img key={index} src={value.url} 
                                     onClick={()=>{
                                         getDetail(value.id);   //모달창에 보여주기 위한 세부정보
@@ -276,21 +292,36 @@ function Gallery(){
                             )
                         })
                     }
-
-                    {loading && <h4>Loading...</h4>}
-                    {!hasMore && <p>All images have been loaded!</p>}
                 </div>
             </div>
 
+            {(loading && hasMore) && <div style={{
+                fontSize:15,
+                fontWeight:600,
+                color:'grey',
+                marginTop:10
+            }}
+            ><TbPhotoSquareRounded  style={{fontSize:20}}/>loading..<TbPhotoSquareRounded  style={{fontSize:20}}/>
+            </div> }
+            {!hasMore && <div style={{
+                fontSize:15,
+                fontWeight:600,
+                color:'grey',
+                marginTop:8,
+                marginBottom:20
+            }}
+            >All images have been loaded! <RiChatSmileLine style={{fontSize:20}}/>
+            </div> }
+
             {
                 modalShow &&
-                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setImgReview(true); {/*setProviderId(null); setProviderName(null); setScore(0);*/}}}>
+                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setImgReview(true); setScore(0);}}>
                     <div className='portfolio-modalBody' onClick={(event)=>{event.stopPropagation(); setModalShow(true);}}>
                         <pre className='portfolio-modal-text'>
-                            이름 : {detail.providerName}<br/>
-                            문의 번호 : {detail.providerPhoneNum}<br/>
-                            위치 : {detail.providerAddress}<br/>
-                            가격 : {detail.providerPrice}<br/>
+                            <div style={{fontWeight:700, fontSize:18}}>{detail.providerName}</div>
+                            <TiPhoneOutline style={{fontSize:15, color:'#456547'}}/> {detail.providerPhoneNum}<br/>
+                            <IoLocationOutline style={{fontSize:15, color:'#456547'}}/> {detail.providerAddress}<br/>
+                            <LiaWonSignSolid style={{fontSize:15, color:'#456547'}}/> {detail.providerPrice}<br/>
                         </pre>
 
                         {
@@ -374,7 +405,9 @@ function Gallery(){
 
                         <div className='portfolio-selection'>
                              <button className='portfolio-chatting-button'
-                                onClick={()=>{handleChatButtonClick(detail)}}
+                                onClick={()=>{
+                                    handleChatButtonClick(detail);
+                                }}
                              >
                                 채팅
                             </button>
@@ -384,7 +417,7 @@ function Gallery(){
                                 setModalShow(false);
                                 setScore(0);
                                 console.log(detail);
-                            }}>선택</button>
+                            }}>예약하기</button>
                         </div>
                     </div>
                 </div>

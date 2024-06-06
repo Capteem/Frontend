@@ -14,6 +14,9 @@ import { debounce } from 'lodash';
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
+import { TiPhoneOutline } from "react-icons/ti";
+import { IoLocationOutline } from "react-icons/io5";
+import { LiaWonSignSolid } from "react-icons/lia";
 
 // CSS 파일 import
 import '../../styles/ImageGallery.css';
@@ -542,13 +545,13 @@ function PortfolioEnd(props){
             }
             {
                 modalShow &&
-                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setProviderId(null); setProviderName(null); setID(null); setScore(0);}}>
+                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setProviderId(null); setProviderName(null); setID(null); setScore(0); setImgReview(true);}}>
                     <div className='portfolio-modalBody' onClick={(event)=>{event.stopPropagation(); setModalShow(true);}}>
                         <pre className='portfolio-modal-text'>
-                            이름 : {detail.providerName}<br/>
-                            문의 번호 : {detail.providerPhone}<br/>
-                            위치 : {detail.providerArea} {detail.providerSubArea} {detail.providerDetailArea}<br/>
-                            가격 : {detail.providerPrice}<br/>
+                        <div style={{fontWeight:700, fontSize:18}}>{detail.providerName}</div>
+                            <TiPhoneOutline style={{fontSize:15, color:'#456547'}}/> {detail.providerPhone}<br/>
+                            <IoLocationOutline style={{fontSize:15, color:'#456547'}}/> {detail.providerArea} {detail.providerSubArea} {detail.providerDetailArea}<br/>
+                            <LiaWonSignSolid style={{fontSize:15, color:'#456547'}}/> {detail.providerPrice}<br/>
                         </pre>
 
                         {
