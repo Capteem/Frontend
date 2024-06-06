@@ -92,7 +92,7 @@ function SmallNav() {
                           <Link to="/mypage/viewreservation" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/viewreservation');}}><FaList/> 예약 내역</Link>
                           <Link to="/mypage/shoppingbag" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/shoppingbag');}}><FaShoppingBag/> 장바구니</Link>
                           <Link to="/mypage/reviewlist" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/reviewlist');}}><MdOutlineRateReview/> 리뷰 관리</Link>
-                          <Link to={`/servicelist/chatlist?userId=${userId}`} onClick={()=>{setMyPage(false); handleNavigation(`/servicelist/chatlist?userId=${userId}`);}}><IoChatboxEllipses/> 1:1 채팅</Link>
+                          <Link to={`/chatlist?userId=${userId}`} onClick={()=>{setMyPage(false); handleNavigation(`/chatlist?userId=${userId}`);}}><IoChatboxEllipses/> 1:1 채팅</Link>
                             {role === "PROVIDER" && (
                               <Link to="/mypage/servicelist" style={{ backgroundColor : "#efbb54", borderRadius : "0px 0px 15px 15px"}}
                               onClick={()=>{ setMyPage(false); handleNavigation('/mypage/servicelist');}}>서비스 리스트</Link>

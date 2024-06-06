@@ -6,6 +6,7 @@ import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import NoData from '../../../assets/noReview.png';
 import remove from '../../../assets/remove';
+import Modal from 'react-modal';
 
 function ViewReservation() {
   const [reservations, setReservations] = useState([]);
@@ -18,6 +19,9 @@ function ViewReservation() {
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1000 ? 1 : 3);
   const [sortColumn, setSortColumn] = useState('reservationTableId');
   const [sortDirection, setSortDirection] = useState('asc');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState(null);
+
 
   useEffect(() => {
     if (!accessToken) {
@@ -45,6 +49,7 @@ function ViewReservation() {
       });
       if (response.status === 200) {
         setReservations(response.data);
+        console.log(response.data);
         if (showCompletedReservations) {
           const totalAmount = response.data
             .filter(reservation => reservation.status === 2)
@@ -114,6 +119,21 @@ function ViewReservation() {
     setReservations(sortedUsers);
   };
 
+  const handleChatButtonClick = (providerId, providerName) => {
+    const userId = localStorage.getItem('userId');
+    navigate(`/chattingroom?userId=${userId}&providerId=${providerId}&providerName=${providerName}&role=USER`);
+  };
+
+  const openModal = (reservation) => {
+    setSelectedReservation(reservation);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedReservation(null);
+  };
+
   // Pagination을 위한 계산
   const indexOfLastReservation = currentPage * itemsPerPage;
   const indexOfFirstReservation = indexOfLastReservation - itemsPerPage;
@@ -167,7 +187,7 @@ function ViewReservation() {
                 총 결제금액: {totalCompletedAmount}
               </div>
             )}
-            <Table style={{width : "60%"}}>
+            <Table style={{width : "70%"}}>
               <Thead>
                 <Tr>
                   <Th>예약 번호</Th>
@@ -188,7 +208,7 @@ function ViewReservation() {
                         {reservation.reservationHairName && <p>헤어,메이크업 : {reservation.reservationHairName}</p>}
                       </div>
                     </Td>
-                    <Td><div className='text'>{new Date(reservation.reservationStartDate).toLocaleDateString()}</div></Td>
+                    <Td><div className='text'>{new Date(reservation.reservationStartDate).toLocaleDateString()}<br/>{new Date(reservation.reservationStartDate).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}<br/>~{new Date(new Date(reservation.reservationEndDate).getTime() + 60 * 60 * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
                     <Td><div className='text'>{reservation.amount} </div></Td>
                     <Td>
                       <div className='text'>
@@ -198,17 +218,19 @@ function ViewReservation() {
                              '예약취소'}
                            {(reservation.status === 0 || reservation.status === 1) && (
                              <button onClick={() => handleCancel(reservation.tid)} style={{marginLeft : "5px",}}>
-                               예약취소
+                               취소
                                </button>
                            )}
                            {(reservation.status === 2) && (
                              <button style={{ background: "#efbb54", borderColor: "#efbb54", marginLeft : "5px", padding : "0px, ipx, 0px, 1px"}}
                              onClick={() => { navigate('/mypage/writereview', { state: reservation }); console.log(reservation); }}
                              >
-                              리뷰쓰기
+                              리뷰
                               </button>
                            )}
-                         </div>
+                              <button style={{ background: "#E8EEE8", borderColor: "#E8EEE8", color :"black", marginLeft : "5px", padding : "0px, ipx, 0px, 1px"}}
+                              onClick={() => openModal(reservation)}>채팅</button>
+                             </div>
                      </Td>
 
                   </Tr>
@@ -222,6 +244,69 @@ function ViewReservation() {
               pageRangeDisplayed={5}
               onChange={handlePageChange}
             />
+            <Modal
+                isOpen={isModalOpen}
+               onRequestClose={closeModal}
+               contentLabel="Service Modal"
+               style={{
+                overlay: {
+                  backgroundColor: 'rgba(0,0,0,0.5)'
+                },
+                content: {
+                  textAlign : "center",
+                  width: '280px',
+                  height: '200px',
+                  margin: 'auto',
+                  border: '1px solid #ccc',
+                  borderRadius: '15px',
+                  padding: '20px'
+                }
+              }}
+               >
+                      {selectedReservation && (
+                        <div>
+                          <h2>서비스 선택</h2>
+                          <div style={{margin : "5px"}}> 
+                          {(selectedReservation.reservationCameraName !== null) && (
+                             <button 
+                             onClick={() => handleChatButtonClick(selectedReservation.reservationCameraId, selectedReservation.reservationCameraName)}
+                             style={{
+                              borderRadius : "10px",
+                              border : "none",
+                              background : "#E8EEE8"
+                             }}
+                             >
+                             {selectedReservation.reservationCameraName} 
+                             </button>
+                          )}
+                           </div>
+                           <div  style={{margin : "5px"}}> 
+                         {(selectedReservation.reservationStudioName !== null) && (
+                          <button onClick={() => handleChatButtonClick(selectedReservation.reservationStudioId, selectedReservation.reservationStudioName)}
+                          style={{
+                            borderRadius : "10px",
+                            border : "none",
+                            background : "#E8EEE8"
+                           }}
+                          >
+                          {selectedReservation.reservationStudioName} 
+                          </button>)}
+                          </div>
+                          <div> 
+                          {(selectedReservation.reservationHairName !== null) && (
+                          <button onClick={() => handleChatButtonClick(selectedReservation.reservationHairId, selectedReservation.reservationHairName)}
+                          style={{
+                            borderRadius : "10px",
+                            border : "none",
+                            background : "#E8EEE8"
+                           }}
+                          >
+                          {selectedReservation.reservationHairName} 
+                          </button>)}
+                          </div>
+                          </div>
+                      )}
+                    </Modal>
           </>
         )}
       </div>

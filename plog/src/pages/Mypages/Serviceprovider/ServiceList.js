@@ -160,6 +160,7 @@ function ServiceList() {
                           isOpen={isDropdownOpen}
                           toggleDropdown={toggleDropdown}
                           providerId={service.providerId}
+                          providerName={service.providerName}
                         />
                       </div>
                     </div>

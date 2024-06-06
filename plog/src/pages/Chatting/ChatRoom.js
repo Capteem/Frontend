@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
-import * as StompJs from '@stomp/stompjs';
-import { useSelector } from "react-redux";
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
+import { FaRegArrowAltCircleUp, FaArrowLeft } from "react-icons/fa";
+import NoData from '../../assets/noReview.png';
+import remove from '../../assets/remove';
 
 function ChatRoom() {
   const location = useLocation();
@@ -11,25 +13,25 @@ function ChatRoom() {
   const providerId = queryParams.get('providerId');
   const providerName = queryParams.get('providerName');
   const userId = queryParams.get('userId');
+  const role = queryParams.get('role');
   const roomId = queryParams.get('roomId');
-  const userNickname = localStorage.getItem('userNickname');
+  const userNickname = queryParams.get('userNickName') || localStorage.getItem('userNickname');
   const accessToken = localStorage.getItem('accesToken');
   const navigate = useNavigate();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [chatList, setChatList] = useState([]);
   const [chat, setChat] = useState('');
-  //const { roomId } = useParams();
   const client = useRef(null);
-  const currentUser = useSelector((state) => state.user);
   const messagesEndRef = useRef(null);
-  console.log(roomId);
+  const sender = role === 'USER' ? userNickname : providerName;
 
   useEffect(() => {
-    if (roomId === null) {
-      // roomid가 없으면 채팅방 생성 API를 호출하여 새로운 채팅방 생성
+    if (!accessToken) {
+      navigate("/signin");
+    }
+    if (!roomId) {
       createChatRoom();
     } else {
-      // roomid가 있으면 채팅 메시지를 불러옴
       fetchMessages();
     }
     connectWebSocket();
@@ -48,7 +50,7 @@ function ChatRoom() {
   }, [chatList]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView();
   };
 
   const createChatRoom = async () => {
@@ -56,11 +58,11 @@ function ChatRoom() {
       const response = await axios.post(
         `${process.env.REACT_APP_URL}/ch`,
         {
-          "userId": userId,
-          "userNickName": userNickname,
-          "providerId": providerId,
-          "providerName": providerName,
-          "creationDate" : new Date().toISOString(),
+          userId: userId,
+          userNickName: userNickname,
+          providerId: providerId,
+          providerName: providerName,
+          creationDate: new Date().toISOString(),
         },
         {
           headers: {
@@ -70,82 +72,171 @@ function ChatRoom() {
       );
       if (response.status === 200) {
         const newRoomId = response.data.roomId;
-        navigate(`/chattingroom?userId=${userId}&roomId=${newRoomId}`);
-      } else {
-        alert("채팅방 생성에 실패하였습니다.");
+        navigate(`/chattingroom?userId=${userId}&roomId=${newRoomId}&providerId=${providerId}&providerName=${providerName}&role=USER`);
       }
     } catch (error) {
-      console.error('채팅방 생성에 실패하였습니다.', error);
+      if (error.response && error.response.status === 401) {
+        remove();
+        navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
+      } else if (error.response && error.response.status === 409) {
+        console.log("채팅방이 존재합니다");
+        navigate(`/chatlist?userId=${userId}&filterId=${providerId}`);
+      } else {
+        console.error('Failed to create chat room.', error);
+      }
     }
   };
 
   const fetchMessages = async () => {
     try {
-      const response = await axios.get( `wss://api.picturewithlog.com/ch/${roomId}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/ch/${roomId}`, {
+        headers: {
+          'Auth-Token': accessToken
+        }
+      });
       if (response.status === 200) {
-        setChatList(response.data.chatMessageDtoList);
-        console.log(response.data.chatMessageDtoList);
+        setChatList(response.data.chatMessageDtoList || []);
+        console.log("Fetched messages:", response.data.chatMessageDtoList);
       } else {
-        alert("채팅 메시지 불러오기에 실패하였습니다.");
+        alert("Failed to fetch chat messages.");
       }
     } catch (error) {
-      console.error('채팅 메시지 불러오기에 실패하였습니다.', error);
+      if (error.response && error.response.status === 401) {
+        remove();
+        navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
+      } else if (error.response && error.response.status === 404) {
+        console.log("채팅방이 존재하지 않습니다.");
+      } else {
+        console.error('Failed to fetch chat messages.', error);
+      }
     }
   };
 
   const connectWebSocket = () => {
-    client.current = new StompJs.Client({
-      brokerURL: `wss://api.picturewithlog.com/chat`,
-      onConnect: () => {
-        console.log('WebSocket connected');
-        subscribeToChannel();
-      },
-      debug: (str) => {
-        console.log(new Date(), str);
-      },
+    const socket = new SockJS(`${process.env.REACT_APP_URL}/chat`);
+    client.current = Stomp.over(socket);
+    client.current.connect({}, (frame) => {
+      console.log('Connected: ' + frame);
+      subscribeToChannel();
+    }, (error) => {
+      console.error('Error connecting to WebSocket:', error);
     });
-    client.current.activate();
   };
 
   const disconnectWebSocket = () => {
     if (client.current) {
-      client.current.deactivate();
+      client.current.disconnect(() => {
+        console.log('Disconnected');
+      });
     }
   };
 
   const subscribeToChannel = () => {
-    client.current.subscribe(`wss://api.picturewithlog.com/ch/${roomId}`, (message) => {
+    client.current.subscribe(`/room/${roomId}`, (message) => {
       const newMessage = JSON.parse(message.body);
       setChatList((prevChatList) => [...prevChatList, newMessage]);
     });
   };
 
-  
-  const publishMessage = () => {
-    if (!client.current || !client.current.connected || !chat) return;
-    client.current.publish({
-      destination: `wss://api.picturewithlog.com/send/${roomId}`,
-      body: JSON.stringify({
+  const sendMessage = () => {
+    if (!roomId) {
+      alert("채팅방을 생성할 수 없습니다.");
+      navigate(-1);
+    }
+
+    if (chat && client.current) {
+      const chatMessage = {
         roomId: roomId,
+        sender: sender,
+        senderType: role,
         message: chat,
-        sender: currentUser.userId,
-      }),
-    });
-    setChat('');
+        sendDate: new Date().toISOString().split('.')[0],
+      };
+      console.log("Sending message:", chatMessage);
+      client.current.send(`/send/${roomId}`, {}, JSON.stringify(chatMessage));
+      setChat('');
+    }
   };
 
+  const handleChangePage = () => {
+    navigate(-1);
+    disconnectWebSocket();
+  }
+
   return (
-    <div>
-      <div>
-        {chatList.map((message, index) => (
-          <div key={index}>
-            <p>{message.sender}: {message.message}</p>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+    <div className="multi">
+      <div style={{ display: "flex" }}>
+        <button
+          style={{ border: "none", width: "20%", height: "20%", marginBottom: "20px" }}
+          onClick={handleChangePage}
+        ><FaArrowLeft /></button>
+        <h4 style={{ marginTop: "5px", marginLeft: "10px" }}>{(role === "USER" || !role) ? providerName : userNickname}</h4>
       </div>
-      <input type="text" value={chat} onChange={(e) => setChat(e.target.value)} />
-      <button onClick={publishMessage}>Send</button>
+      <label
+        style={{
+          height: "350px",
+          overflowY: "auto",
+          border: "1px solid #ccc",
+          padding: "10px",
+        }}
+      >
+        {chatList.length === 0 ? (
+          <img
+            src={NoData}
+            alt="No Data"
+            style={{ width: "50%", height: "50%" }}
+          />
+        ) : (
+          <div id="messageArea">
+            {chatList.map((message, index) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent:
+                    role === "USER"
+                      ? message.senderType === "USER"
+                        ? "flex-end"
+                        : "flex-start"
+                      : message.senderType === "PROVIDER"
+                      ? "flex-end"
+                      : "flex-start",
+                  marginBottom: "10px",
+                }}
+                key={index}
+              >
+                <div
+                  style={{
+                    padding: "10px",
+                    borderRadius: "10px",
+                    backgroundColor: message.senderType === "USER" ? "#162617" : "#E8EEE8",
+                    color: message.senderType === "USER" ? "white" : "black",
+                    fontSize: "15px",
+                    maxWidth: "60%",
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  {message.message}
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+      </label>
+      <div style={{ display: "flex" }}>
+        <input
+          type="text"
+          id="message"
+          value={chat}
+          onChange={(e) => setChat(e.target.value)}
+          placeholder="message"
+        />
+        <button onClick={sendMessage} style={{ border: "none", width: "20%" }}><FaRegArrowAltCircleUp /></button>
+      </div>
     </div>
   );
 }

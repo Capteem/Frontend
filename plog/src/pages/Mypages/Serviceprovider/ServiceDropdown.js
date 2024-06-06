@@ -30,8 +30,9 @@ function ServiceDropdown(props) {
     }
   };
 
-  const {providerId} = props;
-  console.log(props);
+  const providerId = props.providerId;
+  const providerName = props.providerName
+  console.log(props.providerName);
   return (
     <div className="dropdown">
       <button className="dropbtn" onClick={toggleDropdown} style={{background : "#E8EEE8", color : "black"}}>
@@ -40,19 +41,19 @@ function ServiceDropdown(props) {
       {isOpen && (
         <div className="dropdown-content">
           <Link to={`/servicelist/serviceinfo?providerId=${providerId}`} 
-          onClick={()=>{ setMyPage(false); handleNavigation(`/servicelist/serviceinfo?providerId=${providerId}`)}}>
+          onClick={()=>{ setMyPage(false); handleNavigation(`/servicelist/serviceinfo?providerId=${providerId}&providerName=${providerName}`)}}>
           <FaPhotoFilm /> 포토폴리오 관리
           </Link>
-          <Link to={`/servicelist/viewscheduledinformation?providerId=${providerId}`}
+          <Link to={`/servicelist/viewscheduledinformation?providerId=${providerId}&providerName=${providerName}`}
           onClick={()=>{ setMyPage(false); handleNavigation(`/servicelist/viewscheduledinformation?providerId=${providerId}`)}}>
           <MdCalendarMonth /> 예약된 내역 관리
           </Link>
           <Link to={`/servicelist/review?providerId=${providerId}`} 
-          onClick={()=>{ setMyPage(false); handleNavigation(`/servicelist/review?providerId=${providerId}`)}}>
+          onClick={()=>{ setMyPage(false); handleNavigation(`/servicelist/review?providerId=${providerId}&providerName=${providerName}`)}}>
           <MdRateReview/> 리뷰 관리
           </Link>
-          <Link to={`/servicelist/chatlist?userId=${localStorage.getItem('userId')}&providerId=${providerId}`}
-          onClick={()=>{ setMyPage(false); handleNavigation(`/servicelist/chatlist?userId=${localStorage.getItem('userId')}&providerId=${providerId}`)}}>
+          <Link to={`/chatlist?userId=${localStorage.getItem('userId')}&providerId=${providerId}&providerName=${providerName}`}
+          onClick={()=>{ setMyPage(false); handleNavigation(`/chatlist?userId=${localStorage.getItem('userId')}&providerId=${providerId}&providerName=${providerName}`)}}>
           <MdOutlineMarkUnreadChatAlt/> 1:1 채팅 관리
           </Link>
         </div>

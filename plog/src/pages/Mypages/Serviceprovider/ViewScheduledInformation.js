@@ -413,7 +413,7 @@ function ViewScheduledInformation() {
                     </Td>
                     <Td><div className='text'>{new Date(reservation.reservationStartTime).toLocaleDateString('ko-KR')}</div></Td>
                     <Td><div className='text'>{new Date(reservation.reservationStartTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
-                    <Td><div className='text'>{new Date(reservation.reservationEndTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
+                    <Td><div className='text'>{new Date(new Date(reservation.reservationEndTime).getTime() + 60 * 60 * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</div></Td>
                     <Td><div className='text'>{reservation.reservationPrice}</div></Td>
                     <Td>
                       <div className='text'>

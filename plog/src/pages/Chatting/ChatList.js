@@ -5,11 +5,14 @@ import { FaFrog } from "react-icons/fa";
 import axios from 'axios';
 import NoData from '../../assets/noReview.png';
 import Pagination from 'react-js-pagination';
+import remove from '../../assets/remove';
 
 function ChatList() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const providerId = queryParams.get('providerId');
+  const providerName= queryParams.get('providerName');
+  const filterId= queryParams.get('filterId');
   const userId = queryParams.get('userId');
   const accessToken = localStorage.getItem('accesToken');
   const navigate = useNavigate();
@@ -18,15 +21,25 @@ function ChatList() {
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [currentPage, setCurrentPage] = useState(1);
   const [editingComplaintIndex, setEditingComplaintIndex] = useState(-1);
+  const [role, setRole] = useState("");
+
+
 
   useEffect(() => {
-    if (!accessToken || localStorage.getItem('userId') !== userId) {
+    console.log(localStorage.getItem('userId'));
+    console.log(userId);
+    if(userId === null){
+      console.log("userId가 null임")
+    }
+    else if (!accessToken || localStorage.getItem('userId') !== userId) {
       navigate("/signin");
     } else {
       if (providerId === null) {
         getUserChatList();
+        setRole('USER');
       } else {
         getProviderChatList();
+        setRole('PROVIDER');
       }
     }
     const handleResize = () => {
@@ -38,7 +51,7 @@ function ChatList() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [accessToken, navigate]);
+  }, [accessToken, navigate, filterId, userId]);
 
   const getUserChatList = async () => {
     try {
@@ -54,15 +67,22 @@ function ChatList() {
         }
       );
       if (response.status === 200) {
-        setChatList(response.data.chatRoomDtoList);
-        console.log(response.data.chatRoomDtoList);
+        let chatRoomList = response.data.chatRoomDtoList;
+        if (filterId !== null) {
+          let filteredChatList = chatRoomList.filter(chat => chat.providerId === parseInt(filterId));
+          setChatList(filteredChatList);
+        } else {
+          setChatList(chatRoomList);
+        }
+        console.log(chatRoomList);
       } else {
         alert("사용자 채팅리스트 가져오기에 실패하였습니다.");
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       }
       else if (error.response && error.response.status === 409) {
         alert("채팅방이 존재하지 않습니다");
@@ -94,8 +114,10 @@ function ChatList() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
+        
       }
       else if (error.response && error.response.status === 409) {
         alert("채팅방이 존재하지 않습니다");
@@ -123,8 +145,9 @@ function ChatList() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       }
       else if (error.response && error.response.status === 404) {
         alert("채팅방이 존재하지 않습니다");
@@ -153,7 +176,7 @@ function ChatList() {
             alt=""
             style={{ width: "40%", height: "40%" }}
           />
-          <p style={{ fontSize: window.innerWidth < "500" ? "25px" : "40px", border: "bold" }}>채팅방이 없습니다.</p>
+          <p style={{ fontSize: "30px", border: "bold" }}>채팅방이 없습니다.</p>
         </>
       ) : (
         <>
@@ -168,10 +191,10 @@ function ChatList() {
                 </p>
                 <div>
                   <button
-                    style={{ margin: "0px", padding: "0px", width: "70%", paddingBottom: "1px",  paddingTop: "1px", border: "none" }}
-                    onClick={() => navigate(`/chattingroom?userId=${userId}&roomId=${chatRoom.roomId}`)}>참여</button>
+                    style={{ margin: "0px", padding: "0px", width: "70%", paddingBottom: "1px",  paddingTop: "1px",  marginBottom: "1px", border: "none" }}
+                    onClick={() => navigate(`/chattingroom?userId=${userId}&userNickName=${chatRoom.userNickName}&roomId=${chatRoom.roomId}&role=${role}&providerName=${chatRoom.providerName}`)}>참여</button>
                   <button
-                    style={{ margin: "0px", padding: "0px", width: "70%", paddingTop: "1px",paddingBottom: "1px", border: "none" }}
+                    style={{ margin: "0px", padding: "0px", width: "70%", paddingTop: "1px",paddingBottom: "1px", marginTop: "1px", border: "none" }}
                     onClick={() => deleteChatRoom(chatRoom.roomId)}>삭제</button>
                 </div>
               </div>
