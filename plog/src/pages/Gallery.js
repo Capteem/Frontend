@@ -417,7 +417,7 @@ function Gallery(){
                                 setModalShow(false);
                                 setScore(0);
                                 console.log(detail);
-                            }}>예약하기</button>
+                            }}>예약</button>
                         </div>
                     </div>
                 </div>

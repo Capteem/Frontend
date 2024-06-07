@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import remove from '../../../assets/remove';
+import Pagination from 'react-js-pagination';
 
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
@@ -39,8 +40,8 @@ function Review(){
             },
         })
         .then((result)=>{
-            console.log(result.data.reviewList);            
-            setReviewList(result.data.reviewList);
+            console.log(result.data.reviewList);
+            sort(result.data.reviewList);           
             calculateScore(result.data.reviewList);
         })
         .catch((error)=>{
@@ -54,6 +55,12 @@ function Review(){
             }
         })
     }
+    function sort(props){
+        props.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate));
+        console.log(props);
+        setReviewList(props);
+    }
+
     const [score, setScore] = useState(0);
     function calculateScore(props){
         let tmpScore = 0;
@@ -163,6 +170,24 @@ function Review(){
         })
     }
 
+    //pagination
+    const [currentReview, setCurrentReview] = useState([]);
+    const [page, setPage] = useState(1);
+
+    const postPerPage = 2;
+    const indexOfLastPost = page * postPerPage;
+    const indexOfFirstPost = indexOfLastPost - postPerPage;
+
+    const handlePageChange = (page) => {
+        setPage(page);
+    }
+
+    useEffect(()=>{
+        if(reviewList !== null){
+            setCurrentReview(reviewList.slice(indexOfFirstPost, indexOfLastPost))
+        }
+    },[reviewList, page]);
+
     return(
         <div className='review-body'>
         <div className='review'>
@@ -183,7 +208,7 @@ function Review(){
                 </div>
             }
            
-            {reviewList && reviewList.map((item, index)=>{
+            {reviewList && currentReview.map((item, index)=>{
                 let [date, time] = item.reviewDate.split("T");
                 let five = [1,2,3,4,5];
 
@@ -244,6 +269,15 @@ function Review(){
                     </div>
                 )
             })}
+            {reviewList === null ? <Pagination
+                activePage={page}
+                itemsCountPerPage={postPerPage}
+                totalItemsCount={reviewList !== null ? reviewList.length : null}
+                pageRangeDisplayed={3}
+                prevPageText={"<"}
+                nextPageText={">"}
+                onChange={handlePageChange}
+            />:null}
         </div>
         </div>
     )

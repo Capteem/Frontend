@@ -76,7 +76,7 @@ function PortfolioEnd(props){
     },[props.sendToPortfolio]);
 
     function initialSetting(props){
-        console.log("initialSetting 실행");
+        // console.log("initialSetting 실행");
         const studioTmp = [];
         const photoTmp = [];
         const hmTmp = [];
@@ -91,7 +91,6 @@ function PortfolioEnd(props){
             }
         })
     
-        console.log(studioTmp);
         setServerStudio(studioTmp);
         setServerPhoto(photoTmp);
         setServerHM(hmTmp);
@@ -100,10 +99,10 @@ function PortfolioEnd(props){
         setShowHM(hmTmp);
     }
 
-    useEffect(()=>{
-        console.log(showStudio);
-        console.log(serverStudio);
-    },[showStudio])
+    // useEffect(()=>{
+    //     console.log(showStudio);
+    //     console.log(serverStudio);
+    // },[showStudio])
 
     //여기서부턴 날짜, 지역 선택 시
     useEffect(()=>{
@@ -113,18 +112,15 @@ function PortfolioEnd(props){
         settingShowHM(serverHM);
         changeClick(0);
         setShow([]);
-        console.log(checkSelect);
     },[checkSelect.finalDate, checkSelect.finalArea, checkSelect.finalSubarea])
 
     function settingShowStudio(props){
-        console.log(props);
         const filteredData = props.filter(item => {
             return (checkDate(item.dateList) || checkSelect.finalDate === '') 
             && (item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
 
-        console.log(showStudio);
         setShowStudio(filteredData);
     }
     function settingShowPhoto(props){
@@ -524,7 +520,7 @@ function PortfolioEnd(props){
                             let item = repPhoto.find(photo => photo.id === value.providerId);
                             let url = item ? item.url : null;
                             return(
-                                <div style={{padding:1}}>
+                                <div key={index} style={{padding:1}}>
                                 <div className='image-container-change'>
                                     <img key={index} src={url} onClick={()=>{
                                         getDetail(value);   //모달창에 보여주기 위한 세부정보

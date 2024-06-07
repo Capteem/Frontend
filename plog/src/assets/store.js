@@ -39,12 +39,26 @@ const sendReservation = createSlice({
         },
         changePhotographer(state, action){
             state.finalPhotographer = action.payload;
+
+            if(state.fianlStudio[0] === "" && state.finalPhotographer[0] === "" && 
+            state.finalHair[0] === ""){
+                state.finalArea = "";
+                state.finalSubarea = "";
+            }
         },
         changeHair(state, action){
             state.finalHair = action.payload;
+
+            if(state.fianlStudio[0] === "" && state.finalPhotographer[0] === "" && 
+            state.finalHair[0] === ""){
+                state.finalArea = "";
+                state.finalSubarea = "";
+            }
         },
         changeDate(state, action){
             state.finalDate = action.payload;
+            state.finalStartDate = action.payload;
+            state.finalEndDate = action.payload;
         },
         changeFinalStartDate(state, action){
             state.finalStartDate = action.payload;

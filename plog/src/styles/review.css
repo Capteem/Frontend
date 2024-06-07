@@ -82,7 +82,7 @@
 
 .review-textarea{
     width: 400px;  /* 너비 고정 */
-    height: 200px; /* 높이 고정 */
+    height: 150px; /* 높이 고정 */
     resize: none;
 }
 
@@ -116,9 +116,6 @@
     color:rgb(141, 207, 148);
 }
 
-
-
-
 /* WriteReview.js 코드 */
 .portfolio-button:disabled{
     border:solid;
@@ -143,4 +140,12 @@
 /* review-portfolio */
 .portfolio-modal-review{
     display: flex;
+}
+
+@media (max-width: 450px){
+    .review-textarea{
+        width: 300px;  /* 너비 고정 */
+        height: 150px; /* 높이 고정 */
+        resize: none;
+    }
 }

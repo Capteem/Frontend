@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import remove from '../../../assets/remove';
+import Pagination from 'react-js-pagination';
 
 import axios from 'axios'
 
@@ -27,6 +28,7 @@ function ReviewList(){
     },[]);
 
     const [reviewList, setReviewList] = useState([]);
+    const [tmpReviewList, setTmpReviewList] = useState([]);
 
     //todo: 서비스 제공자도 받아오기
     function getReviewList(){
@@ -42,7 +44,7 @@ function ReviewList(){
         })
         .then(function(result){
             console.log(result.data.reviewList);
-            setReviewList(result.data.reviewList);
+            sort(result.data.reviewList)
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
@@ -53,6 +55,11 @@ function ReviewList(){
                 console.log(error);
             }
         })
+    }
+    function sort(props){
+        props.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate));
+        console.log(props);
+        setReviewList(props);
     }
 
     useEffect(()=>{
@@ -146,8 +153,26 @@ function ReviewList(){
         })
     }
 
+    //pagination
+    const [currentReview, setCurrentReview] = useState([]);
+    const [page, setPage] = useState(1);
+
+    const postPerPage = 2;
+    const indexOfLastPost = page * postPerPage;
+    const indexOfFirstPost = indexOfLastPost - postPerPage;
+
+    const handlePageChange = (page) => {
+        setPage(page);
+    }
+
+    useEffect(()=>{
+        if(reviewList !== null){
+            setCurrentReview(reviewList.slice(indexOfFirstPost, indexOfLastPost))
+        }
+    },[reviewList, page]);
+
     return(
-            <div className='review-body'>
+        <div className='review-body'>
                 <div className='review'>
                     <div className='review-title'>
                         Review List
@@ -161,7 +186,7 @@ function ReviewList(){
                         </div>
                     }
 
-                    {reviewList && reviewList.map((item, index)=>{
+                    {currentReview && currentReview.map((item, index)=>{
                     let [date, time] = item.reviewDate.split("T");
                     let five = [1,2,3,4,5];
 
@@ -205,9 +230,17 @@ function ReviewList(){
                             </div>
                         )
                     })}
-                </div>
-                
-            </div>
+                    {reviewList === null ? <Pagination
+                        activePage={page}
+                        itemsCountPerPage={postPerPage}
+                        totalItemsCount={reviewList !== null ? reviewList.length : null}
+                        pageRangeDisplayed={3}
+                        prevPageText={"<"}
+                        nextPageText={">"}
+                        onChange={handlePageChange}
+                    />: null}
+            </div>            
+        </div>
     )
 }
 

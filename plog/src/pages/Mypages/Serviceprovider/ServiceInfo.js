@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import remove from '../../../assets/remove';
+import { debounce } from 'lodash';
 
 import selectImage from '../../../assets/select-image.png';
 import addImg from '../../../assets/addImg.png';
@@ -632,6 +633,26 @@ function ServiceInfo(){
     }
   }
 
+  //화면 크기 담는 state
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(()=>{
+    window.addEventListener('resize', handleResize);
+    return()=>{
+        window.removeEventListener('resize', handleResize);
+    };
+  },[]);
+
+  const handleResize = debounce(()=>{
+    setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+  }, 1000);
+
   const [imgRemove, setImgRemove] = useState(true);
   return (
     <div className='information-container'>
@@ -732,7 +753,8 @@ function ServiceInfo(){
                     chagneTimeSelect(index);
                   }}>{item}</button>
                 }
-                {index != 0 && index % 7 === 0 ? <br/> : null}
+
+                {windowSize.width > 550 ? index !== 0 ? index % 7 === 0 ? <br/> : null : null : null}
               </>
           )})
         }</div>      
@@ -796,13 +818,11 @@ function ServiceInfo(){
                 console.log("수정완료 버튼 클릭");
                 checkBeforeSend();
               }}>수정 완료</button>
-              <button className='information-finish-button'>서비스 삭제</button>
           </div>
         }
       </div>
     </div>
   );
 }
-
 
 export default ServiceInfo;

@@ -186,8 +186,6 @@
 .timeSelectbutton-select{
   border: none;
   font-size: 17px; /* 버튼 내부 텍스트 크기 */
-  border: none;
-  /* border-radius: 5px; */
   cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
   background-color: #69876b; /* 배경색 (선택적) */
   color: white; /* 텍스트 색상 (선택적) */
@@ -202,8 +200,6 @@
 .timeSelectbutton-notSelect{
   border: none;
   font-size: 17px; /* 버튼 내부 텍스트 크기 */
-  border: none;
-  /* border-radius: 5px; */
   cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
   background-color: #96be99; /* 배경색 (선택적) */
   color: white; /* 텍스트 색상 (선택적) */
@@ -219,9 +215,6 @@
 .timeSelectbutton-notSelect:disabled{
   border: none;
   font-size: 17px; /* 버튼 내부 텍스트 크기 */
-  border: none;
-  /* border-radius: 5px; */
-  cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
   background-color: #d6d8d6; /* 배경색 (선택적) */
   color: white; /* 텍스트 색상 (선택적) */
   margin: 2px;
@@ -314,6 +307,12 @@
 
 .reservation-not-selected {
   color:#9b9999;
+  font-size: 13px;
+}
+
+.reservation-category {
+  margin-right: 6px;
+  font-size: 14px;
 }
 
 .calculate-button{
@@ -355,6 +354,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.reservation-align-left {
+  justify-content: flex-start;
 }
 
 .reservation-caculate-design{
@@ -484,10 +487,48 @@
   }
 }
 
+@media (max-width:600px){
+  .timeSelectbutton-select{
+    border: none;
+    font-size: 15px; /* 버튼 내부 텍스트 크기 */
+    cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
+    background-color: #69876b; /* 배경색 (선택적) */
+    color: white; /* 텍스트 색상 (선택적) */
+    margin: 2px;
+    width: 55px; /* 버튼의 너비 */
+    height: 25px; /* 버튼의 높이 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+  }
+  
+  .timeSelectbutton-notSelect{
+    border: none;
+    font-size: 15px; /* 버튼 내부 텍스트 크기 */
+    cursor: pointer; /* 마우스 오버 시 커서 변경 (선택적) */
+    background-color: #96be99; /* 배경색 (선택적) */
+    color: white; /* 텍스트 색상 (선택적) */
+    margin: 2px;
+    width: 55px; /* 버튼의 너비 */
+    height: 25px; /* 버튼의 높이 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+  }
+
+  .timeSelectbutton-notSelect:disabled{
+    border: none;
+    font-size: 15px; /* 버튼 내부 텍스트 크기 */
+    background-color: #d6d8d6; /* 배경색 (선택적) */
+    color: white; /* 텍스트 색상 (선택적) */
+    margin: 2px;
+    width: 55px; /* 버튼의 너비 */
+    height: 25px; /* 버튼의 높이 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+    opacity: 50%;
+  }
+}
+
 .reservation-center-bottom table{
   margin-bottom:30px;
   margin-left:30px;
-  width: 450px;
+  width: 90%;
   border-collapse: collapse;
   font-family: Arial, sans-serif;
   font-size: 14px;
@@ -507,4 +548,24 @@
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+}
+
+@media (max-width:500px){
+  .reservation-center-bottom table{
+    margin-bottom:30px;
+    margin-left:10px;
+    width: 90%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .reservation-center-bottom th{
+    width: 100px;
+    padding: 12px 15px;
+    text-align: right;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
 }
