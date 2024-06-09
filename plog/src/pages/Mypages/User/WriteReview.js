@@ -220,7 +220,7 @@ function WriteReview(){
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.");      
             }else{
-                alert('리뷰 작성 실패');
+                // alert('리뷰 작성 실패');
                 console.log(error);
             }
         })

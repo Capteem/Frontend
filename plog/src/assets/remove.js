@@ -1,6 +1,7 @@
 import {Cookies} from 'react-cookie';
 
 function remove(){
+
     const cookies = new Cookies();
     localStorage.removeItem('accesToken');
     localStorage.removeItem('userId');

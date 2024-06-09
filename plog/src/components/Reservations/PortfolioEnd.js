@@ -27,6 +27,16 @@ import noReview from '../../assets/noReview.png'
 
 function PortfolioEnd(props){
 
+    const [checkAlert, setCheckAlert] = useState(true);
+    // const [tmp, setTmp] = useState(0);
+    useEffect(()=>{
+        if(checkAlert === false){
+            alert("로그인 만료. 다시 로그인해주세요.");
+            console.log("클릭")
+            // setTmp(1);
+        }
+    },[checkAlert])
+
     const navigate = useNavigate();
     const [providerId, setProviderId] = useState(null);
     const [providerName, setProviderName] = useState(null);
@@ -360,12 +370,12 @@ function PortfolioEnd(props){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 404){
-                // console.log("포트폴리오 존재 안함");
+                console.log("포트폴리오 존재 안함");
             }
             else if(error.response && error.response.status === 401){
                 remove();
                 navigate('/signin', { replace: true });
-                alert("로그인 만료. 다시 로그인해주세요.")
+                setCheckAlert(false);
             }else{
                 // console.log(error);
             }
@@ -398,7 +408,7 @@ function PortfolioEnd(props){
                 if(error.response && error.response.status === 401){
                     remove();
                     navigate('/signin', { replace: true });
-                    alert("로그인 만료. 다시 로그인해주세요.")
+                    setCheckAlert(false);
                 }else{
                     // console.log("포폴 detail사진 재요청 에러");
                     // console.log(error);
@@ -431,7 +441,7 @@ function PortfolioEnd(props){
                 if(error.response && error.response.status === 401){
                     remove();
                     navigate('/signin', { replace: true });
-                    alert("로그인 만료. 다시 로그인해주세요.")
+                    setCheckAlert(false);
                 }else{
                     // console.log("대표사진 요청 에러");
                     // console.log(error);
@@ -452,14 +462,17 @@ function PortfolioEnd(props){
             },
         })
         .then((result)=>{
-            setDetailReview(result.data.reviewList);
-            calculateScore(result.data.reviewList);      
+            calculateScore(result.data.reviewList);  
+
+            let tmp = result.data.reviewList;
+            tmp.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate));
+            setDetailReview(tmp);    
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
                 remove();
                 navigate('/signin', { replace: true });
-                alert("로그인 만료. 다시 로그인해주세요.")
+                setCheckAlert(false);
             }else{
                 // console.log("review받기 실패");
                 // console.log(error);
@@ -599,6 +612,13 @@ function PortfolioEnd(props){
                                     </div>
                                 )
                             })
+                        }
+
+                        {(!detailPhoto) &&
+                            <div className='shoppingBag-none'>
+                                <img style={{width:150, height:150}} className='shoppingBag-noneBag' src={noReview}/>
+                                <div className='shoppingBag-noneText'>등록된 사진이 없습니다.</div>
+                            </div>
                         }
                         </div>
                         }

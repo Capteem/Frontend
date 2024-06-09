@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 //css
 import '../../styles/shoppingBag.css'
 import shoppingBag from '../../assets/shoppingBag.jpg'
+import { BiSolidShoppingBags } from "react-icons/bi";
 
 //쿠키에서 받아와서 띄움
 function ShoppingBag(){
@@ -92,6 +93,9 @@ function ShoppingBag(){
 
     return(
         <div style={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+            <div className='review-title'>
+                <span style={{fontSize:28}}><BiSolidShoppingBags style={{marginBottom:6, marginRight:4}}/>Shopping Bag</span>
+            </div>
         <div style={{maxWidth:1000, width:'90%'}}>
             {
                 dataList.length === 0 ? 
