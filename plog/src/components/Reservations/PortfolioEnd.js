@@ -9,7 +9,7 @@ import {changeStudio, changePhotographer, changeHair,
     changeArea, changeSubarea, changeCommonTimeList} from '../../assets/store.js';
 
 import remove from '../../assets/remove.js';
-import Photo from './Photo.js';
+import Photo from './PhotoOne.js';
 import { debounce } from 'lodash';
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
@@ -72,7 +72,6 @@ function PortfolioEnd(props){
     //서버한테 제공자들 데이터 받아옴
     const [reload, setReload] = useState(false);
     useEffect(()=>{
-        console.log("portfolioEnd실행" + props.sendToPortfolio);
         reloadForGallery();
         setReload(!reload);
     },[props.sendToPortfolio]);
@@ -103,7 +102,6 @@ function PortfolioEnd(props){
             }
         })
     
-        console.log(studioTmp);
         setServerStudio(studioTmp);
         setServerPhoto(photoTmp);
         setServerHM(hmTmp);
@@ -127,36 +125,29 @@ function PortfolioEnd(props){
     }
 
     function settingShowStudio(props){
-        console.log(checkSelect.finalArea);
         const filteredData = props.filter(item => {
-            {console.log(item)}
             return (checkDate(item.dateList) || checkSelect.finalDate === '') 
             && (item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
-        console.log(filteredData);
         setShowStudio(filteredData);
     }
-    function settingShowPhoto(props){
-        console.log(checkSelect.finalArea);
+    function settingShowPhoto(props){;
         const filteredData = props.filter(item => {
             return (checkDate(item.dateList) || checkSelect.finalDate === '') 
             && (item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
 
-        console.log(filteredData);
         setShowPhoto(filteredData);
     }
     function settingShowHM(props){
-        console.log(checkSelect.finalArea);
         const filteredData = props.filter(item => {
             return ( checkDate(item.dateList) || checkSelect.finalDate === "") 
             &&(item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
-
-        console.log(filteredData);
+;
         setShowHM(filteredData);
     }
     function checkDate(props){
@@ -497,6 +488,15 @@ function PortfolioEnd(props){
         navigate(`/chattingroom?userId=${userId}&providerId=${providerId}&providerName=${providerName}&role=USER`);}
       };
 
+    function handleClickPhoto(value){
+        getDetail(value);
+        getReview(value);
+        setModalShow(true);
+        setID(value.userId);
+        setProviderId(value.providerId);
+        setProviderName(value.providerName);
+    }
+
     return(
         <>
             {windowSize.width > 850 ?
@@ -535,10 +535,10 @@ function PortfolioEnd(props){
                             let item = repPhoto.find(photo => photo.id === value.providerId);
                             let url = item ? item.url : null;
                             return(
-                                <div key={index} style={{padding:1}}>
+                                <div key={index} style={{padding:1, objectFit:'cover'}}>
                                 <div className='image-container-change'>
                                     {/* {
-                                        url === null ? <img src={noReview} /> :
+                                        url === null ? <img  src={noReview} /> :
                                         <img key={index} src={url} onClick={()=>{
                                             getDetail(value);   //모달창에 보여주기 위한 세부정보
                                             getReview(value);
@@ -547,28 +547,16 @@ function PortfolioEnd(props){
                                             setProviderId(value.providerId);
                                             setProviderName(value.providerName);
                                         }}/>
-                                    } */}
+                                    }
+
+                                    <div className='provider-name-change'>{value.providerName}</div> */}
 
                                     <Photo style={{objectFit:'cover', border:100}} src={url} providername={value.providerName}
                                         onClick={()=>{
                                             console.log("클릭");
-                                            getDetail(value);   //모달창에 보여주기 위한 세부정보
-                                            getReview(value);
-                                            setModalShow(true);
-                                            setID(value.userId);
-                                            setProviderId(value.providerId);
-                                            setProviderName(value.providerName);
+                                            handleClickPhoto(value);
                                         }}
                                     />
-                                    {/* <img key={index} src={url} onClick={()=>{
-                                        getDetail(value);   //모달창에 보여주기 위한 세부정보
-                                        getReview(value);
-                                        setModalShow(true);
-                                        setID(value.userId);
-                                        setProviderId(value.providerId);
-                                        setProviderName(value.providerName);
-                                    }}/> */}
-                                    {/* <div className='provider-name-change'>{value.providerName}</div> */}
                                 </div>
                                 </div>
                             )
