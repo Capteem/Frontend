@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import DatePicker, {registerLocale} from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
-import { setHours, setMinutes, addDays, subDays, getMonth, getYear } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
 import { debounce } from 'lodash';
 
 //redux
@@ -175,7 +175,6 @@ function Calendar(){
 
     //포폴 선택시 시간 버튼 조절
     function settingbutton(props){
-        console.log(props);
         const tmpTime = times;
 
         const timeList = [];

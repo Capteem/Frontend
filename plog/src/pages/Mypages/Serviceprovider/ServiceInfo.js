@@ -68,12 +68,12 @@ function ServiceInfo(){
       }
     })
     .catch((error)=>{
-      if(error.response.status === 401){
+      if(error.response && error.response.status === 401){
         remove();
         navigate('/signin', { replace: true });
         alert("로그인 만료. 다시 로그인해주세요.")
       }else{
-        console.log(error);
+        console.log(error.response);
         console.log("정보 받기 실패");
       }
     })
@@ -89,7 +89,7 @@ function ServiceInfo(){
       repPhoto(result.data);      
     })
     .catch((error)=>{
-      if(error.response.status === 401){
+      if(error.response && error.response.status === 401){
         remove();
         navigate('/signin', { replace: true });
         alert("로그인 만료. 다시 로그인해주세요.")
@@ -144,7 +144,7 @@ function ServiceInfo(){
             reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
         })
         .catch((error)=>{
-          if(error.response.status === 401){
+          if(error.response && error.response.status === 401){
             remove();
             navigate('/signin', { replace: true });
             alert("로그인 만료. 다시 로그인해주세요.")
@@ -263,7 +263,7 @@ function ServiceInfo(){
           }
       })
       .catch((error)=>{
-        if(error.response.status === 401){
+        if(error.response && error.response.status === 401){
           remove();
           navigate('/signin', { replace: true });
           alert("로그인 만료. 다시 로그인해주세요.")
@@ -289,7 +289,7 @@ function ServiceInfo(){
         setImageURL(tmp);
     })
     .catch((error) => {
-      if(error.response.status === 401){
+      if(error.response && error.response.status === 401){
         remove();
         navigate('/signin', { replace: true });
         alert("로그인 만료. 다시 로그인해주세요.")
@@ -593,6 +593,10 @@ function ServiceInfo(){
       setTimeCheck(tmpTimecheck);
     })
   }
+
+  useEffect(()=>{
+    console.log(timeCheck);
+  },[timeCheck])
 
 
   const [checkChangeInfo, setCheckChangeInfo] = useState(false);

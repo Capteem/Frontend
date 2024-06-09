@@ -15,13 +15,13 @@ import Accordion from 'react-bootstrap/Accordion';
 
 //Redux
 import { useDispatch, useSelector } from "react-redux"
-import {reset, changeStudio, changePhotographer, changeHair, changeArea, changeSubarea, changeDate, changeDateShow} from '../../assets/store.js';
+import {reset, changeStudio, changePhotographer, changeHair, changeArea, 
+    changeSubarea, changeDate, changeDateShow, notSelectGallery} from '../../assets/store.js';
 
 
 //css
 import '../../styles/reserve.css'
 import '../../styles/Table.css';
-import { RiCloseCircleFill } from "react-icons/ri";
 import { MdDeleteForever  } from "react-icons/md";
 import { TbCurrencyWon } from "react-icons/tb";
 
@@ -35,16 +35,23 @@ function Reservation(){
         if(!token){
             navigate('/');
         }
-    },[navigate])
-
+    },[navigate]);
 
     //여기서부터 수정중
     const [sendToPortfolio, setSendToPortfolio] = useState([]);
+    let checkGallery = useSelector((state)=>state.galleryRedux);
     //서버한테 제공자들 데이터 받아옴
     useEffect(()=>{
         // console.log("실행");
         // console.log(checkFinal);
-        // dispatch(reset());
+        // if(checkGallery.galleryRedux === false){
+        //     dispatch(reset());
+        // }else{
+        //     dispatch(notSelectGallery());
+        // }
+
+        console.log(checkGallery.galleryRedux === false);
+
         axios.get(`${process.env.REACT_APP_URL}/service/confirmed`,
             {
                 headers:{
@@ -77,6 +84,9 @@ function Reservation(){
     function checkSelect(){
         if(checkFinal.finalDate === ""){
             alert("날짜를 선택하세요.");
+            return false;
+        } else if(checkFinal.finalHours === 0){
+            alert("시간을 선택하세요.");
             return false;
         } else if(checkFinal.fianlStudio[0] === "" && checkFinal.finalPhotographer[0] === "" && 
         checkFinal.finalHair[0] === ""){
@@ -149,9 +159,6 @@ function Reservation(){
         height: window.innerHeight,
     });
 
-    // useEffect(()=>{
-    //     window.location.reload();
-    // },[windowSize])
 
     useEffect(()=>{
         window.addEventListener('resize', handleResize);
@@ -332,6 +339,7 @@ function Reservation(){
                             if(checkSelect()){
                                 setmMdalShoppingShow(true);
                             }
+                            setmMdalShoppingShow(true);
                         }}>장바구니</button>
                         <button className='calculate-button'
                             onClick={()=>{
@@ -466,7 +474,9 @@ function Reservation(){
                                     <tr>
                                         <th>날짜</th>
                                         <td>
-                                            {checkFinal.finalDateShow} ({showStartTime}시-{showEndTime}시)
+                                            {checkFinal.finalDateShow}
+                                            {windowSize.width > 450 ? null : <br />}
+                                            ({showStartTime}시-{showEndTime}시)
                                             {checkFinal.finalDateShow === '' ? <span className='reservation-not-selected'>미선택</span> : null}
                                         </td>
                                     </tr>
@@ -485,7 +495,7 @@ function Reservation(){
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>헤어 메이크업</th>
+                                        <th>헤.메</th>
                                         <td>
                                             {checkFinal.finalHair.providerName}
                                             {checkFinal.finalHair.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}
@@ -533,7 +543,9 @@ function Reservation(){
                                     <tr>
                                         <th>날짜</th>
                                         <td>
-                                            {checkFinal.finalDateShow} ({showStartTime}시-{showEndTime}시)
+                                            {checkFinal.finalDateShow} 
+                                            {windowSize.width > 450 ? null : <br />}
+                                            ({showStartTime}시-{showEndTime}시)
                                             {checkFinal.finalDateShow === '' ? <span className='reservation-not-selected'>미선택</span> : null}
                                         </td>
                                     </tr>
@@ -552,7 +564,7 @@ function Reservation(){
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>헤어 메이크업</th>
+                                        <th>헤.메</th>
                                         <td>
                                             {checkFinal.finalHair.providerName}
                                             {checkFinal.finalHair.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}

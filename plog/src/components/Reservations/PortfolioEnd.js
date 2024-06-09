@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import '../../App.css'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux"
@@ -10,6 +9,7 @@ import {changeStudio, changePhotographer, changeHair,
     changeArea, changeSubarea, changeCommonTimeList} from '../../assets/store.js';
 
 import remove from '../../assets/remove.js';
+import Photo from './Photo.js';
 import { debounce } from 'lodash';
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
@@ -68,15 +68,27 @@ function PortfolioEnd(props){
     const dispatch = useDispatch();
     const checkSelect = useSelector((state)=>state.sendReservation);
 
+    const [windowChange, setWindowChange] = useState(false);
     //서버한테 제공자들 데이터 받아옴
+    const [reload, setReload] = useState(false);
     useEffect(()=>{
+        console.log("portfolioEnd실행" + props.sendToPortfolio);
+        reloadForGallery();
+        setReload(!reload);
+    },[props.sendToPortfolio]);
+
+    useEffect(()=>{
+        reloadForGallery();
+    },[reload]);
+
+    function reloadForGallery(){
         initialSetting(props.sendToPortfolio);
         setProviderAll(props.sendToPortfolio);
         getRep(props.sendToPortfolio);
-    },[props.sendToPortfolio]);
+        setWindowChange(!windowChange);
+    }
 
     function initialSetting(props){
-        // console.log("initialSetting 실행");
         const studioTmp = [];
         const photoTmp = [];
         const hmTmp = [];
@@ -91,6 +103,7 @@ function PortfolioEnd(props){
             }
         })
     
+        console.log(studioTmp);
         setServerStudio(studioTmp);
         setServerPhoto(photoTmp);
         setServerHM(hmTmp);
@@ -99,48 +112,51 @@ function PortfolioEnd(props){
         setShowHM(hmTmp);
     }
 
-    // useEffect(()=>{
-    //     console.log(showStudio);
-    //     console.log(serverStudio);
-    // },[showStudio])
-
     //여기서부턴 날짜, 지역 선택 시
     useEffect(()=>{
         console.log("날짜 지역 선택");
+        reloadGalleryRegion();
+    },[checkSelect.finalDate, checkSelect.finalArea, checkSelect.finalSubarea, checkSelect, serverStudio, serverPhoto, serverHM])
+
+    function reloadGalleryRegion(){
         settingShowStudio(serverStudio);
         settingShowPhoto(serverPhoto);
         settingShowHM(serverHM);
         changeClick(0);
         setShow([]);
-    },[checkSelect.finalDate, checkSelect.finalArea, checkSelect.finalSubarea])
+    }
 
     function settingShowStudio(props){
+        console.log(checkSelect.finalArea);
         const filteredData = props.filter(item => {
+            {console.log(item)}
             return (checkDate(item.dateList) || checkSelect.finalDate === '') 
             && (item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
-
+        console.log(filteredData);
         setShowStudio(filteredData);
     }
     function settingShowPhoto(props){
-
+        console.log(checkSelect.finalArea);
         const filteredData = props.filter(item => {
             return (checkDate(item.dateList) || checkSelect.finalDate === '') 
             && (item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
 
+        console.log(filteredData);
         setShowPhoto(filteredData);
     }
     function settingShowHM(props){
-
+        console.log(checkSelect.finalArea);
         const filteredData = props.filter(item => {
             return ( checkDate(item.dateList) || checkSelect.finalDate === "") 
             &&(item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
 
+        console.log(filteredData);
         setShowHM(filteredData);
     }
     function checkDate(props){
@@ -242,7 +258,8 @@ function PortfolioEnd(props){
         }else if(props.selectNum === 3){
             setShow(showStudio); 
         }
-    }, [serverStudio, serverPhoto, serverHM, showPhoto, showHM, showStudio, checkSelect.finalDate, click])
+
+    }, [serverStudio, serverPhoto, serverHM, showPhoto, showHM, showStudio, checkSelect.finalDate, props, windowChange, checkSelect.finalArea, checkSelect.finalSubarea])
     useEffect(()=>{
         setClick(prevClick => ({
             ...prevClick, // 이전 상태를 복사
@@ -392,8 +409,8 @@ function PortfolioEnd(props){
                     navigate('/signin', { replace: true });
                     alert("로그인 만료. 다시 로그인해주세요.")
                 }else{
-                    console.log("포폴 detail사진 재요청 에러");
-                    console.log(error);
+                    // console.log("포폴 detail사진 재요청 에러");
+                    // console.log(error);
                 }
             })
         })
@@ -425,8 +442,8 @@ function PortfolioEnd(props){
                     navigate('/signin', { replace: true });
                     alert("로그인 만료. 다시 로그인해주세요.")
                 }else{
-                    console.log("대표사진 요청 에러");
-                    console.log(error);
+                    // console.log("대표사진 요청 에러");
+                    // console.log(error);
                 }
             })
 
@@ -453,8 +470,8 @@ function PortfolioEnd(props){
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             }else{
-                console.log("review받기 실패");
-                console.log(error);
+                // console.log("review받기 실패");
+                // console.log(error);
             }
         })
         setDetail(props);
@@ -482,8 +499,6 @@ function PortfolioEnd(props){
 
     return(
         <>
-        {/* {console.log(show)} */}
-        {/* {console.log(showStudio)} */}
             {windowSize.width > 850 ?
                 <div>
                     {click.studioClick === false ? <button className='portfolio-button' onClick={()=>{changeClick(3); setShow(showStudio);}}>스튜디오</button> :
@@ -522,15 +537,38 @@ function PortfolioEnd(props){
                             return(
                                 <div key={index} style={{padding:1}}>
                                 <div className='image-container-change'>
-                                    <img key={index} src={url} onClick={()=>{
+                                    {/* {
+                                        url === null ? <img src={noReview} /> :
+                                        <img key={index} src={url} onClick={()=>{
+                                            getDetail(value);   //모달창에 보여주기 위한 세부정보
+                                            getReview(value);
+                                            setModalShow(true);
+                                            setID(value.userId);
+                                            setProviderId(value.providerId);
+                                            setProviderName(value.providerName);
+                                        }}/>
+                                    } */}
+
+                                    <Photo style={{objectFit:'cover', border:100}} src={url} providername={value.providerName}
+                                        onClick={()=>{
+                                            console.log("클릭");
+                                            getDetail(value);   //모달창에 보여주기 위한 세부정보
+                                            getReview(value);
+                                            setModalShow(true);
+                                            setID(value.userId);
+                                            setProviderId(value.providerId);
+                                            setProviderName(value.providerName);
+                                        }}
+                                    />
+                                    {/* <img key={index} src={url} onClick={()=>{
                                         getDetail(value);   //모달창에 보여주기 위한 세부정보
                                         getReview(value);
                                         setModalShow(true);
                                         setID(value.userId);
                                         setProviderId(value.providerId);
                                         setProviderName(value.providerName);
-                                    }}/>
-                                    <div className='provider-name-change'>{value.providerName}</div>
+                                    }}/> */}
+                                    {/* <div className='provider-name-change'>{value.providerName}</div> */}
                                 </div>
                                 </div>
                             )

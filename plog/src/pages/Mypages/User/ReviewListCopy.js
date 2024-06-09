@@ -43,7 +43,6 @@ function ReviewList(){
             },
         })
         .then(function(result){
-            console.log(result.data.reviewList);
             sort(result.data.reviewList)
         })
         .catch((error)=>{
@@ -60,24 +59,6 @@ function ReviewList(){
         props.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate));
         console.log(props);
         setReviewList(props);
-    }
-
-    const [checkChange, setCheckChange] = useState([true, true]);
-    function initialcheckSetting(){
-        let tmp = [true, true];
-        setCheckChange(tmp);
-    }
-
-    function changeReview(index){   //리뷰 수정
-        let tmp = [...checkChange];
-        tmp[index] = false;
-        setCheckChange(tmp);
-    }
-
-    function changeComplete(index){
-        let tmp = [...checkChange];
-        tmp[index] = true;
-        setCheckChange(tmp);
     }
 
     //todo:리뷰 삭제 실패
@@ -153,10 +134,6 @@ function ReviewList(){
     const [currentReview, setCurrentReview] = useState([]);
     const [page, setPage] = useState(1);
 
-    useEffect(()=>{
-        initialcheckSetting();
-    },[page]);
-
     const postPerPage = 2;
     const indexOfLastPost = page * postPerPage;
     const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -167,17 +144,10 @@ function ReviewList(){
 
     useEffect(()=>{
         if(reviewList !== null){
-            setCurrentReview(reviewList.slice(indexOfFirstPost, indexOfLastPost))
+            let tmp = reviewList.slice(indexOfFirstPost, indexOfLastPost);
+            setCurrentReview(tmp);
         }
     },[reviewList, page]);
-
-
-    const [deleteModal, setDeleteModal] = useState(false);
-    const [changeModal, setChangeModal] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(-1);
-    const [currentReviewId, setCurrentReviewId] = useState(-1);
-
-    const [changeTextarea, setChangeTextarea] = useState(false);
 
     return(
         <div className='review-body'>
@@ -192,52 +162,38 @@ function ReviewList(){
                             <div className='shoppingBag-noneText'>작성한 리뷰가 없습니다.</div>
                         </div>
                     }
-
                     {currentReview && currentReview.map((item, index)=>{
-                    let [date, time] = item.reviewDate.split("T");
-                    let five = [1,2,3,4,5];
-
-                    console.log(index);
+                        let [date, time] = item.reviewDate.split("T");
+                        let five = [1,2,3,4,5];
 
                         return(
                             <div key={index}>
                                 <div className='review-user'>
-                                <span className='review-name'>{item.providerName}</span>
-                                <span className='review-time'>{date} {time}</span>
-                                <div style={{marginBottom:2, marginTop:-5}}>{
-                                        five.map((score, index)=>{
-                                            return(
-                                                <span key={index}>{
-                                                    score <= item.reviewScore ?
-                                                        <GoStarFill className='review-starClick'/>
-                                                    :
-                                                        <GoStar className='review-star'/>
-                                                }</span>
-                                            )
-                                        })
-                                }</div>
+                                    <span className='review-name'>{item.providerName}</span>
+                                    <span className='review-time'>{date} {time}</span>
+                                    <div style={{marginBottom:2, marginTop:-5}}>{
+                                            five.map((score, index)=>{
+                                                return(
+                                                    <span key={index}>{
+                                                        score <= item.reviewScore ?
+                                                            <GoStarFill className='review-starClick'/>
+                                                        :
+                                                            <GoStar className='review-star'/>
+                                                    }</span>
+                                                )
+                                            })
+                                    }</div>
                                 </div>
                                 <textarea className='review-textarea'
                                     disabled={checkChange[index]}
-                                    value={changeTextarea === true ? null : item.reviewContent}
                                     onChange={(event)=>{changeComment(event, item)}}
+                                    value={item.reviewContent}
                                 >
                                 </textarea>
 
-                                {
-                                    checkChange[index] === true ? 
-                                    <div className='review-button-left'>
-                                        <button className='review-button' onClick={()=>{setCurrentIndex(index);changeReview(index); setChangeTextarea(true);}}>수정</button>
-                                        <button className='review-button' onClick={()=>{setCurrentReviewId(item.reviewId); setDeleteModal(true);}}>삭제</button>
-                                    </div>
-                                    :
-                                    <div className='review-button-left'>
-                                        <button className='review-button' onClick={()=>{setChangeModal(true); setChangeTextarea(false);}}>완료</button>
-                                        <button className='review-button' onClick={()=>{changeComplete(index); setChangeTextarea(false);}}>취소</button>
-                                    </div>
-                                }
                             </div>
                         )
+
                     })}
                     {reviewList.length !== 0 ? <Pagination
                         activePage={page}
@@ -248,36 +204,7 @@ function ReviewList(){
                         nextPageText={">"}
                         onChange={handlePageChange}
                     />: null}
-            </div>
-
-            {
-                changeModal &&
-                <div className='small-portfolio-modal' onClick={()=>{setChangeModal(false)}}>
-                <div className='small-portfolio-modalBody'>
-                    <div className='small-modal-big-text'>수정하시겠습니까?</div>
-                    <button className='small-modal-button' onClick={()=>{
-                        changeComplete(currentIndex);
-                        rewriteReview();
-                        setChangeModal(false);
-                    }}>확인</button>
-                    <button className='small-modal-button' onClick={()=>{setChangeModal(false); changeComplete(currentIndex);}}>취소</button>
-                </div>
-                </div>
-            }
-
-            {
-                deleteModal &&
-                <div className='small-portfolio-modal' onClick={()=>{setDeleteModal(false)}}>
-                <div className='small-portfolio-modalBody'>
-                    <div className='small-modal-big-text'>삭제하시겠습니까?</div>
-                    <button className='small-modal-button' onClick={()=>{
-                        deleteReview(currentReviewId);
-                        setDeleteModal(false);
-                    }}>확인</button>
-                    <button className='small-modal-button' onClick={()=>{setDeleteModal(false);}}>취소</button>
-                </div>
-                </div>
-            }          
+            </div>    
         </div>
     )
 }

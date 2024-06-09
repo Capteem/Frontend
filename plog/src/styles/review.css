@@ -86,6 +86,11 @@
     resize: none;
 }
 
+.review-textarea-value textarea{
+    color:rgb(43, 42, 42);
+    opacity: 70%;
+}
+
 .review-button{
     border:solid 1px #69876b;
     border-radius: 3px;

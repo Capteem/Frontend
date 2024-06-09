@@ -284,14 +284,14 @@ function WriteReview(){
                         setPhotoBtn(false);
                         setHmBtn(true);
                     }} disabled={hmDisable}
-                    >헤어,메이크업</button> 
+                    >헤.메</button> 
                     :
                     <button className='portfolio-button-click'
                     onClick={()=>{
                         setClick(true);
                         checkWriting(3);
                     }} disabled={hmDisable}
-                    >헤어,메이크업</button>
+                    >헤.메</button>
                 }
             </div>
 

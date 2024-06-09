@@ -498,6 +498,8 @@
     width: 55px; /* 버튼의 너비 */
     height: 25px; /* 버튼의 높이 */
     text-align: center; /* 텍스트를 가운데 정렬 */
+    text-justify: center;
+    padding:0
   }
   
   .timeSelectbutton-notSelect{
@@ -510,6 +512,9 @@
     width: 55px; /* 버튼의 너비 */
     height: 25px; /* 버튼의 높이 */
     text-align: center; /* 텍스트를 가운데 정렬 */
+    text-justify: center;
+    padding:0
+    /* padding-right: 50px; */
   }
 
   .timeSelectbutton-notSelect:disabled{
@@ -521,7 +526,9 @@
     width: 55px; /* 버튼의 너비 */
     height: 25px; /* 버튼의 높이 */
     text-align: center; /* 텍스트를 가운데 정렬 */
+    text-justify: center;
     opacity: 50%;
+    padding:0
   }
 }
 

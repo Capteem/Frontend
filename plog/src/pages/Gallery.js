@@ -4,7 +4,7 @@ import axios from 'axios'
 import remove from '../assets/remove';
 
 import {changeStudio, changePhotographer, changeHair, 
-    changeArea, changeSubarea} from '../assets/store.js';
+    changeArea, changeSubarea, selectGallery, notSelectGallery} from '../assets/store.js';
 
 import '../styles/ImageGallery.css';
 import '../styles/review.css'
@@ -36,6 +36,7 @@ function Gallery(){
 
     useEffect(()=>{
         getImgPerPage();
+        dispatch(notSelectGallery());
     },[]);
 
     const [loading, setLoading] = useState(false);
@@ -75,7 +76,6 @@ function Gallery(){
             }
         )
         .then(function(result){
-            console.log(result.data);
             getImg(result.data, 1);
         })
         .catch((error)=>{
@@ -83,11 +83,11 @@ function Gallery(){
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             } if(error.response && error.response.status === 404){
-                console.log("data 다 불러옴");
+                // console.log("data 다 불러옴");
                 setHasMore(false);
             }else{
-                alert('서버로부터 data 받아오는 것 실패');
-                console.log(error);
+                // alert('서버로부터 data 받아오는 것 실패');
+                // console.log(error);
             }
         })
     }
@@ -102,13 +102,12 @@ function Gallery(){
             },
         })
         .then((result)=>{
-            console.log(result.data.portfolioList);
             setDetailPhotoInfo(result.data.portfolioList);
             getImg(result.data.portfolioList, 2);       
         })
         .catch((error)=>{
             if(error.response && error.response.status === 404){
-                console.log("포트폴리오 존재 안함");
+                // console.log("포트폴리오 존재 안함");
             }
             else if(error.response && error.response.status === 401){
                 remove();
@@ -132,7 +131,6 @@ function Gallery(){
                 responseType: "blob",
             })
             .then((result)=>{
-                console.log("사진 받기 성공");
                 if(num === 1){
                     const newFile = new File([result.data], imgList);   //blob 객체를 File 객체로 변환시켜줌
                     const reader = new FileReader(); // 변환한 File 객체를 읽기 위해 FileReader 객체 생성(비동기)
@@ -179,7 +177,6 @@ function Gallery(){
             },
         })
         .then((result)=>{
-            console.log(result.data);
             setDetail(result.data);
             setID(result.data.uerId);
         })
@@ -208,7 +205,7 @@ function Gallery(){
             },
         })
         .then((result)=>{
-            console.log(result);
+            // console.log(result);
             setDetailReview(result.data.reviewList);
             calculateScore(result.data.reviewList);      
         })
@@ -218,8 +215,8 @@ function Gallery(){
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             }else{
-                console.log("review받기 실패");
-                console.log(error);
+                // console.log("review받기 실패");
+                // console.log(error);
             }
         })
     }
@@ -277,6 +274,9 @@ function Gallery(){
                 <div className="gallery-container-gallery">
                     {
                         imgList.map((value, index)=>{
+                            if(index !== 0 && (value.url === imgList[index-1].url)){
+                                return null;
+                            }
                             return(
                                 <div className='image-container-gallery'>
                                 <img key={index} src={value.url} 
@@ -285,7 +285,6 @@ function Gallery(){
                                         getPhoto(value.id);
                                         getReview(value.id);
                                         setModalShow(true);
-                                        console.log(value);
                                     }}
                                 />
                                 </div>
@@ -416,7 +415,7 @@ function Gallery(){
                                 select(detail);
                                 setModalShow(false);
                                 setScore(0);
-                                console.log(detail);
+                                dispatch(selectGallery());
                             }}>예약</button>
                         </div>
                     </div>
