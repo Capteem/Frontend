@@ -1,10 +1,9 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import {Cookies} from 'react-cookie';
 import { useEffect, useState } from 'react';
-import { debounce } from 'lodash';
 import '../../styles/Nav.css';
 import '../../styles/smallModal.css';
 import Dropdown from './DropDown'; 
+import remove from "../../assets/remove";
 import Plog from './../../assets/Ploglogo.png'
 
 function Nav(){
@@ -130,7 +129,7 @@ function Nav(){
                   로그아웃하면 장바구니 내역이 삭제됩니다
                 </div>
                 <button className='small-modal-button' onClick={()=>{
-                  removeToken();
+                  remove();
                   navigate("/");
                   setCheckLogin(false);
                   setModalShow(false);
@@ -141,17 +140,6 @@ function Nav(){
         }
       </div>
     )
-}
-
-//로그아웃 토큰 다 삭제
-//todo: 장바구니 삭제
-function removeToken(){
-  const cookies = new Cookies();
-  localStorage.removeItem('accesToken');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('role');
-  localStorage.removeItem('userNickname');
-  cookies.remove('tmpBag');
 }
 
 export default Nav;

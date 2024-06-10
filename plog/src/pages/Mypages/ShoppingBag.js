@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 //css
 import '../../styles/shoppingBag.css'
 import shoppingBag from '../../assets/shoppingBag.jpg'
+import { BiSolidShoppingBags } from "react-icons/bi";
 
 //쿠키에서 받아와서 띄움
 function ShoppingBag(){
@@ -85,8 +86,17 @@ function ShoppingBag(){
         remove(props);
     }
 
+    const [calculateModal, setCalculateModal] = useState(false);
+    const [itemModal, setItemModal] = useState([]);
+    const [deleteModal, setDeleteModal] = useState(false);
+    
+
     return(
-        <div>
+        <div style={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+            <div className='review-title'>
+                <span style={{fontSize:28}}><BiSolidShoppingBags style={{marginBottom:6, marginRight:4}}/>Shopping Bag</span>
+            </div>
+        <div style={{maxWidth:1000, width:'90%'}}>
             {
                 dataList.length === 0 ? 
                 <div className='shoppingBag-none'>
@@ -109,7 +119,6 @@ function ShoppingBag(){
             }
             {
                 dataList && dataList.map((item, index)=>{
-                    console.log(item);
                     let [tmpStartDate, tmpStartTime] = item.startDate.split("T");
                     let timeStart = tmpStartTime.split(":");
 
@@ -139,16 +148,94 @@ function ShoppingBag(){
                             <div className='shoppingBag-button'>
                                 <button className='shoppingBag-calculate-button'
                                     onClick={()=>{
-                                        sendPay(item);
+                                        setCalculateModal(true);
+                                        setItemModal(item);
                                     }}
                                 >결제</button>
                                 <br/>
-                                <button className='shoppingBag-calculate-button' onClick={()=>{remove(item);}}>삭제</button>
+                                <button className='shoppingBag-calculate-button' onClick={()=>{setDeleteModal(true); setItemModal(item);}}>삭제</button>
                             </div>
                         </div>
                     )
                 })
             }
+
+            {/* 결제 모달 창 */}
+            {
+                calculateModal &&
+                <div className='portfolio-modal' onClick={()=>{setCalculateModal(false)}}>
+                    <div className='portfolio-modalBody'>
+                        <div className='reservation-center-bottom'>
+                            <div className='reservation-center'>
+                                <h5>결제하시겠습니까?</h5>
+                            </div>
+                            <br/>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th>날짜</th>
+                                        <td>
+                                            {itemModal.startDate.split("T")[0]}
+                                            <br/>
+                                            ({itemModal.startDate.split("T")[1].split(":")[0]}시-{itemModal.endDate.split("T")[1].split(":")[0]}시)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>스튜디오</th>
+                                        <td>
+                                            {itemModal.studioName}
+                                            {itemModal.studioName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>사진작가</th>
+                                        <td>
+                                            {itemModal.photoName}
+                                            {itemModal.photoName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>헤.메</th>
+                                        <td>
+                                            {itemModal.hmName}
+                                            {itemModal.hmName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>총가격</th>
+                                        <td>{itemModal.price}원</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div className='reservation-calculate'>
+                                <button className='calculate-button' onClick={()=>{
+                                    setCalculateModal(false);
+                                    sendPay(itemModal);
+                                }}>결제</button>
+                                <button className='calculate-button' onClick={()=>{
+                                    setCalculateModal(false);
+                                }}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {
+                deleteModal &&
+                <div className='small-portfolio-modal' onClick={()=>{setDeleteModal(false)}}>
+                <div className='small-portfolio-modalBody'>
+                    <div className='small-modal-big-text'>삭제하시겠습니까?</div>
+                    <button className='small-modal-button' onClick={()=>{
+                        remove(itemModal);
+                        setDeleteModal(false);
+                    }}>확인</button>
+                    <button className='small-modal-button' onClick={()=>{setDeleteModal(false);}}>취소</button>
+                </div>
+                </div>
+            }
+        </div>
         </div>
     );
 }

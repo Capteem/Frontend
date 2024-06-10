@@ -1,7 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import {Cookies} from 'react-cookie';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import remove from "../../assets/remove";
 
 import '../../styles/Nav.css';
 import '../../styles/smallModal.css';
@@ -92,7 +93,7 @@ function Admin_Nav() {
           <div className='small-portfolio-modalBody'>
             <div className='small-modal-big-text'>로그아웃 하시겠습니까?</div>
             <button className='small-modal-button' onClick={()=>{
-              removeToken();
+              remove();
               navigate("/");
               setCheckLogin(false);
               setModalShow(false);
@@ -104,15 +105,5 @@ function Admin_Nav() {
     </div>
   )
 }  
-
-function removeToken(){
-  const cookies = new Cookies();
-  localStorage.removeItem('accesToken');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('role');
-  localStorage.removeItem('userNickname');
-  cookies.remove('refreshToken');
-  cookies.remove('tmpBag');
-}
   
 export default Admin_Nav;

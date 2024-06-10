@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/multi.css';
+import remove from '../../assets/remove';
 
 function Question() {
     const complaintTitle = useRef();
@@ -65,8 +66,9 @@ function Question() {
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
-                alert("로그인 만료. 다시 로그인해주세요.");
+                remove();
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.");
             } else {
                 alert("질문 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
             }

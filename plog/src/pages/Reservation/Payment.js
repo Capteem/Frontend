@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../../styles/Table.css';
+import remove from '../../assets/remove';
 
 function Payment() {
     const location = useLocation();
@@ -53,8 +54,9 @@ function Payment() {
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
-                alert("로그인 만료. 다시 로그인해주세요.");
+                remove();
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.");
               }else if (error.response && error.response.status === 500) {
                 alert("결제오류 다시 시도해주세요. ")
                 navigate(-1);
@@ -84,8 +86,9 @@ function Payment() {
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
-                alert("로그인 만료. 다시 로그인해주세요.");
+                remove();
                 navigate('/signin', { replace: true });
+                alert("로그인 만료. 다시 로그인해주세요.");
               } else {
                 console.error('결제 정보 가져오기 중 오류가 발생했습니다:', error);
             }

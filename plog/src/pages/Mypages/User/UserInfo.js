@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import '../../../styles/Table.css';
 import { useNavigate } from "react-router-dom";
+import remove from "../../../assets/remove";
 
 function UserInfo() {
   const [userInfo, setUserInfo] = useState({});
@@ -64,8 +65,9 @@ function UserInfo() {
       setInitialUserInfo({ ...response.data }); // Save the initial state
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         console.error('회원정보 가져오기에 실패하였습니다.', error);
       }
@@ -91,8 +93,9 @@ function UserInfo() {
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          alert("로그인 만료. 다시 로그인해주세요.");
+          remove();
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.");
         } else {
           console.error('비밀번호 확인에 실패하였습니다.', error);
         }
@@ -143,8 +146,9 @@ function UserInfo() {
       window.location.reload();
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         console.error('회원정보 수정에 실패하였습니다.', error);
       }
@@ -175,8 +179,9 @@ function UserInfo() {
         setNewPasswordReEnter('');
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          alert("로그인 만료. 다시 로그인해주세요.");
+          remove();
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.");
         } else {
           console.error('비밀번호 변경 중 오류가 발생했습니다.');
         }

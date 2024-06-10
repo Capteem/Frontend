@@ -33,15 +33,12 @@ function RegionSelect(){
     }
 
     useEffect(()=>{
-        console.log(checkArea);
         if((checkArea.finalArea === undefined || checkArea.finalArea === "") && (checkArea.finalSubArea == undefined || checkArea.finalSubArea == "")){
-            console.log("둘다");
             setSelectedArea("");
             setSelectedSubArea("");
             // setFinalArea("");
             // setFinalSubArea("");
         }else if(checkArea.finalArea !== undefined && (checkArea.finalSubArea === undefined || checkArea.finalSubArea === "")){
-            console.log("서브지역만");
             setSelectedSubArea("");
             // setFinalSubArea("");
         }

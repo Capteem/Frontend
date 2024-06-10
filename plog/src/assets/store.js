@@ -39,12 +39,26 @@ const sendReservation = createSlice({
         },
         changePhotographer(state, action){
             state.finalPhotographer = action.payload;
+
+            if(state.fianlStudio[0] === "" && state.finalPhotographer[0] === "" && 
+            state.finalHair[0] === ""){
+                state.finalArea = "";
+                state.finalSubarea = "";
+            }
         },
         changeHair(state, action){
             state.finalHair = action.payload;
+
+            if(state.fianlStudio[0] === "" && state.finalPhotographer[0] === "" && 
+            state.finalHair[0] === ""){
+                state.finalArea = "";
+                state.finalSubarea = "";
+            }
         },
         changeDate(state, action){
             state.finalDate = action.payload;
+            state.finalStartDate = action.payload;
+            state.finalEndDate = action.payload;
         },
         changeFinalStartDate(state, action){
             state.finalStartDate = action.payload;
@@ -71,6 +85,23 @@ export const {reset, changeStudio, changePhotographer, changeHair,
     changeDate, changeArea, changeSubarea, changeDateShow,
     changeFinalStartDate, changeFinalEndDate,changeFinalHours,
 } = sendReservation.actions;
+
+const galleryRedux = createSlice({
+    name : 'galleryRedux',
+	initialState : {
+        galleryRedux : false,
+    },
+    reducers : {
+        selectGallery(state){
+            state.galleryRedux = true;
+        },
+        notSelectGallery(state){
+            state.galleryRedux = false;
+        },
+    }
+})
+
+export const { selectGallery, notSelectGallery } = galleryRedux.actions;
 
 const includeDates = createSlice({
     name : 'includeDates',
@@ -130,39 +161,6 @@ const commonTimeList = createSlice({
 })
 export const {changeCommonTimeList} = commonTimeList.actions;
 
-// const includeArea = createSlice({
-//     name : 'includeArea',
-// 	initialState : {
-//         includeArea : [],
-//         length: 0,
-//     },
-//     reducers : {
-//         // changeincludeArea(state, action){
-//         //     const areaToAdd = action.payload;
-//         //     if (!state.includeArea.includes(areaToAdd) && areaToAdd !== "") {
-//         //         state.includeArea = [...state.includeArea, areaToAdd];
-//         //         state.length += 1;
-//         //     }
-//         // },
-//         // deleteArea(state, action){
-//         //     state.includeArea 
-//         //     = state.includeArea.filter((element) => element !== action.payload);
-//         // }
-//     }
-// })
-
-// export const {changeincludeArea, deleteArea} = includeArea.actions;
-
-// const includeSubArea = createSlice({
-//     name : 'includeSubArea',
-// 	initialState : {
-//         includeSubArea : [""],
-//     },
-//     reducers : {
-
-//     }
-// })
-
 export default configureStore({
 	reducer: { 
         sendReservation : sendReservation.reducer,
@@ -170,8 +168,7 @@ export default configureStore({
         includeTimes : includeTimes.reducer,
         includeDateList : includeDateList.reducer,
         commonTimeList : commonTimeList.reducer,
-
-        // includeArea : includeArea.reducer,
-        // includeSubArea : includeSubArea.reducer,
+        
+        galleryRedux : galleryRedux.reducer,
     }
 })

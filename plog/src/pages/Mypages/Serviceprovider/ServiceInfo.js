@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import remove from '../../../assets/remove';
+import { debounce } from 'lodash';
 
 import selectImage from '../../../assets/select-image.png';
 import addImg from '../../../assets/addImg.png';
@@ -66,11 +68,12 @@ function ServiceInfo(){
       }
     })
     .catch((error)=>{
-      if(error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+      if(error.response && error.response.status === 401){
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
       }else{
-        console.log(error);
+        console.log(error.response);
         console.log("정보 받기 실패");
       }
     })
@@ -86,9 +89,10 @@ function ServiceInfo(){
       repPhoto(result.data);      
     })
     .catch((error)=>{
-      if(error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+      if(error.response && error.response.status === 401){
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
       }else{
         console.log(error);
         console.log("정보 받기 실패");
@@ -109,8 +113,9 @@ function ServiceInfo(){
         if(error.response.status === 404){
             console.log("포트폴리오 존재 안함");
         } else if(error.response.status === 401){
-          alert("로그인 만료. 다시 로그인해주세요.")
+          remove();
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.")
         }else{
           console.log(error);
           console.log("정보 받기 실패");
@@ -139,9 +144,10 @@ function ServiceInfo(){
             reader.readAsDataURL(newFile); // 변환한 파일 객체를 넘기면 브라우저가 이미지를 볼 수 있는 링크가 생성됨
         })
         .catch((error)=>{
-          if(error.response.status === 401){
-            alert("로그인 만료. 다시 로그인해주세요.")
+          if(error.response && error.response.status === 401){
+            remove();
             navigate('/signin', { replace: true });
+            alert("로그인 만료. 다시 로그인해주세요.")
           }else{
             console.log("포폴 detail사진 재요청 에러");
             console.log(error);
@@ -171,8 +177,9 @@ function ServiceInfo(){
     })
     .catch((error)=>{
       if(error.response && error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
       }else{
         console.log("포폴 detail사진 재요청 에러");
         console.log(error);
@@ -214,6 +221,7 @@ function ServiceInfo(){
       })
       .catch((error)=>{
         if(error.response && error.response.status === 401){
+          remove();
           navigate('/signin', { replace: true });
           alert("로그인 만료. 다시 로그인해주세요.");
         }else{
@@ -255,9 +263,10 @@ function ServiceInfo(){
           }
       })
       .catch((error)=>{
-        if(error.response.status === 401){
-          alert("로그인 만료. 다시 로그인해주세요.")
+        if(error.response && error.response.status === 401){
+          remove();
           navigate('/signin', { replace: true });
+          alert("로그인 만료. 다시 로그인해주세요.")
         }else{
             console.log(error);
         }
@@ -280,9 +289,10 @@ function ServiceInfo(){
         setImageURL(tmp);
     })
     .catch((error) => {
-      if(error.response.status === 401){
-        alert("로그인 만료. 다시 로그인해주세요.")
+      if(error.response && error.response.status === 401){
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
       }else{
           console.log(error);
       }
@@ -448,6 +458,11 @@ function ServiceInfo(){
       console.log(result);
     })
     .catch((error)=>{
+      if(error.response && error.response.status === 401){
+        remove();
+        navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.")
+      }
       console.log(error);
     })
   }
@@ -579,6 +594,10 @@ function ServiceInfo(){
     })
   }
 
+  useEffect(()=>{
+    console.log(timeCheck);
+  },[timeCheck])
+
 
   const [checkChangeInfo, setCheckChangeInfo] = useState(false);
   const [tmpserviceName, settmpServiceName] = useState("");
@@ -605,6 +624,7 @@ function ServiceInfo(){
       })
       .catch((error)=>{
         if(error.response && error.response.status === 401){
+          remove();
           navigate('/signin', { replace: true });
           alert("로그인 만료. 다시 로그인해주세요.")
         }else{
@@ -616,6 +636,26 @@ function ServiceInfo(){
 
     }
   }
+
+  //화면 크기 담는 state
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(()=>{
+    window.addEventListener('resize', handleResize);
+    return()=>{
+        window.removeEventListener('resize', handleResize);
+    };
+  },[]);
+
+  const handleResize = debounce(()=>{
+    setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+  }, 1000);
 
   const [imgRemove, setImgRemove] = useState(true);
   return (
@@ -717,7 +757,8 @@ function ServiceInfo(){
                     chagneTimeSelect(index);
                   }}>{item}</button>
                 }
-                {index != 0 && index % 7 === 0 ? <br/> : null}
+
+                {windowSize.width > 550 ? index !== 0 ? index % 7 === 0 ? <br/> : null : null : null}
               </>
           )})
         }</div>      
@@ -781,13 +822,11 @@ function ServiceInfo(){
                 console.log("수정완료 버튼 클릭");
                 checkBeforeSend();
               }}>수정 완료</button>
-              <button className='information-finish-button'>서비스 삭제</button>
           </div>
         }
       </div>
     </div>
   );
 }
-
 
 export default ServiceInfo;

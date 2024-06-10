@@ -8,23 +8,39 @@ import { useDispatch, useSelector } from "react-redux"
 import {changeStudio, changePhotographer, changeHair, 
     changeArea, changeSubarea, changeCommonTimeList} from '../../assets/store.js';
 
+import remove from '../../assets/remove.js';
+import Photo from './PhotoOne.js';
 import { debounce } from 'lodash';
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
+import { TiPhoneOutline } from "react-icons/ti";
+import { IoLocationOutline } from "react-icons/io5";
+import { LiaWonSignSolid } from "react-icons/lia";
 
-
-import '../../styles/ImageGallery.css'; // CSS 파일 import
+// CSS 파일 import
+import '../../styles/ImageGallery.css';
 import '../../styles/review.css'
-import '../../styles/shoppingBag.css'
 import '../../styles/shoppingBag.css'
 import shoppingBag from '../../assets/shoppingBag.jpg'
 import noReview from '../../assets/noReview.png'
 
 function PortfolioEnd(props){
 
-    const navigate = useNavigate();
+    const [checkAlert, setCheckAlert] = useState(true);
+    // const [tmp, setTmp] = useState(0);
+    useEffect(()=>{
+        if(checkAlert === false){
+            alert("로그인 만료. 다시 로그인해주세요.");
+            console.log("클릭")
+            // setTmp(1);
+        }
+    },[checkAlert])
 
+    const navigate = useNavigate();
+    const [providerId, setProviderId] = useState(null);
+    const [providerName, setProviderName] = useState(null);
+    const [Id, setID] = useState(null);
     //화면 크기 담는 state
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
@@ -62,15 +78,26 @@ function PortfolioEnd(props){
     const dispatch = useDispatch();
     const checkSelect = useSelector((state)=>state.sendReservation);
 
+    const [windowChange, setWindowChange] = useState(false);
     //서버한테 제공자들 데이터 받아옴
+    const [reload, setReload] = useState(false);
     useEffect(()=>{
+        reloadForGallery();
+        setReload(!reload);
+    },[props.sendToPortfolio]);
+
+    useEffect(()=>{
+        reloadForGallery();
+    },[reload]);
+
+    function reloadForGallery(){
         initialSetting(props.sendToPortfolio);
         setProviderAll(props.sendToPortfolio);
         getRep(props.sendToPortfolio);
-    },[props.sendToPortfolio]);
+        setWindowChange(!windowChange);
+    }
 
     function initialSetting(props){
-        console.log("initialSetting 실행");
         const studioTmp = [];
         const photoTmp = [];
         const hmTmp = [];
@@ -85,7 +112,6 @@ function PortfolioEnd(props){
             }
         })
     
-        console.log(studioTmp);
         setServerStudio(studioTmp);
         setServerPhoto(photoTmp);
         setServerHM(hmTmp);
@@ -94,34 +120,29 @@ function PortfolioEnd(props){
         setShowHM(hmTmp);
     }
 
-    useEffect(()=>{
-        console.log(showStudio);
-        console.log(serverStudio);
-    },[showStudio])
-
     //여기서부턴 날짜, 지역 선택 시
     useEffect(()=>{
         console.log("날짜 지역 선택");
+        reloadGalleryRegion();
+    },[checkSelect.finalDate, checkSelect.finalArea, checkSelect.finalSubarea, checkSelect, serverStudio, serverPhoto, serverHM])
+
+    function reloadGalleryRegion(){
         settingShowStudio(serverStudio);
         settingShowPhoto(serverPhoto);
         settingShowHM(serverHM);
         changeClick(0);
         setShow([]);
-    },[checkSelect.finalDate, checkSelect.finalArea, checkSelect.finalSubarea])
+    }
 
     function settingShowStudio(props){
-        console.log(props);
         const filteredData = props.filter(item => {
             return (checkDate(item.dateList) || checkSelect.finalDate === '') 
             && (item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
-
-        console.log(showStudio);
         setShowStudio(filteredData);
     }
-    function settingShowPhoto(props){
-
+    function settingShowPhoto(props){;
         const filteredData = props.filter(item => {
             return (checkDate(item.dateList) || checkSelect.finalDate === '') 
             && (item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
@@ -131,13 +152,12 @@ function PortfolioEnd(props){
         setShowPhoto(filteredData);
     }
     function settingShowHM(props){
-
         const filteredData = props.filter(item => {
             return ( checkDate(item.dateList) || checkSelect.finalDate === "") 
             &&(item.providerArea === checkSelect.finalArea || checkSelect.finalArea === "") 
             && (item.providerSubArea === checkSelect.finalSubarea || checkSelect.finalSubarea === "");
         });
-
+;
         setShowHM(filteredData);
     }
     function checkDate(props){
@@ -239,7 +259,8 @@ function PortfolioEnd(props){
         }else if(props.selectNum === 3){
             setShow(showStudio); 
         }
-    }, [serverStudio, serverPhoto, serverHM, showPhoto, showHM, showStudio, checkSelect.finalDate, click])
+
+    }, [serverStudio, serverPhoto, serverHM, showPhoto, showHM, showStudio, checkSelect.finalDate, props, windowChange, checkSelect.finalArea, checkSelect.finalSubarea])
     useEffect(()=>{
         setClick(prevClick => ({
             ...prevClick, // 이전 상태를 복사
@@ -349,11 +370,12 @@ function PortfolioEnd(props){
         })
         .catch((error)=>{
             if(error.response && error.response.status === 404){
-                // console.log("포트폴리오 존재 안함");
+                console.log("포트폴리오 존재 안함");
             }
             else if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
-                alert("로그인 만료. 다시 로그인해주세요.")
+                setCheckAlert(false);
             }else{
                 // console.log(error);
             }
@@ -384,11 +406,12 @@ function PortfolioEnd(props){
             })
             .catch((error)=>{
                 if(error.response && error.response.status === 401){
+                    remove();
                     navigate('/signin', { replace: true });
-                    alert("로그인 만료. 다시 로그인해주세요.")
+                    setCheckAlert(false);
                 }else{
-                    console.log("포폴 detail사진 재요청 에러");
-                    console.log(error);
+                    // console.log("포폴 detail사진 재요청 에러");
+                    // console.log(error);
                 }
             })
         })
@@ -416,11 +439,12 @@ function PortfolioEnd(props){
             })
             .catch((error)=>{
                 if(error.response && error.response.status === 401){
+                    remove();
                     navigate('/signin', { replace: true });
-                    alert("로그인 만료. 다시 로그인해주세요.")
+                    setCheckAlert(false);
                 }else{
-                    console.log("대표사진 요청 에러");
-                    console.log(error);
+                    // console.log("대표사진 요청 에러");
+                    // console.log(error);
                 }
             })
 
@@ -438,13 +462,17 @@ function PortfolioEnd(props){
             },
         })
         .then((result)=>{
-            setDetailReview(result.data.reviewList);
-            calculateScore(result.data.reviewList);      
+            calculateScore(result.data.reviewList);  
+
+            let tmp = result.data.reviewList;
+            tmp.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate));
+            setDetailReview(tmp);    
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
-                alert("로그인 만료. 다시 로그인해주세요.")
+                setCheckAlert(false);
             }else{
                 // console.log("review받기 실패");
                 // console.log(error);
@@ -463,10 +491,27 @@ function PortfolioEnd(props){
     }
 
     const [imgReview, setImgReview] = useState(true)
+
+    const handleChatButtonClick = () => {
+        const userId = localStorage.getItem('userId');
+        if(userId === Id){
+            alert("본인의 서비스와 채팅할 수 없습니다.");
+        }
+        else{
+        navigate(`/chattingroom?userId=${userId}&providerId=${providerId}&providerName=${providerName}&role=USER`);}
+      };
+
+    function handleClickPhoto(value){
+        getDetail(value);
+        getReview(value);
+        setModalShow(true);
+        setID(value.userId);
+        setProviderId(value.providerId);
+        setProviderName(value.providerName);
+    }
+
     return(
         <>
-        {/* {console.log(show)} */}
-        {/* {console.log(showStudio)} */}
             {windowSize.width > 850 ?
                 <div>
                     {click.studioClick === false ? <button className='portfolio-button' onClick={()=>{changeClick(3); setShow(showStudio);}}>스튜디오</button> :
@@ -503,14 +548,28 @@ function PortfolioEnd(props){
                             let item = repPhoto.find(photo => photo.id === value.providerId);
                             let url = item ? item.url : null;
                             return(
-                                <div style={{padding:1}}>
+                                <div key={index} style={{padding:1, objectFit:'cover'}}>
                                 <div className='image-container-change'>
-                                    <img key={index} src={url} onClick={()=>{
-                                        getDetail(value);   //모달창에 보여주기 위한 세부정보
-                                        getReview(value);
-                                        setModalShow(true);
-                                    }}/>
-                                    <div className='provider-name-change'>{value.providerName}</div>
+                                    {/* {
+                                        url === null ? <img  src={noReview} /> :
+                                        <img key={index} src={url} onClick={()=>{
+                                            getDetail(value);   //모달창에 보여주기 위한 세부정보
+                                            getReview(value);
+                                            setModalShow(true);
+                                            setID(value.userId);
+                                            setProviderId(value.providerId);
+                                            setProviderName(value.providerName);
+                                        }}/>
+                                    }
+
+                                    <div className='provider-name-change'>{value.providerName}</div> */}
+
+                                    <Photo style={{objectFit:'cover', border:100}} src={url} providername={value.providerName}
+                                        onClick={()=>{
+                                            console.log("클릭");
+                                            handleClickPhoto(value);
+                                        }}
+                                    />
                                 </div>
                                 </div>
                             )
@@ -521,13 +580,13 @@ function PortfolioEnd(props){
             }
             {
                 modalShow &&
-                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setScore(0);}}>
+                <div className='portfolio-modal' onClick={()=>{setModalShow(false); setProviderId(null); setProviderName(null); setID(null); setScore(0); setImgReview(true);}}>
                     <div className='portfolio-modalBody' onClick={(event)=>{event.stopPropagation(); setModalShow(true);}}>
                         <pre className='portfolio-modal-text'>
-                            이름 : {detail.providerName}<br/>
-                            문의 번호 : {detail.providerPhone}<br/>
-                            위치 : {detail.providerArea} {detail.providerSubArea} {detail.providerDetailArea}<br/>
-                            가격 : {detail.providerPrice}<br/>
+                        <div style={{fontWeight:700, fontSize:18}}>{detail.providerName}</div>
+                            <TiPhoneOutline style={{fontSize:15, color:'#456547'}}/> {detail.providerPhone}<br/>
+                            <IoLocationOutline style={{fontSize:15, color:'#456547'}}/> {detail.providerArea} {detail.providerSubArea} {detail.providerDetailArea}<br/>
+                            <LiaWonSignSolid style={{fontSize:15, color:'#456547'}}/> {detail.providerPrice}<br/>
                         </pre>
 
                         {
@@ -553,6 +612,13 @@ function PortfolioEnd(props){
                                     </div>
                                 )
                             })
+                        }
+
+                        {(!detailPhoto) &&
+                            <div className='shoppingBag-none'>
+                                <img style={{width:150, height:150}} className='shoppingBag-noneBag' src={noReview}/>
+                                <div className='shoppingBag-noneText'>등록된 사진이 없습니다.</div>
+                            </div>
                         }
                         </div>
                         }
@@ -613,11 +679,18 @@ function PortfolioEnd(props){
                         }
 
                         <div className='portfolio-selection'>
-                            <button className='portfolio-chatting-button'>채팅</button>
+                             <button className='portfolio-chatting-button'
+                                onClick={handleChatButtonClick}
+                             >
+                                채팅
+                            </button>
                             <button className='portfolio-selection-button' onClick={(event)=>{
                                 event.stopPropagation();
                                 setFinal(detail, detail.providerType);
                                 setModalShow(false);
+                                setProviderId(null);
+                                setProviderName(null);
+                                setID(null);
                                 setScore(0);
                             }}>선택</button>
                         </div>

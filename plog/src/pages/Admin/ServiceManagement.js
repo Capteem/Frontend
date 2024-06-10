@@ -7,6 +7,7 @@ import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import { IoSearch } from "react-icons/io5";
 import NoData from '../../assets/noReview.png';
+import remove from '../../assets/remove';
 
 Modal.setAppElement('#root');
 
@@ -63,8 +64,9 @@ function ServiceManagement() {
       } 
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         console.error('서비스리스트 가져오기에 실패하였습니다.', error);
       }
@@ -102,8 +104,9 @@ function ServiceManagement() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } 
       else if (error.response && error.response.status === 400) {
         alert('서비스 상태 변경을 실패하였습니다.');
@@ -175,8 +178,9 @@ function ServiceManagement() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         console.error('이미지정보 가져오기에 실패하였습니다.', error);
       }

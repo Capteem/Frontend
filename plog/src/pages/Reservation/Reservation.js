@@ -6,6 +6,7 @@ import PortfolioEnd from '../../components/Reservations/PortfolioEnd.js';
 import { debounce } from 'lodash';
 import { Cookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import remove from '../../assets/remove.js';
 
 import axios from 'axios'
 
@@ -14,12 +15,15 @@ import Accordion from 'react-bootstrap/Accordion';
 
 //Redux
 import { useDispatch, useSelector } from "react-redux"
-import {reset, changeStudio, changePhotographer, changeHair, changeArea, changeSubarea, changeDate, changeDateShow} from '../../assets/store.js';
+import {reset, changeStudio, changePhotographer, changeHair, changeArea, 
+    changeSubarea, changeDate, changeDateShow, notSelectGallery} from '../../assets/store.js';
 
 
 //css
 import '../../styles/reserve.css'
 import '../../styles/Table.css';
+import { MdDeleteForever  } from "react-icons/md";
+import { TbCurrencyWon } from "react-icons/tb";
 
 // todo: 로그인 했는지 확인
 function Reservation(){
@@ -31,15 +35,23 @@ function Reservation(){
         if(!token){
             navigate('/');
         }
-    },[navigate])
-
+    },[navigate]);
 
     //여기서부터 수정중
     const [sendToPortfolio, setSendToPortfolio] = useState([]);
+    let checkGallery = useSelector((state)=>state.galleryRedux);
     //서버한테 제공자들 데이터 받아옴
     useEffect(()=>{
-        console.log("실행");
-        dispatch(reset());
+        // console.log("실행");
+        // console.log(checkFinal);
+        // if(checkGallery.galleryRedux === false){
+        //     dispatch(reset());
+        // }else{
+        //     dispatch(notSelectGallery());
+        // }
+
+        console.log(checkGallery.galleryRedux === false);
+
         axios.get(`${process.env.REACT_APP_URL}/service/confirmed`,
             {
                 headers:{
@@ -48,12 +60,13 @@ function Reservation(){
             }
         )
         .then(function(result){
-            console.log(result.data);
+            // console.log(result.data);
             const tmp = result.data;;
             setSendToPortfolio(tmp);
         })
         .catch((error)=>{
             if(error.response && error.response.status === 401){
+                remove();
                 navigate('/signin', { replace: true });
                 alert("로그인 만료. 다시 로그인해주세요.")
             }else{
@@ -71,6 +84,9 @@ function Reservation(){
     function checkSelect(){
         if(checkFinal.finalDate === ""){
             alert("날짜를 선택하세요.");
+            return false;
+        } else if(checkFinal.finalHours === 0){
+            alert("시간을 선택하세요.");
             return false;
         } else if(checkFinal.fianlStudio[0] === "" && checkFinal.finalPhotographer[0] === "" && 
         checkFinal.finalHair[0] === ""){
@@ -143,6 +159,7 @@ function Reservation(){
         height: window.innerHeight,
     });
 
+
     useEffect(()=>{
         window.addEventListener('resize', handleResize);
         return()=>{
@@ -181,9 +198,31 @@ function Reservation(){
         navigate('/payment', { state: { sendList } });
     }
 
+    const [showStartTime, setShowStartTime] = useState([]);
+    const [showEndTime, setShowEndTime] = useState([]);
+
+    useEffect(()=>{
+        console.log(checkFinal.finalStartDate);
+
+        if(checkFinal.finalStartDate !== ''){
+            let tmp = checkFinal.finalStartDate.split("T");
+            let tmpTime = tmp[1].split(":");
+
+            setShowStartTime(tmpTime[0]);
+        }
+        if(checkFinal.finalEndDate !== ''){
+            let tmp = checkFinal.finalEndDate.split("T");
+            let tmpTime = tmp[1].split(":");
+
+            setShowEndTime(tmpTime[0]);
+        }
+
+    },[checkFinal.finalStartDate, checkFinal.finalEndDate])
+
     return(
 
         <div className='reservation-start-container'>
+            {/* 850 */}
             {windowSize.width > 850 ?
                 <div className="reservation-container">
                     <div className="calendar">
@@ -196,56 +235,83 @@ function Reservation(){
                     <div className="selection">
                         <div>
                             <h6 className='reservation-h6'><b>날짜</b></h6>
-                            <span className='reservation-align'>
-                                {checkFinal.finalDateShow}
+                            <span className={`reservation-align ${checkFinal.finalDateShow === '' ? 'reservation-align-left' : ''}`}>
+                                <span style={{fontSize:13}}>{checkFinal.finalDateShow} {(checkFinal.finalStartDate !== '' && checkFinal.finalHours !== 0) ? 
+                                    checkFinal.finalEndDate !== '' ? <span style={{fontSize:13}}>({showStartTime}시-{showEndTime}시)</span> 
+                                    : <span style={{fontSize:13}}>({showStartTime})</span> : null}</span>
                                 {checkFinal.finalDateShow === '' ? <span className='reservation-not-selected'>미선택</span> : 
-                                    <button className='reservation-x-button'
-                                        onClick={()=>{ dispatch(changeDate("")); dispatch(changeDateShow(''));}}
-                                >x</button>}
+                                    <MdDeleteForever 
+                                        style={{
+                                            color:'#69876b',
+                                            marginLeft:3,
+                                            marginBottom:3,
+                                        }}
+                                        onClick={()=>{ dispatch(changeDate("")); dispatch(changeDateShow('')); }}
+                                    />}
                             </span>
                         </div>
     
                         <div>
                             <h6 className='reservation-h6'><b>스튜디오</b></h6>
-                            <span className='reservation-align'>
-                                {checkFinal.fianlStudio.providerName}
-                                {checkFinal.fianlStudio.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : <button
-                                    className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeStudio([""]));}}
-                                >x</button>}
+                            <span className={`reservation-align ${checkFinal.fianlStudio[0] === '' ? 'reservation-align-left' : ''}`}>
+                                <span style={{fontSize:13}}>{checkFinal.fianlStudio.providerName}</span>
+                                {checkFinal.fianlStudio.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : 
+                                <MdDeleteForever 
+                                    style={{
+                                        color:'#69876b',
+                                        marginLeft:3,
+                                        marginBottom:3,
+                                    }}
+                                    onClick={()=>{ dispatch(changeStudio([""])); }}
+                                />}
                             </span>
                         </div>
         
                         <div>
                             <h6 className='reservation-h6'><b>사진작가</b></h6>
-                            <span className='reservation-align'>
-                                {checkFinal.finalPhotographer.providerName}
-                                {checkFinal.finalPhotographer.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : <button
-                                    className='reservation-x-button'
-                                    onClick={()=>{dispatch(changePhotographer([""]));}}
-                                >x</button>}
+                            <span className={`reservation-align ${checkFinal.finalPhotographer[0] === '' ? 'reservation-align-left' : ''}`}>
+                                <span style={{fontSize:13}}>{checkFinal.finalPhotographer.providerName}</span>
+                                {checkFinal.finalPhotographer.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : 
+                                    <MdDeleteForever 
+                                        style={{
+                                            color:'#69876b',
+                                            marginLeft:3,
+                                            marginBottom:3,
+                                        }}
+                                        onClick={()=>{ dispatch(changePhotographer([""])); }}
+                                />}
                             </span>
                         </div>
         
                         <div>
                             <h6 className='reservation-h6'><b>헤어 메이크업</b></h6>
-                            <span className='reservation-align'>
-                                {checkFinal.finalHair.providerName}
-                                {checkFinal.finalHair.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : <button
-                                    className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeHair([""]));}}
-                                >x</button>}
+                            <span className={`reservation-align ${checkFinal.finalHair[0] === '' ? 'reservation-align-left' : ''}`}>
+                                <span style={{fontSize:13}}>{checkFinal.finalHair.providerName}</span>
+                                {checkFinal.finalHair.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : 
+                                    <MdDeleteForever 
+                                        style={{
+                                            color:'#69876b',
+                                            marginLeft:3,
+                                            marginBottom:3,
+                                        }}
+                                        onClick={()=>{ dispatch(changeHair([""])); }}
+                                />}
                             </span>
                         </div>
         
                         <div>
                             <h6 className='reservation-h6'><b>지역</b></h6>
-                            <span className='reservation-align'>
-                                {checkFinal.finalArea} {checkFinal.finalSubarea}
-                                {checkFinal.finalArea === "" ? <span className='reservation-not-selected'>미선택</span> : <button
-                                    className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeArea("")); dispatch(changeSubarea(""));}}
-                                >x</button>}
+                            <span className={`reservation-align ${checkFinal.finalArea === '' ? 'reservation-align-left' : ''}`}>
+                                <span style={{fontSize:13}}>{checkFinal.finalArea} {checkFinal.finalSubarea}</span>
+                                {checkFinal.finalArea === "" ? <span className='reservation-not-selected'>미선택</span> : 
+                                    <MdDeleteForever 
+                                        style={{
+                                            color:'#69876b',
+                                            marginLeft:3,
+                                            marginBottom:3,
+                                        }}
+                                        onClick={()=>{ dispatch(changeArea("")); dispatch(changeSubarea("")); }}
+                                />}
                             </span>
                         </div>
 
@@ -254,15 +320,26 @@ function Reservation(){
                         <br/>
                         <br/>
                         <div className='reservation-price'>
-                            {isNaN(price) ? <>총가격:0원</> :
-                                <>총가격:{price}원</>
-                            }
+                        {isNaN(price) ? <div style={{
+                                marginTop:5,
+                                marginBottom:5,
+                                fontWeight:700,
+                                fontSize:20
+                            }}><TbCurrencyWon style={{fontSize:30, marginBottom:3}}/> 0</div> :
+                            <div style={{
+                                marginTop:5,
+                                marginBottom:5,
+                                fontWeight:700,
+                                fontSize:20
+                            }}><TbCurrencyWon style={{fontSize:30, marginBottom:3}}/> {price}</div>
+                        }
                         </div>
                         <div className='reservation-caculate-design'>
                         <button className='calculate-button' onClick={()=>{
                             if(checkSelect()){
                                 setmMdalShoppingShow(true);
                             }
+                            setmMdalShoppingShow(true);
                         }}>장바구니</button>
                         <button className='calculate-button'
                             onClick={()=>{
@@ -279,11 +356,18 @@ function Reservation(){
                     <Accordion defaultActiveKey="0">
                         <Accordion.Item eventKey="0">
                             <Accordion.Header>
-                                날짜:{checkFinal.finalDateShow} 
-                                    {checkFinal.finalDateShow === '' ? "미선택" : <button
-                                        className='reservation-x-button'
+                                <span className='reservation-category'>날짜 </span> <span style={{fontSize:13, color:'#69876b'}}>{checkFinal.finalDateShow} {(checkFinal.finalStartDate !== '' && checkFinal.finalHours !== 0) ? 
+                                    checkFinal.finalEndDate !== '' ? <span style={{fontSize:13, color:'#69876b'}}>({showStartTime}시-{showEndTime}시)</span> 
+                                    : <span style={{fontSize:13}}>({showStartTime})</span> : null}</span>
+                                    {checkFinal.finalDateShow === '' ? null : 
+                                    <MdDeleteForever 
+                                        style={{
+                                            color:'#69876b',
+                                            marginLeft:3,
+                                            marginBottom:3,
+                                        }}
                                         onClick={()=>{ dispatch(changeDate("")); dispatch(changeDateShow(''));}}
-                                    >x</button>}
+                                    />}
                             </Accordion.Header>
                             <Accordion.Body>
                                 <Calendar/>
@@ -293,11 +377,16 @@ function Reservation(){
 
                         <Accordion.Item eventKey="1">
                             <Accordion.Header onClick={()=>{setSelectNum(3);}}>
-                                스튜디오:{checkFinal.fianlStudio.providerName}
-                                {checkFinal.fianlStudio.providerName === undefined ? null : <button
-                                    className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeStudio([""]));}}
-                                >x</button>}
+                                <span className='reservation-category'>스튜디오 </span> <span style={{fontSize:13, color:'#69876b'}}>{checkFinal.fianlStudio.providerName}</span>
+                                {checkFinal.fianlStudio.providerName === undefined ? null : 
+                                <MdDeleteForever 
+                                    style={{
+                                        color:'#69876b',
+                                        marginLeft:3,
+                                        marginBottom:3,
+                                    }}
+                                    onClick={()=>{ dispatch(changeStudio([""]));}}
+                                />}
                             </Accordion.Header>
                             <Accordion.Body>
                                 <PortfolioEnd sendToPortfolio={sendToPortfolio} selectNum={3}/>
@@ -306,11 +395,16 @@ function Reservation(){
 
                         <Accordion.Item eventKey="2">
                             <Accordion.Header onClick={()=>{setSelectNum(1)}}>
-                                사진작가:{checkFinal.finalPhotographer.providerName}
-                                {checkFinal.finalPhotographer.providerName === undefined ? null : <button
-                                    className='reservation-x-button'
-                                    onClick={()=>{dispatch(changePhotographer([""]));}}
-                                >x</button>}
+                            <span className='reservation-category'>사진작가 </span> <span style={{fontSize:13, color:'#69876b'}}>{checkFinal.finalPhotographer.providerName}</span>
+                                {checkFinal.finalPhotographer.providerName === undefined ? null : 
+                                    <MdDeleteForever 
+                                        style={{
+                                            color:'#69876b',
+                                            marginLeft:3,
+                                            marginBottom:3,
+                                        }}
+                                        onClick={()=>{ dispatch(changePhotographer([""]));}}
+                                    />}
                             </Accordion.Header>
                             <Accordion.Body>
                                 <PortfolioEnd sendToPortfolio={sendToPortfolio} selectNum={1}/>
@@ -319,11 +413,16 @@ function Reservation(){
 
                         <Accordion.Item eventKey="3">
                             <Accordion.Header onClick={()=>{setSelectNum(2)}}>
-                                헤메:{checkFinal.finalHair.providerName}
-                                {checkFinal.finalHair.providerName === undefined ? null : <button
-                                    className='reservation-x-button'
-                                    onClick={()=>{dispatch(changeHair([""]));}}
-                                >x</button>}
+                                <span className='reservation-category'>헤메 </span> <span style={{fontSize:13, color:'#69876b'}}>{checkFinal.finalHair.providerName}</span>
+                                {checkFinal.finalHair.providerName === undefined ? null : 
+                                    <MdDeleteForever 
+                                        style={{
+                                            color:'#69876b',
+                                            marginLeft:3,
+                                            marginBottom:3,
+                                        }}
+                                        onClick={()=>{ dispatch(changeHair([""]));}}
+                                    />}
                             </Accordion.Header>
                             <Accordion.Body>
                                 <PortfolioEnd sendToPortfolio={sendToPortfolio} selectNum={2}/>
@@ -331,8 +430,18 @@ function Reservation(){
                         </Accordion.Item>
                     </Accordion>
 
-                    {isNaN(price) ? <h3>총가격:0원</h3> :
-                        <h3>총가격:{price}원</h3>
+                    {isNaN(price) ? <div style={{
+                            marginTop:5,
+                            marginBottom:5,
+                            fontWeight:700,
+                            fontSize:18
+                        }}><TbCurrencyWon style={{fontSize:25, marginBottom:3}}/> 0</div> :
+                        <div style={{
+                            marginTop:5,
+                            marginBottom:5,
+                            fontWeight:700,
+                            fontSize:18
+                        }}><TbCurrencyWon style={{fontSize:25, marginBottom:3}}/> {price}</div>
                     }
                     <button className='calculate-button' onClick={()=>{
                         if(checkSelect()){
@@ -366,6 +475,8 @@ function Reservation(){
                                         <th>날짜</th>
                                         <td>
                                             {checkFinal.finalDateShow}
+                                            {windowSize.width > 450 ? null : <br />}
+                                            ({showStartTime}시-{showEndTime}시)
                                             {checkFinal.finalDateShow === '' ? <span className='reservation-not-selected'>미선택</span> : null}
                                         </td>
                                     </tr>
@@ -384,7 +495,7 @@ function Reservation(){
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>헤어 메이크업</th>
+                                        <th>헤.메</th>
                                         <td>
                                             {checkFinal.finalHair.providerName}
                                             {checkFinal.finalHair.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}
@@ -432,7 +543,9 @@ function Reservation(){
                                     <tr>
                                         <th>날짜</th>
                                         <td>
-                                            {checkFinal.finalDateShow}
+                                            {checkFinal.finalDateShow} 
+                                            {windowSize.width > 450 ? null : <br />}
+                                            ({showStartTime}시-{showEndTime}시)
                                             {checkFinal.finalDateShow === '' ? <span className='reservation-not-selected'>미선택</span> : null}
                                         </td>
                                     </tr>
@@ -451,7 +564,7 @@ function Reservation(){
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>헤어 메이크업</th>
+                                        <th>헤.메</th>
                                         <td>
                                             {checkFinal.finalHair.providerName}
                                             {checkFinal.finalHair.providerName === undefined ? <span className='reservation-not-selected'>미선택</span> : null}

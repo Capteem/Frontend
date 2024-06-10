@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { NavLink, useNavigate } from "react-router-dom";
 import {Cookies} from 'react-cookie';
 
+import remove from '../../assets/remove';
+
 import '../../styles/Nav.css';
 import '../../styles/smallModal.css';
 import Plog from './../../assets/Ploglogo.png'
@@ -90,7 +92,7 @@ function SmallNav() {
                           <Link to="/mypage/viewreservation" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/viewreservation');}}><FaList/> 예약 내역</Link>
                           <Link to="/mypage/shoppingbag" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/shoppingbag');}}><FaShoppingBag/> 장바구니</Link>
                           <Link to="/mypage/reviewlist" onClick={()=>{ setMyPage(false); handleNavigation('/mypage/reviewlist');}}><MdOutlineRateReview/> 리뷰 관리</Link>
-                          <Link to={`/servicelist/chatlist?userId=${userId}`} onClick={()=>{handleNavigation(`/servicelist/chatlist?userId=${userId}`);}}><IoChatboxEllipses/> 1:1 채팅</Link>
+                          <Link to={`/chatlist?userId=${userId}`} onClick={()=>{setMyPage(false); handleNavigation(`/chatlist?userId=${userId}`);}}><IoChatboxEllipses/> 1:1 채팅</Link>
                             {role === "PROVIDER" && (
                               <Link to="/mypage/servicelist" style={{ backgroundColor : "#efbb54", borderRadius : "0px 0px 15px 15px"}}
                               onClick={()=>{ setMyPage(false); handleNavigation('/mypage/servicelist');}}>서비스 리스트</Link>
@@ -123,7 +125,7 @@ function SmallNav() {
                 로그아웃하면 장바구니 내역이 삭제됩니다
               </div>
               <button className='small-modal-button' onClick={()=>{
-                removeToken();
+                remove();
                 navigate("/");
                 setCheckLogin(false);
                 setModalShow(false);
@@ -137,15 +139,5 @@ function SmallNav() {
   );
 }
 
-//로그아웃 토큰 다 삭제
-//todo: 장바구니 삭제
-function removeToken(){
-  const cookies = new Cookies();
-  localStorage.removeItem('accesToken');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('role');
-  localStorage.removeItem('userNickname');
-  cookies.remove('tmpBag');
-}
 
 export default SmallNav;

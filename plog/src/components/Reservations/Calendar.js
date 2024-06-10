@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import DatePicker, {registerLocale} from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
-import { setHours, setMinutes, addDays, subDays, getMonth, getYear } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
+import { debounce } from 'lodash';
 
 //redux
 import {changeDate, changeDateShow, changeFinalStartDate, changeFinalEndDate} from '../../assets/store.js';
@@ -52,14 +53,13 @@ function Calendar(){
     }, [finalDate]);
 
     useEffect(()=>{
-        console.log(checkFinal.finalDate);
-        if(checkFinal.finalDate === undefined || checkFinal.finalDate === ""){
+        if(checkFinal.finalStartDate === ''){
             setCheckTimeSelect([
                 false, false, false, false, false, false, false, false,
                 false, false, false, false, false, false, false, false,
             ]);
         }
-    },[checkFinal.finalDate])
+    },[checkFinal.finalStartDate])
 
     function handleButton(index){
         if(handlebutton1 === 100){
@@ -90,6 +90,28 @@ function Calendar(){
         changeFormForIncludeDateList();
     },[handlebutton1, handlebutton2])
     //시간 선택 체크
+
+    useEffect(()=>{
+        if(checkFinal.finalStartDate !== '' && checkFinal.finalHours !== 0){
+            if(checkFinal.finalEndDate !== ''){
+                let tmp = checkFinal.finalEndDate.split("T");
+                let tmpTime = tmp[1].split(':').slice(0, -1).join(':');
+
+                console.log(tmp[1]);
+                setHandlebutton2(times.indexOf(tmpTime));
+            }
+
+            let tmp = checkFinal.finalStartDate.split("T");
+            let tmpTime = tmp[1].split(':').slice(0, -1).join(':');
+            setHandlebutton1(times.indexOf(tmpTime) - 1);
+        }
+
+        if(checkFinal.finalStartDate !== ''){
+            let tmp = new Date(checkFinal.finalStartDate);
+            settingbutton(tmp);
+            setStartDate(tmp);
+        }
+    },[])
 
     //includeDateList에 저장할 포맷
     function changeFormForIncludeDateList(){
@@ -130,6 +152,7 @@ function Calendar(){
             };
             dispatch(changeIncludeDateList(list));
 
+            console.log(handlebutton2);
             const tmpTimeTwo = times[handlebutton2].split(":");
             const tmpHoursTwo = tmpTimeTwo[0].toString().padStart(2, '0') + ":00:00";
 
@@ -270,6 +293,26 @@ function Calendar(){
     ]
     //여기까지 달력 커스텀
 
+    //화면 크기 담는 state
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+
+    useEffect(()=>{
+        window.addEventListener('resize', handleResize);
+        return()=>{
+            window.removeEventListener('resize', handleResize);
+        };
+    },[]);
+
+    const handleResize = debounce(()=>{
+        setWindowSize({
+            width: window.innerWidth,
+            height: window.innerHeight,
+        });
+    }, 1000);
+
     return(
         <div>
             <DatePicker     
@@ -320,9 +363,8 @@ function Calendar(){
                     }
                     return(
                         <>
-                            {
-                                (index) % 4 === 0 ? <br/> : null
-                            } 
+                            {windowSize.width > 300 ? index !== 0 ? index % 4 === 0 ? <br/> : null : null : null}
+                            
                             {cannotSelect[index] === true ? 
                                 <button disabled={true}
                                 className='timeSelectbutton-notSelect'

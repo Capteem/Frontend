@@ -6,6 +6,7 @@ import ServiceDropdown from './ServiceDropdown';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import Pagination from 'react-js-pagination';
 import NoData from '../../../assets/noReview.png';
+import remove from '../../../assets/remove';
 
 
 function ServiceList() {
@@ -63,8 +64,9 @@ function ServiceList() {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인 만료. 다시 로그인해주세요.");
+        remove();
         navigate('/signin', { replace: true });
+        alert("로그인 만료. 다시 로그인해주세요.");
       } else {
         console.error('서비스리스트 가져오기에 실패하였습니다.', error);
       }
@@ -158,6 +160,7 @@ function ServiceList() {
                           isOpen={isDropdownOpen}
                           toggleDropdown={toggleDropdown}
                           providerId={service.providerId}
+                          providerName={service.providerName}
                         />
                       </div>
                     </div>
